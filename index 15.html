@@ -1,0 +1,2147 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Цыганский Лемон Лист</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+  :root{
+    --bg: #140f1e;
+    --card: #1c1530;
+    --card-alt: #221a38;
+    --lemon: #e4ff5c;
+    --lemon-dim: #b9d148;
+    --mystic: #a25ce0;
+    --ink: #f4f0ea;
+    --muted: #a598c4;
+    --danger: #e05c7a;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+
+  body{
+    background: radial-gradient(ellipse at 50% -10%, #2a1c46 0%, #140f1e 55%), var(--bg);
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--ink);
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    padding: 32px 14px 80px;
+  }
+
+  .wrap{ width:100%; max-width: 720px; }
+
+  .card{
+    background: var(--card);
+    border: 1px solid #362857;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 30px 80px -20px rgba(0,0,0,0.7);
+    position: relative;
+  }
+
+  .header{
+    position: relative;
+    padding: 44px 32px 34px;
+    text-align: center;
+    background:
+      radial-gradient(circle at 20% 20%, rgba(162,92,224,0.25), transparent 45%),
+      radial-gradient(circle at 80% 0%, rgba(228,255,92,0.12), transparent 40%),
+      linear-gradient(180deg, #251a3f 0%, #1c1530 100%);
+    border-bottom: 1px solid #382a5c;
+  }
+
+  .lang-switch{
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    display:flex;
+    gap: 4px;
+    z-index: 2;
+  }
+  .lang-btn{
+    background: rgba(28,21,48,0.6);
+    border: 1px solid #382a5c;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    padding: 5px 9px;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: all .15s ease;
+  }
+  .lang-btn.active{
+    background: linear-gradient(90deg, rgba(228,255,92,0.16), rgba(162,92,224,0.16));
+    border-color: rgba(228,255,92,0.45);
+    color: var(--ink);
+  }
+  .lang-btn:not(.active):hover{ border-color: #45356c; color: var(--ink); }
+
+  .lemon-slice{
+    position:absolute;
+    width: 64px; height:64px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 50% 50%, #eaff8a 0%, var(--lemon) 55%, var(--lemon-dim) 100%);
+    box-shadow: 0 0 40px rgba(228,255,92,0.45);
+    top: -20px; left: 50%;
+    transform: translateX(-50%);
+  }
+  .lemon-slice::before{
+    content:"";
+    position:absolute; inset:9px;
+    border-radius: 50%;
+    background: repeating-conic-gradient(from 0deg, #d7f04a 0deg 15deg, #eaff8a 15deg 30deg);
+    opacity: 0.55;
+  }
+
+  .eyebrow{
+    letter-spacing: 0.35em;
+    font-size: 11px;
+    color: var(--mystic);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .eyebrow::before, .eyebrow::after{ content:"✦"; color: var(--lemon); margin: 0 10px; }
+
+  .title{
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: clamp(30px, 6vw, 46px);
+    text-transform: uppercase;
+    line-height: 1.02;
+    text-shadow: 0 0 30px rgba(228,255,92,0.25);
+  }
+  .title .accent{ color: var(--lemon); }
+
+  .subtitle{
+    margin-top: 12px;
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+
+  .tabs{
+    display:flex;
+    gap: 8px;
+    padding: 20px 20px 0;
+  }
+  .tab-btn{
+    flex: 1;
+    padding: 10px 6px;
+    background: transparent;
+    border: 1px solid #33254f;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: all .15s ease;
+  }
+  .tab-btn.active{
+    background: linear-gradient(90deg, rgba(228,255,92,0.12), rgba(162,92,224,0.12));
+    border-color: rgba(228,255,92,0.4);
+    color: var(--ink);
+  }
+  .tab-btn:not(.active):hover{ border-color: #45356c; color: var(--ink); }
+
+  .list{
+    padding: 18px 20px 10px;
+    display:flex;
+    flex-direction:column;
+    gap: 10px;
+  }
+
+  .row{
+    display:flex;
+    align-items:center;
+    gap: 14px;
+    padding: 12px;
+    border-radius: 16px;
+    background: var(--card-alt);
+    border: 1px solid #33254f;
+    position: relative;
+    transition: background .18s ease, border-color .18s ease, box-shadow .18s ease;
+    cursor: pointer;
+  }
+  .row:hover{
+    background: linear-gradient(90deg, rgba(228,255,92,0.09), rgba(162,92,224,0.09));
+    border-color: rgba(228,255,92,0.35);
+    box-shadow: 0 0 22px -6px rgba(228,255,92,0.25);
+  }
+  .row.no-click{ cursor: default; }
+  .row.no-click:hover{
+    background: var(--card-alt);
+    border-color: #33254f;
+    box-shadow: none;
+  }
+
+  .thumb{
+    width: 130px;
+    height: 73px;
+    border-radius: 10px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #2c2148, #1c1530);
+    border: 1px solid #382a5c;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+  }
+  .thumb img{ width:100%; height:100%; object-fit: cover; display:block; }
+  .thumb .thumb-fallback{ font-size: 22px; color: #4a3c70; }
+
+  .row-body{
+    flex: 1;
+    min-width: 0;
+    display:flex;
+    flex-direction:column;
+    gap: 5px;
+    justify-content:center;
+  }
+
+  .title-line{
+    display:flex;
+    align-items:baseline;
+    gap: 7px;
+    min-width:0;
+  }
+  .rank-badge{
+    font-family:'Oswald', sans-serif;
+    font-weight:700;
+    font-size: 15px;
+    color: var(--mystic);
+    flex-shrink:0;
+  }
+  .row.rank-1 .rank-badge{ color: var(--lemon); }
+  .row.rank-2 .rank-badge{ color: #d5d5e0; }
+  .row.rank-3 .rank-badge{ color: #c98a4b; }
+
+  .level-name{
+    font-family:'Oswald', sans-serif;
+    font-weight:600;
+    font-size: 18px;
+    color: var(--ink);
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    min-width: 0;
+  }
+
+  .verifier{ font-size: 11.5px; color: var(--muted); }
+  .verifier b{ color: var(--mystic); font-weight:500; }
+  .verifier .fv{ color: var(--lemon-dim); }
+
+  .points{
+    font-family:'Oswald', sans-serif;
+    font-weight:700;
+    font-size: 15px;
+    color: var(--lemon);
+    white-space:nowrap;
+  }
+  .points span{
+    font-family:'JetBrains Mono', monospace;
+    font-weight:400;
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    margin-left: 5px;
+  }
+
+  .admin-col{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  .move-col{
+    display:flex;
+    flex-direction:column;
+    gap: 1px;
+    align-items:center;
+  }
+  .move-col button{
+    background: transparent;
+    border: none;
+    color: #59496f;
+    font-size: 9px;
+    line-height: 1;
+    padding: 4px 3px;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  .move-col button:hover:not(:disabled){ color: var(--lemon); background: rgba(228,255,92,0.12); }
+  .move-col button:disabled{ opacity: 0.2; cursor: default; }
+
+  .row-actions{
+    display:flex;
+    flex-direction:column;
+    gap: 2px;
+    align-items:center;
+  }
+  .del, .edit{
+    background: transparent;
+    border: none;
+    color: #6a5a94;
+    font-size: 13px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 4px 6px;
+    opacity: 1;
+    transition: color .15s ease, background .15s ease;
+    border-radius: 6px;
+  }
+  .del:hover, .del:active{ color: var(--danger); background: rgba(224,92,122,0.12); }
+  .edit:hover, .edit:active{ color: var(--lemon); background: rgba(228,255,92,0.12); }
+
+  /* add button + form */
+  .add-zone{ padding: 16px 20px 26px; }
+
+  .add-btn{
+    width: 100%;
+    padding: 14px;
+    border-radius: 12px;
+    border: 1px dashed #45356c;
+    background: transparent;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all .15s ease;
+  }
+  .add-btn:hover{ border-color: var(--lemon); color: var(--lemon); }
+
+  .add-form{
+    display:none;
+    flex-direction: column;
+    gap: 10px;
+    padding: 16px;
+    border-radius: 12px;
+    background: var(--card-alt);
+    border: 1px solid #33254f;
+  }
+  .add-form.open{ display:flex; }
+
+  .add-form label{
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #7a6ba0;
+    margin-bottom: 4px;
+    display:block;
+  }
+  .add-form input[type=text], .add-form input[type=number], .add-form input[type=date], .add-form textarea{
+    width: 100%;
+    background: #16101f;
+    border: 1px solid #362857;
+    border-radius: 8px;
+    padding: 10px 11px;
+    color: var(--ink);
+    font-family: inherit;
+    font-size: 13px;
+  }
+  .add-form textarea{ resize: vertical; min-height: 62px; line-height: 1.5; }
+  .add-form input:focus, .add-form textarea:focus{ outline:none; border-color: var(--lemon); }
+
+  .add-form .grid2{ display:grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  .add-form .actions{ display:flex; gap: 10px; margin-top: 4px; }
+  .add-form button{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border-radius: 8px;
+    padding: 10px 16px;
+    border: 1px solid #3a2c5c;
+    background: #241a3c;
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .add-form button.primary{
+    background: var(--lemon);
+    color: #1c1530;
+    border-color: var(--lemon);
+    font-weight: 700;
+    flex: 1;
+  }
+  .add-form button.ghost{ background: transparent; }
+
+  .status{
+    text-align:center;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    color: #5c4d80;
+    padding-bottom: 6px;
+    text-transform: uppercase;
+  }
+
+  .config-warning{
+    margin: 0 20px 14px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: rgba(224,92,122,0.12);
+    border: 1px solid rgba(224,92,122,0.4);
+    color: var(--danger);
+    font-size: 10.5px;
+    line-height: 1.5;
+    display:none;
+  }
+  .config-warning.show{ display:block; }
+
+  .footer{
+    padding: 12px 32px 26px;
+    text-align:center;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    color: #5c4d80;
+    border-top: 1px solid #2c2148;
+    text-transform:uppercase;
+  }
+
+  .admin-bar{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap: 8px;
+    padding: 0 20px 10px;
+    margin-top: 16px;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+  .admin-bar b{ color: var(--lemon); }
+  .admin-bar button{
+    background: transparent;
+    border: 1px solid #362857;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 4px 9px;
+    border-radius: 7px;
+    cursor: pointer;
+  }
+  .admin-bar button:hover{ border-color: var(--danger); color: var(--danger); }
+
+  /* auth modal */
+  .modal-overlay{
+    display:none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 7, 18, 0.72);
+    backdrop-filter: blur(3px);
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 20px;
+  }
+  .modal-overlay.open{ display:flex; }
+  .modal-box{
+    width: 100%;
+    max-width: 340px;
+    background: var(--card);
+    border: 1px solid #382a5c;
+    border-radius: 16px;
+    padding: 22px;
+    box-shadow: 0 30px 80px -20px rgba(0,0,0,0.8);
+  }
+  .modal-title{
+    font-family:'Oswald', sans-serif;
+    font-weight:700;
+    font-size: 16px;
+    text-transform: uppercase;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .modal-sub{
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 16px;
+    line-height:1.5;
+  }
+  .modal-box label{
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #7a6ba0;
+    margin-bottom: 4px;
+    display:block;
+  }
+  .modal-box input{
+    width: 100%;
+    background: #16101f;
+    border: 1px solid #362857;
+    border-radius: 8px;
+    padding: 10px 11px;
+    color: var(--ink);
+    font-family: inherit;
+    font-size: 13px;
+    margin-bottom: 12px;
+  }
+  .modal-box input:focus{ outline:none; border-color: var(--lemon); }
+  .modal-error{
+    font-size: 10.5px;
+    color: var(--danger);
+    min-height: 14px;
+    margin: -4px 0 10px;
+  }
+  .modal-actions{ display:flex; gap: 8px; }
+  .modal-actions button{
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border-radius: 8px;
+    padding: 10px 12px;
+    border: 1px solid #3a2c5c;
+    background: #241a3c;
+    color: var(--ink);
+    cursor: pointer;
+    flex: 1;
+  }
+  .modal-actions button.primary{
+    background: var(--lemon);
+    color: #1c1530;
+    border-color: var(--lemon);
+    font-weight: 700;
+  }
+  .modal-view-btn{
+    width:100%;
+    margin-top: 8px;
+    background: transparent;
+    border: 1px dashed #45356c;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 9px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .modal-view-btn:hover{ border-color: var(--lemon); color: var(--lemon); }
+
+  /* level detail modal */
+  .detail-box{
+    width: 100%;
+    max-width: 460px;
+    max-height: 88vh;
+    overflow-y: auto;
+    background: var(--card);
+    border: 1px solid #382a5c;
+    border-radius: 18px;
+    box-shadow: 0 30px 80px -20px rgba(0,0,0,0.8);
+  }
+  .detail-close{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(20,15,30,0.6);
+    border: 1px solid #382a5c;
+    color: var(--muted);
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 14px;
+    line-height:1;
+    z-index: 3;
+  }
+  .detail-close:hover{ color: var(--lemon); border-color: var(--lemon); }
+  .detail-head{
+    position: relative;
+    padding: 30px 26px 22px;
+    text-align:center;
+    background:
+      radial-gradient(circle at 20% 10%, rgba(162,92,224,0.28), transparent 45%),
+      radial-gradient(circle at 80% 0%, rgba(228,255,92,0.14), transparent 40%),
+      linear-gradient(180deg, #251a3f 0%, #1c1530 100%);
+    border-bottom: 1px solid #382a5c;
+  }
+  .detail-rank{
+    display:inline-block;
+    background: rgba(162,92,224,0.18);
+    border: 1px solid rgba(162,92,224,0.5);
+    color: var(--mystic);
+    font-family:'Oswald', sans-serif;
+    font-weight:700;
+    font-size: 13px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+  }
+  .detail-title{
+    font-family:'Oswald', sans-serif;
+    font-weight:700;
+    font-size: 26px;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  .detail-creator{
+    margin-top: 6px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .detail-creator b{ color: var(--ink); font-weight:600; }
+  .detail-verified{
+    display:inline-flex;
+    align-items:center;
+    gap: 6px;
+    margin-top: 14px;
+    padding: 7px 16px;
+    border-radius: 30px;
+    background: rgba(94, 210, 130, 0.12);
+    border: 1px solid rgba(94, 210, 130, 0.4);
+    color: #6fd98f;
+    font-size: 11.5px;
+    font-weight: 600;
+  }
+  .detail-verified b{ color:#8fe6a8; }
+  .detail-desc{
+    margin: 18px 4px 0;
+    font-size: 12.5px;
+    color: var(--muted);
+    line-height: 1.6;
+    font-style: italic;
+  }
+  .detail-media{
+    margin: 18px 24px 0;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #382a5c;
+    background: #0f0a18;
+    position: relative;
+  }
+  .detail-media img{ width:100%; display:block; aspect-ratio: 16/9; object-fit: cover; }
+  .detail-media .play-badge{
+    position:absolute; inset:0;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .detail-media .play-badge span{
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    background: rgba(224,32,32,0.92);
+    display:flex; align-items:center; justify-content:center;
+    color:#fff; font-size: 20px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  }
+  .detail-media-link{ text-decoration:none; display:block; }
+  .detail-media .yt-caption{
+    position:absolute;
+    left:0; right:0; bottom:0;
+    padding: 8px 12px;
+    background: linear-gradient(0deg, rgba(0,0,0,0.75), transparent);
+    color: #fff;
+    font-size: 11.5px;
+    font-weight: 600;
+    display:flex;
+    align-items:center;
+    gap: 6px;
+  }
+  .detail-stats{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 20px 24px 6px;
+  }
+  .detail-stats .stat-box{
+    background: var(--card-alt);
+    border: 1px solid #33254f;
+    border-radius: 12px;
+    padding: 12px 10px;
+    text-align:center;
+  }
+  .detail-stats .stat-box .stat-label{
+    font-size: 9px;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color: #7a6ba0;
+    margin-bottom: 4px;
+  }
+  .detail-stats .stat-box .stat-value{
+    font-family:'Oswald', sans-serif;
+    font-weight:700;
+    font-size: 16px;
+    color: var(--ink);
+    word-break: break-word;
+  }
+  .detail-stats .stat-box.wide{ grid-column: 1 / -1; }
+  .detail-stats .stat-box.accent .stat-value{ color: var(--lemon); }
+  .detail-admin-actions{
+    display:flex;
+    gap: 10px;
+    padding: 4px 24px 22px;
+  }
+  .detail-admin-actions button{
+    flex:1;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border-radius: 8px;
+    padding: 10px 12px;
+    border: 1px solid #3a2c5c;
+    background: #241a3c;
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .detail-admin-actions button.edit-detail-btn:hover{ border-color: var(--lemon); color: var(--lemon); }
+  .detail-admin-actions button.del-detail-btn:hover{ border-color: var(--danger); color: var(--danger); }
+
+  /* position history / records subsections */
+  .detail-subsection{
+    margin: 6px 24px 0;
+    border-radius: 14px;
+    background: var(--card-alt);
+    border: 1px solid #33254f;
+    overflow: hidden;
+  }
+  .detail-subsection:last-of-type{ margin-bottom: 20px; }
+  .subsection-header{
+    display:flex;
+    align-items:center;
+    gap: 10px;
+    padding: 14px 16px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .subsection-header .sh-icon{ font-size: 15px; color: var(--mystic); flex-shrink:0; }
+  .subsection-header .sh-title{
+    font-family:'Oswald', sans-serif;
+    font-weight:600;
+    font-size: 14.5px;
+    color: var(--ink);
+    flex: 1;
+  }
+  .subsection-header .sh-chevron{
+    color: var(--muted);
+    font-size: 11px;
+    transition: transform .18s ease;
+  }
+  .detail-subsection.collapsed .sh-chevron{ transform: rotate(180deg); }
+  .subsection-body{
+    padding: 0 16px 16px;
+  }
+  .detail-subsection.collapsed .subsection-body{ display:none; }
+
+  .subsection-list{
+    max-height: 340px;
+    overflow-y: auto;
+    padding-right: 2px;
+  }
+  .subsection-list::-webkit-scrollbar{ width: 5px; }
+  .subsection-list::-webkit-scrollbar-thumb{ background: #382a5c; border-radius: 10px; }
+  .subsection-list::-webkit-scrollbar-track{ background: transparent; }
+
+  .entry-card{
+    background: #1c1530;
+    border: 1px solid #33254f;
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 10px;
+  }
+  .entry-card:last-child{ margin-bottom: 0; }
+  .entry-top-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 10px;
+  }
+  .entry-left{
+    display:flex;
+    align-items:center;
+    gap: 10px;
+    min-width:0;
+  }
+  .entry-icon{
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size: 12px;
+    flex-shrink:0;
+  }
+  .entry-icon.add{ background: rgba(94,210,130,0.16); color: #6fd98f; }
+  .entry-icon.move{ background: transparent; color: var(--muted); font-size: 15px; }
+  .entry-date{
+    font-size: 13.5px;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .entry-rank{
+    font-family:'Oswald', sans-serif;
+    font-weight:700;
+    font-size: 12px;
+    color: var(--mystic);
+    background: rgba(162,92,224,0.16);
+    border: 1px solid rgba(162,92,224,0.4);
+    padding: 3px 10px;
+    border-radius: 20px;
+    flex-shrink:0;
+  }
+  .entry-note{
+    margin-top: 10px;
+    font-size: 12.5px;
+    color: var(--muted);
+  }
+
+  .records-summary{
+    display:flex;
+    align-items:center;
+    gap: 10px;
+    padding-bottom: 14px;
+    font-size: 12.5px;
+    color: var(--muted);
+  }
+  .records-summary .rs-icon{ font-size: 17px; flex-shrink:0; }
+  .records-summary b{ color: var(--lemon); font-weight:700; }
+  .records-summary b.full-count{ color: #6fd98f; }
+
+  .record-card{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap: 10px;
+    background: #1c1530;
+    border: 1px solid #33254f;
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+  }
+  .record-card:last-child{ margin-bottom: 0; }
+  .record-left{
+    display:flex;
+    align-items:center;
+    gap: 10px;
+    min-width:0;
+  }
+  .record-flag{ font-size: 18px; flex-shrink:0; }
+  .record-player{
+    font-family:'Oswald', sans-serif;
+    font-weight:600;
+    font-size: 15px;
+    color: var(--ink);
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .record-right{
+    display:flex;
+    align-items:center;
+    gap: 10px;
+    flex-shrink:0;
+  }
+  .record-percent{
+    font-family:'Oswald', sans-serif;
+    font-weight:700;
+    font-size: 15px;
+    color: var(--ink);
+  }
+  .record-play{
+    width: 28px; height: 28px;
+    border-radius: 9px;
+    background: rgba(224,92,122,0.85);
+    color: #fff;
+    display:flex; align-items:center; justify-content:center;
+    font-size: 11px;
+    text-decoration:none;
+    flex-shrink:0;
+  }
+  .record-play:hover{ background: var(--danger); }
+
+  .subsection-empty{
+    font-size: 12px;
+    color: #6a5a94;
+    text-align:center;
+    padding: 10px 0 16px;
+  }
+
+
+  @media (max-width: 380px){
+    .thumb{ width: 96px; height: 54px; }
+    .level-name{ font-size: 15.5px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="card">
+    <div class="header">
+      <div class="lang-switch" id="langSwitch">
+        <button class="lang-btn" id="langRuBtn" data-lang="ru">RU</button>
+        <button class="lang-btn" id="langEnBtn" data-lang="en">EN</button>
+      </div>
+      <div class="lemon-slice"></div>
+      <div class="eyebrow">GYPSY EDITION</div>
+      <div class="title"><span id="titleLine1">ЦЫГАНСКИЙ</span><br><span id="titleLine2" class="accent">ЛЕМОН ЛИСТ</span></div>
+      <div class="subtitle" id="subtitle">РЕЙТИНГ УРОВНЕЙ</div>
+    </div>
+
+    <div class="config-warning" id="configWarning">
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" id="tabMainBtn">Уровни</button>
+      <button class="tab-btn" id="tabFutureBtn">Будущие</button>
+      <button class="tab-btn" id="tabPlayersBtn">Рейтинг игроков</button>
+    </div>
+
+    <div class="admin-bar" id="adminBarLoggedOut">
+      <button id="adminLoginOpenBtn">🔒 Войти как админ</button>
+    </div>
+    <div class="admin-bar" id="adminBarLoggedIn" style="display:none;">
+      <span id="loggedInPrefix">Вы вошли как</span> <b id="adminNickLabel"></b>
+      <button id="adminLogoutBtn">Выйти</button>
+    </div>
+
+    <div class="list" id="list"></div>
+
+    <div class="add-zone" id="addZone" style="display:none;">
+      <button class="add-btn" id="openFormBtn">+ Добавить уровень</button>
+
+      <div class="add-form" id="addForm">
+        <div class="form-title" id="formTitle" style="font-family:'Oswald',sans-serif;font-weight:600;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:var(--mystic);">Новый уровень</div>
+        <div>
+          <label id="lblName">Название уровня</label>
+          <input type="text" id="fName" placeholder="Название" />
+        </div>
+        <div class="grid2">
+          <div>
+            <label id="lblVerifier">Верификатор</label>
+            <input type="text" id="fVerifier" placeholder="Ник" />
+          </div>
+          <div>
+            <label id="lblPoints">Очки</label>
+            <input type="number" id="fPoints" placeholder="1000" />
+          </div>
+        </div>
+        <div>
+          <label id="lblExtra">Доп. инфо (необязательно)</label>
+          <input type="text" id="fExtra" placeholder="First Victor: ..." />
+        </div>
+
+        <div class="form-title" id="formSectionDetails" style="font-family:'Oswald',sans-serif;font-weight:600;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-top:4px;">Детальная страница (необязательно)</div>
+
+        <div id="levelInfoFields">
+          <div class="grid2">
+            <div>
+              <label id="lblCreator">Создатель</label>
+              <input type="text" id="fCreator" placeholder="Ник" />
+            </div>
+            <div>
+              <label id="lblThumb">Превью (ссылка на картинку)</label>
+              <input type="text" id="fThumb" placeholder="https://..." />
+            </div>
+          </div>
+          <div>
+            <label id="lblVideo">Видео (YouTube ссылка)</label>
+            <input type="text" id="fVideo" placeholder="https://youtube.com/watch?v=..." />
+          </div>
+        </div>
+        <div>
+          <label id="lblDesc">Описание</label>
+          <input type="text" id="fDesc" placeholder="// текст описания //" />
+        </div>
+        <div id="levelStatFields">
+          <div class="grid2">
+            <div>
+              <label id="lblLevelId">ID</label>
+              <input type="text" id="fLevelId" placeholder="127323087" />
+            </div>
+            <div>
+              <label id="lblPassword">Пароль</label>
+              <input type="text" id="fPassword" placeholder="Free Copy" />
+            </div>
+          </div>
+          <div class="grid2">
+            <div>
+              <label id="lblLength">Длина</label>
+              <input type="text" id="fLength" placeholder="2:15" />
+            </div>
+            <div>
+              <label id="lblObjects">Объекты</label>
+              <input type="text" id="fObjects" placeholder="168 400" />
+            </div>
+          </div>
+          <div>
+            <label id="lblVersion">Версия</label>
+            <input type="text" id="fVersion" placeholder="2.2" />
+          </div>
+        </div>
+        <div>
+          <label id="lblAddedDate">Дата добавления в список</label>
+          <input type="date" id="fAddedDate" />
+        </div>
+        <div>
+          <label id="lblHistoryExtra">История позиций (по строке: дата|место|заметка)</label>
+          <textarea id="fHistoryExtra" placeholder="2026-05-01|3|Обошёл на 2 места"></textarea>
+        </div>
+        <div>
+          <label id="lblRecords">Рекорды (по строке: страна|игрок|процент|видео)</label>
+          <textarea id="fRecords" placeholder="US|Zoink|81|https://youtube.com/watch?v=..."></textarea>
+        </div>
+
+        <div class="actions">
+          <button class="primary" id="submitBtn">Добавить в список</button>
+          <button class="ghost" id="cancelBtn">Отмена</button>
+        </div>
+        <button class="ghost" id="deleteFromFormBtn" style="display:none;color:var(--danger);border-color:rgba(224,92,122,0.4);">Удалить</button>
+      </div>
+    </div>
+
+    <div class="status" id="status">Загрузка…</div>
+    <div class="footer" id="footerText">Цыганский Лемон Лист · общий список сообщества</div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="authModal">
+  <div class="modal-box">
+    <div class="modal-title" id="modalTitle">Вход для админа</div>
+    <div class="modal-sub" id="modalSub">Редактировать список могут только админы. Введи ник и пароль, чтобы войти.</div>
+    <label id="modalNickLabel">Ник</label>
+    <input type="text" id="authNick" placeholder="Ник" autocomplete="off" />
+    <label id="modalPassLabel">Пароль</label>
+    <input type="password" id="authPass" placeholder="Пароль" autocomplete="off" />
+    <div class="modal-error" id="authError"></div>
+    <div class="modal-actions">
+      <button class="primary" id="authLoginBtn">Войти</button>
+      <button id="authCancelBtn">Отмена</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="detailModal">
+  <div class="detail-box" id="detailBox">
+    <button class="detail-close" id="detailCloseBtn">✕</button>
+    <div id="detailContent"></div>
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   JSONBIN.IO CONFIG — ЗАПОЛНИ ЭТИ ДВЕ СТРОКИ
+   1. Зарегистрируйся на https://jsonbin.io (бесплатно)
+   2. В личном кабинете открой "API Keys" и скопируй свой
+      X-Master-Key -> вставь в JSONBIN_API_KEY
+   3. Создай новый Bin с содержимым {"levels": []} и скопируй
+      его Bin ID (виден в URL / в списке бинов) -> JSONBIN_BIN_ID
+   ========================================================= */
+const JSONBIN_API_KEY = '$2a$10$9k0bberZM02/WyIMp.D7yu3uWuXKDc3/kKlSRnm7UG5DpDOSYQiQi';
+const JSONBIN_BIN_ID  = '6a47fb0ff5f4af5e295b9887';
+
+const JSONBIN_BASE = 'https://api.jsonbin.io/v3/b';
+const isConfigured = () =>
+  JSONBIN_API_KEY && JSONBIN_API_KEY.indexOf('ВСТАВЬ_') === -1 &&
+  JSONBIN_BIN_ID && JSONBIN_BIN_ID.indexOf('ВСТАВЬ_') === -1;
+
+const DEFAULT_LEVELS = [
+  { name: 'Penumbra', verifier: 'muwa1t', extra: '', points: 1000, creator: 'muwa1t', description: 'Тестовый уровень с полным описанием — нажми на строку, чтобы увидеть детальную страницу.' },
+  { name: 'Thanatophobia', verifier: 'BaGGet', extra: '', points: 960 },
+  { name: 'Lin Anya', verifier: 'muwa1t', extra: '', points: 920 },
+  { name: 'Leyak', verifier: 'BaGGet', extra: '', points: 880 },
+  { name: 'Crash game', verifier: 'muwa1t', extra: '', points: 840 },
+  { name: 'Pulsar', verifier: 'BaGGet', extra: '', points: 800 },
+  { name: 'Nilscapes', verifier: 'muwa1t', extra: 'First Victor: BaGGet', points: 760 },
+  { name: 'Shitty Congregation', verifier: 'dimonchik', extra: '', points: 720 },
+  { name: 'Supersonic', verifier: 'BaGGet', extra: '', points: 680 },
+  { name: 'Poltergeist', verifier: 'BaGGet', extra: '', points: 640 },
+  { name: 'Crazy II', verifier: 'muwa1t', extra: 'First Victor: BaGGet', points: 600 },
+];
+
+const POINTS_BASE = 1000;
+const POINTS_STEP = 40;
+
+let currentLang = 'ru';
+
+const I18N = {
+  ru: {
+    docTitle: 'Цыганский Лемон Лист',
+    titleLine1: 'ЦЫГАНСКИЙ',
+    titleLine2: 'ЛЕМОН ЛИСТ',
+    configWarning: '⚠ JSONBin не настроен. Открой файл, найди JSONBIN_API_KEY и JSONBIN_BIN_ID в <script> и вставь свои значения с jsonbin.io.',
+    tabMain: 'Уровни',
+    tabFuture: 'Будущие',
+    tabPlayers: 'Рейтинг игроков',
+    adminLoginBtn: '🔒 Войти как админ',
+    loggedInPrefix: 'Вы вошли как',
+    logout: 'Выйти',
+    footer: 'Цыганский Лемон Лист · общий список сообщества',
+    statusLoading: 'Загрузка…',
+    statusDefaultNoConfig: 'Исходный список (JSONBin не настроен)',
+    statusLoaded: 'Загружено из JSONBin',
+    statusLoadError: 'Ошибка загрузки: ',
+    statusSaving: 'Сохранение…',
+    statusSaveNoConfig: 'JSONBin не настроен (не сохранено)',
+    statusSaved: 'Сохранено · видно всем',
+    statusRetrying: 'Повторная попытка сохранения…',
+    statusSaveError: 'Ошибка сохранения: ',
+    cancel: 'Отмена',
+    addToList: 'Добавить в список',
+    saveChanges: 'Сохранить изменения',
+    editingPrefix: 'Редактирование: ',
+    moveUpTitle: 'Выше',
+    moveDownTitle: 'Ниже',
+    editTitle: 'Редактировать',
+    deleteTitle: 'Удалить',
+    modalTitle: 'Вход для админа',
+    modalSub: 'Редактировать список могут только админы. Введи ник и пароль, чтобы войти.',
+    nickLabel: 'Ник',
+    passLabel: 'Пароль',
+    loginBtn: 'Войти',
+    loginError: 'Неверный ник или пароль',
+    formSectionDetails: 'Детальная страница (необязательно)',
+    lblCreator: 'Создатель',
+    lblThumb: 'Превью (ссылка на картинку)',
+    lblVideo: 'Видео (YouTube ссылка)',
+    lblDesc: 'Описание',
+    lblLevelId: 'ID',
+    lblPassword: 'Пароль',
+    lblLength: 'Длина',
+    lblObjects: 'Объекты',
+    lblVersion: 'Версия',
+    createdByPrefix: 'создатель ',
+    verifiedByPrefix: 'Верифицировано ',
+    statID: 'ID',
+    statPassword: 'Пароль',
+    statLength: 'Длина',
+    statObjects: 'Объекты',
+    statVersion: 'Версия',
+    statTotalScore: 'Очки',
+    watchOnYoutube: 'Смотреть на YouTube',
+    editBtnDetail: '✎ Редактировать',
+    deleteBtnDetail: '✕ Удалить',
+    lblAddedDate: 'Дата добавления в список',
+    lblHistoryExtra: 'История позиций (по строке: дата|место|заметка)',
+    lblRecords: 'Рекорды (по строке: страна|игрок|процент|видео)',
+    positionHistoryTitle: 'История позиций',
+    addedToList: 'Добавлено в список',
+    historyEmpty: 'История пока пуста',
+    prevBtn: 'Назад',
+    nextBtn: 'Далее',
+    recordsTitle: 'Рекорды',
+    recordsSummary: '{count} рекордов всего, {full} из них 100%',
+    recordsEmpty: 'Рекордов пока нет',
+    pageOf: '{cur} из {total}',
+  },
+  en: {
+    docTitle: 'Gypsy Lemon List',
+    titleLine1: 'GYPSY',
+    titleLine2: 'LEMON LIST',
+    configWarning: '⚠ JSONBin is not configured. Open the file, find JSONBIN_API_KEY and JSONBIN_BIN_ID in <script> and paste your values from jsonbin.io.',
+    tabMain: 'Main list',
+    tabFuture: 'Future List',
+    tabPlayers: 'Player rankings',
+    adminLoginBtn: '🔒 Admin Panel',
+    loggedInPrefix: 'Logged in as',
+    logout: 'Log out',
+    footer: 'Gypsy Lemon List · shared community list',
+    statusLoading: 'Loading…',
+    statusDefaultNoConfig: 'Default list (JSONBin not configured)',
+    statusLoaded: 'Loaded from JSONBin',
+    statusLoadError: 'Load error: ',
+    statusSaving: 'Saving…',
+    statusSaveNoConfig: 'JSONBin not configured (not saved)',
+    statusSaved: 'Saved · visible to everyone',
+    statusRetrying: 'Retrying save…',
+    statusSaveError: 'Save error: ',
+    cancel: 'Cancel',
+    addToList: 'Add to list',
+    saveChanges: 'Save changes',
+    editingPrefix: 'Editing: ',
+    moveUpTitle: 'Up',
+    moveDownTitle: 'Down',
+    editTitle: 'Edit',
+    deleteTitle: 'Delete',
+    modalTitle: 'Admin Panel',
+    modalSub: 'Only admins can edit the list. Enter your nickname and password to log in.',
+    nickLabel: 'Nickname',
+    passLabel: 'Password',
+    loginBtn: 'Log in',
+    loginError: 'Invalid nickname or password',
+    formSectionDetails: 'Detail page (optional)',
+    lblCreator: 'Creator',
+    lblThumb: 'Preview (image URL)',
+    lblVideo: 'Video (YouTube link)',
+    lblDesc: 'Description',
+    lblLevelId: 'ID',
+    lblPassword: 'Password',
+    lblLength: 'Length',
+    lblObjects: 'Objects',
+    lblVersion: 'Version',
+    createdByPrefix: 'created by ',
+    verifiedByPrefix: 'Verified by ',
+    statID: 'ID',
+    statPassword: 'Password',
+    statLength: 'Length',
+    statObjects: 'Objects',
+    statVersion: 'Version',
+    statTotalScore: 'Points',
+    watchOnYoutube: 'Watch on YouTube',
+    editBtnDetail: '✎ Edit',
+    deleteBtnDetail: '✕ Delete',
+    lblAddedDate: 'Date added to list',
+    lblHistoryExtra: 'Position history (one per line: date|rank|note)',
+    lblRecords: 'Records (one per line: country|player|percent|video)',
+    positionHistoryTitle: 'Position history',
+    addedToList: 'Added to list',
+    historyEmpty: 'No history yet',
+    prevBtn: 'Previous',
+    nextBtn: 'Next',
+    recordsTitle: 'Records',
+    recordsSummary: '{count} records in total, {full} of which are 100%',
+    recordsEmpty: 'No records yet',
+    pageOf: '{cur} of {total}',
+  },
+};
+
+const TAB_CONFIG_I18N = {
+  ru: {
+    main: {
+      key: 'levels',
+      addLabel: '+ Добавить уровень',
+      newTitle: 'Новый уровень',
+      nameLabel: 'Название уровня',
+      namePlaceholder: 'Название',
+      verifierLabel: 'Верификатор',
+      verifierPlaceholder: 'Ник',
+      verifierPrefix: 'Верификатор: ',
+      extraLabel: 'Доп. инфо (необязательно)',
+      extraPlaceholder: 'First Victor: ...',
+      pointsLabel: 'Очки',
+      subtitlePrefix: 'РЕЙТИНГ УРОВНЕЙ · TOP ',
+      autoRecalc: true,
+      deleteWord: 'уровень',
+      deleteWordKey: 'level',
+      showLevelInfo: true,
+    },
+    future: {
+      key: 'futureLevels',
+      addLabel: '+ Добавить будущий уровень',
+      newTitle: 'Новый будущий уровень',
+      nameLabel: 'Название уровня',
+      namePlaceholder: 'Название',
+      verifierLabel: 'Верификатор',
+      verifierPlaceholder: 'Ник (если есть)',
+      verifierPrefix: 'Верификатор: ',
+      extraLabel: 'Доп. инфо (необязательно)',
+      extraPlaceholder: 'Заметка...',
+      pointsLabel: 'Ожидаемые очки',
+      subtitlePrefix: 'СПИСОК ОЖИДАНИЯ · ',
+      autoRecalc: false,
+      deleteWord: 'уровень',
+      deleteWordKey: 'level',
+      showLevelInfo: true,
+    },
+    players: {
+      key: 'players',
+      addLabel: '+ Добавить игрока',
+      newTitle: 'Новый игрок',
+      nameLabel: 'Имя игрока',
+      namePlaceholder: 'Ник',
+      verifierLabel: 'Прохождения',
+      verifierPlaceholder: 'Например: Penumbra, Leyak',
+      verifierPrefix: 'Прохождения: ',
+      extraLabel: 'Доп. инфо (необязательно)',
+      extraPlaceholder: 'Заметка...',
+      pointsLabel: 'Очки',
+      subtitlePrefix: 'РЕЙТИНГ ИГРОКОВ · ',
+      autoRecalc: false,
+      deleteWord: 'игрока',
+      deleteWordKey: 'player',
+      showLevelInfo: false,
+    },
+  },
+  en: {
+    main: {
+      key: 'levels',
+      addLabel: '+ Add level',
+      newTitle: 'New level',
+      nameLabel: 'Level name',
+      namePlaceholder: 'Name',
+      verifierLabel: 'Verifier',
+      verifierPlaceholder: 'Nickname',
+      verifierPrefix: 'Verifier: ',
+      extraLabel: 'Extra info (optional)',
+      extraPlaceholder: 'First Victor: ...',
+      pointsLabel: 'Points',
+      subtitlePrefix: 'LEVEL RANKING · TOP ',
+      autoRecalc: true,
+      deleteWord: 'level',
+      deleteWordKey: 'level',
+      showLevelInfo: true,
+    },
+    future: {
+      key: 'futureLevels',
+      addLabel: '+ Add future level',
+      newTitle: 'New future level',
+      nameLabel: 'Level name',
+      namePlaceholder: 'Name',
+      verifierLabel: 'Verifier',
+      verifierPlaceholder: 'Nickname (if any)',
+      verifierPrefix: 'Verifier: ',
+      extraLabel: 'Extra info (optional)',
+      extraPlaceholder: 'Note...',
+      pointsLabel: 'Expected points',
+      subtitlePrefix: 'WAITING LIST · ',
+      autoRecalc: false,
+      deleteWord: 'level',
+      deleteWordKey: 'level',
+      showLevelInfo: true,
+    },
+    players: {
+      key: 'players',
+      addLabel: '+ Add player',
+      newTitle: 'New player',
+      nameLabel: 'Player name',
+      namePlaceholder: 'Nickname',
+      verifierLabel: 'Completions',
+      verifierPlaceholder: 'e.g. Penumbra, Leyak',
+      verifierPrefix: 'Completions: ',
+      extraLabel: 'Extra info (optional)',
+      extraPlaceholder: 'Note...',
+      pointsLabel: 'Points',
+      subtitlePrefix: 'PLAYER RANKING · ',
+      autoRecalc: false,
+      deleteWord: 'player',
+      deleteWordKey: 'player',
+      showLevelInfo: false,
+    },
+  },
+};
+
+// Proxy keeps all existing `TAB_CONFIG[currentTab]` call sites working
+// while transparently resolving to the config for the active language.
+const TAB_CONFIG = new Proxy({}, {
+  get(_, tab){ return TAB_CONFIG_I18N[currentLang][tab]; }
+});
+
+const state = { levels: [], futureLevels: [], players: [] };
+let currentTab = 'main'; // 'main' | 'future' | 'players'
+
+/* ===================== ADMИН-ДОСТУП ===================== */
+const ADMINS = [
+  { nick: 'BaGGet', pass: 'баггетсигма' },
+  { nick: 'muwa1t', pass: '03121702' }
+];
+
+let isAdmin = false;
+let currentAdminNick = '';
+
+function openAuthModal(){
+  document.getElementById('authError').textContent = '';
+  document.getElementById('authNick').value = '';
+  document.getElementById('authPass').value = '';
+  document.getElementById('authModal').classList.add('open');
+  setTimeout(() => document.getElementById('authNick').focus(), 0);
+}
+function closeAuthModal(){
+  document.getElementById('authModal').classList.remove('open');
+}
+
+function updateAdminBar(){
+  const loggedOut = document.getElementById('adminBarLoggedOut');
+  const loggedIn = document.getElementById('adminBarLoggedIn');
+  const addZone = document.getElementById('addZone');
+  if(isAdmin){
+    loggedOut.style.display = 'none';
+    loggedIn.style.display = 'flex';
+    document.getElementById('adminNickLabel').textContent = currentAdminNick;
+    addZone.style.display = 'block';
+  } else {
+    loggedOut.style.display = 'flex';
+    loggedIn.style.display = 'none';
+    addZone.style.display = 'none';
+  }
+}
+
+function tryLogin(){
+  const nick = document.getElementById('authNick').value.trim();
+  const pass = document.getElementById('authPass').value;
+  const found = ADMINS.find(a => a.nick.toLowerCase() === nick.toLowerCase() && a.pass === pass);
+  if(found){
+    isAdmin = true;
+    currentAdminNick = found.nick;
+    try{ sessionStorage.setItem('gll_admin_nick', found.nick); }catch(e){}
+    updateAdminBar();
+    closeAuthModal();
+    render();
+  } else {
+    document.getElementById('authError').textContent = I18N[currentLang].loginError;
+  }
+}
+
+document.getElementById('adminLoginOpenBtn').addEventListener('click', openAuthModal);
+document.getElementById('authLoginBtn').addEventListener('click', tryLogin);
+[document.getElementById('authNick'), document.getElementById('authPass')].forEach(input => {
+  input.addEventListener('keydown', (e) => { if(e.key === 'Enter') tryLogin(); });
+});
+document.getElementById('authCancelBtn').addEventListener('click', closeAuthModal);
+document.getElementById('authModal').addEventListener('click', (e) => {
+  if(e.target.id === 'authModal') closeAuthModal();
+});
+document.getElementById('adminLogoutBtn').addEventListener('click', () => {
+  isAdmin = false;
+  currentAdminNick = '';
+  try{ sessionStorage.removeItem('gll_admin_nick'); }catch(e){}
+  updateAdminBar();
+  closeForm();
+  render();
+});
+
+function restoreAdminSession(){
+  let savedNick = '';
+  try{ savedNick = sessionStorage.getItem('gll_admin_nick') || ''; }catch(e){}
+  if(savedNick && ADMINS.some(a => a.nick === savedNick)){
+    isAdmin = true;
+    currentAdminNick = savedNick;
+  }
+  updateAdminBar();
+}
+/* =========================================================== */
+
+function applyStaticTexts(){
+  const t = I18N[currentLang];
+  document.getElementById('titleLine1').textContent = t.titleLine1;
+  document.getElementById('titleLine2').textContent = t.titleLine2;
+  document.getElementById('configWarning').textContent = t.configWarning;
+  document.getElementById('tabMainBtn').textContent = t.tabMain;
+  document.getElementById('tabFutureBtn').textContent = t.tabFuture;
+  document.getElementById('tabPlayersBtn').textContent = t.tabPlayers;
+  document.getElementById('adminLoginOpenBtn').textContent = t.adminLoginBtn;
+  document.getElementById('loggedInPrefix').textContent = t.loggedInPrefix;
+  document.getElementById('adminLogoutBtn').textContent = t.logout;
+  document.getElementById('footerText').textContent = t.footer;
+  document.getElementById('cancelBtn').textContent = t.cancel;
+  document.getElementById('modalTitle').textContent = t.modalTitle;
+  document.getElementById('modalSub').textContent = t.modalSub;
+  document.getElementById('modalNickLabel').textContent = t.nickLabel;
+  document.getElementById('modalPassLabel').textContent = t.passLabel;
+  document.getElementById('authNick').placeholder = t.nickLabel;
+  document.getElementById('authPass').placeholder = t.passLabel;
+  document.getElementById('authLoginBtn').textContent = t.loginBtn;
+  document.getElementById('authCancelBtn').textContent = t.cancel;
+
+  document.getElementById('formSectionDetails').textContent = t.formSectionDetails;
+  document.getElementById('lblCreator').textContent = t.lblCreator;
+  document.getElementById('lblThumb').textContent = t.lblThumb;
+  document.getElementById('lblVideo').textContent = t.lblVideo;
+  document.getElementById('lblDesc').textContent = t.lblDesc;
+  document.getElementById('lblLevelId').textContent = t.lblLevelId;
+  document.getElementById('lblPassword').textContent = t.lblPassword;
+  document.getElementById('lblLength').textContent = t.lblLength;
+  document.getElementById('lblObjects').textContent = t.lblObjects;
+  document.getElementById('lblVersion').textContent = t.lblVersion;
+  document.getElementById('lblAddedDate').textContent = t.lblAddedDate;
+  document.getElementById('lblHistoryExtra').textContent = t.lblHistoryExtra;
+  document.getElementById('lblRecords').textContent = t.lblRecords;
+}
+
+function setLanguage(lang){
+  currentLang = lang;
+  try{ localStorage.setItem('gll_lang', lang); }catch(e){}
+  document.documentElement.lang = lang;
+  document.title = I18N[lang].docTitle;
+  applyStaticTexts();
+  applyTabLabels();
+  document.getElementById('langRuBtn').classList.toggle('active', lang === 'ru');
+  document.getElementById('langEnBtn').classList.toggle('active', lang === 'en');
+  render();
+}
+
+function uid(){ return Math.random().toString(36).slice(2, 9); }
+function withIds(arr){ return arr.map(l => ({ id: l.id || uid(), ...l })); }
+function escapeHtml(str){
+  return String(str ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+async function loadLevels(){
+  if(!isConfigured()){
+    document.getElementById('configWarning').classList.add('show');
+    state.levels = withIds(DEFAULT_LEVELS);
+    state.futureLevels = [];
+    state.players = [];
+    setStatus(I18N[currentLang].statusDefaultNoConfig);
+    return;
+  }
+  try{
+    const res = await fetch(`${JSONBIN_BASE}/${JSONBIN_BIN_ID}/latest`, {
+      method: 'GET',
+      headers: { 'X-Master-Key': JSONBIN_API_KEY }
+    });
+    if(!res.ok){
+      const errBody = await res.text().catch(() => '');
+      throw new Error(`HTTP ${res.status} — ${errBody}`);
+    }
+    const data = await res.json();
+    const record = data && data.record;
+    state.levels = (record && Array.isArray(record.levels) && record.levels.length)
+      ? withIds(record.levels) : withIds(DEFAULT_LEVELS);
+    state.futureLevels = (record && Array.isArray(record.futureLevels)) ? withIds(record.futureLevels) : [];
+    state.players = (record && Array.isArray(record.players)) ? withIds(record.players) : [];
+    setStatus(I18N[currentLang].statusLoaded);
+  }catch(e){
+    console.warn('JSONBin load failed, falling back to defaults:', e);
+    state.levels = withIds(DEFAULT_LEVELS);
+    state.futureLevels = [];
+    state.players = [];
+    setStatus(I18N[currentLang].statusLoadError + e.message);
+  }
+}
+
+let saveTimer = null;
+let saveAttempt = 0;
+
+function saveLevels(){
+  clearTimeout(saveTimer);
+  setStatus(I18N[currentLang].statusSaving);
+  saveTimer = setTimeout(doSave, 300);
+}
+
+async function doSave(){
+  if(!isConfigured()){
+    document.getElementById('configWarning').classList.add('show');
+    setStatus(I18N[currentLang].statusSaveNoConfig);
+    return;
+  }
+  const payload = { levels: state.levels, futureLevels: state.futureLevels, players: state.players };
+  try{
+    const res = await fetch(`${JSONBIN_BASE}/${JSONBIN_BIN_ID}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Master-Key': JSONBIN_API_KEY
+      },
+      body: JSON.stringify(payload)
+    });
+    if(!res.ok){
+      const errBody = await res.text().catch(() => '');
+      throw new Error(`HTTP ${res.status} — ${errBody}`);
+    }
+    saveAttempt = 0;
+    setStatus(I18N[currentLang].statusSaved);
+  }catch(e){
+    console.error('JSONBin save error:', e);
+    saveAttempt += 1;
+    if(saveAttempt <= 2){
+      setStatus(I18N[currentLang].statusRetrying);
+      setTimeout(doSave, 600);
+    } else {
+      saveAttempt = 0;
+      setStatus(I18N[currentLang].statusSaveError + e.message);
+    }
+  }
+}
+
+function setStatus(text){
+  document.getElementById('status').textContent = text;
+}
+
+function medalFor(i){
+  if(i === 0) return '🥇';
+  if(i === 1) return '🥈';
+  if(i === 2) return '🥉';
+  return String(i + 1);
+}
+function rankClass(i){
+  if(i === 0) return 'rank-1';
+  if(i === 1) return 'rank-2';
+  if(i === 2) return 'rank-3';
+  return '';
+}
+
+function getArr(){ return state[TAB_CONFIG[currentTab].key]; }
+function setArr(newArr){ state[TAB_CONFIG[currentTab].key] = newArr; }
+
+function deleteConfirmText(word, name){
+  return currentLang === 'ru' ? `Удалить ${word} «${name}»?` : `Delete ${word} "${name}"?`;
+}
+function deleteThisText(cfg){
+  if(currentLang === 'ru'){
+    return `Удалить ${cfg.deleteWordKey === 'player' ? 'этого игрока' : 'этот уровень'}`;
+  }
+  return `Delete ${cfg.deleteWordKey === 'player' ? 'this player' : 'this level'}`;
+}
+
+function recalcPoints(arr){
+  arr.forEach((l, i) => { l.points = Math.max(POINTS_BASE - i * POINTS_STEP, 0); });
+}
+
+function moveItem(id, dir){
+  const cfg = TAB_CONFIG[currentTab];
+  const arr = getArr();
+  const idx = arr.findIndex(l => l.id === id);
+  if(idx < 0) return;
+  const newIdx = idx + dir;
+  if(newIdx < 0 || newIdx >= arr.length) return;
+  [arr[idx], arr[newIdx]] = [arr[newIdx], arr[idx]];
+  if(cfg.autoRecalc) recalcPoints(arr);
+  render();
+  saveLevels();
+}
+
+function render(){
+  const cfg = TAB_CONFIG[currentTab];
+  const list = document.getElementById('list');
+  list.innerHTML = '';
+  const arr = getArr();
+
+  document.getElementById('subtitle').textContent = `${cfg.subtitlePrefix}${arr.length}`;
+
+  arr.forEach((lvl, i) => {
+    const row = document.createElement('div');
+    const isTop = i < 3;
+    row.className = `row ${isTop ? 'top ' : ''}${rankClass(i)}`.trim();
+
+    const verifierLine = lvl.extra
+      ? `${cfg.verifierPrefix}<b>${escapeHtml(lvl.verifier)}</b> · <span class="fv">${escapeHtml(lvl.extra)}</span>`
+      : `${cfg.verifierPrefix}<b>${escapeHtml(lvl.verifier)}</b>`;
+
+    const rankDisplay = medalFor(i);
+    const t = I18N[currentLang];
+
+    const thumbSrc = cfg.showLevelInfo ? rowThumbSrc(lvl) : '';
+    const thumbInner = thumbSrc
+      ? `<img src="${escapeHtml(thumbSrc)}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<span class=&quot;thumb-fallback&quot;>◆</span>'" />`
+      : `<span class="thumb-fallback">◆</span>`;
+
+    row.innerHTML = `
+      ${cfg.showLevelInfo ? `<div class="thumb">${thumbInner}</div>` : ''}
+      <div class="row-body">
+        <div class="title-line">
+          <span class="rank-badge">#${i + 1}</span>
+          <span class="level-name">${escapeHtml(lvl.name)}</span>
+        </div>
+        <div class="verifier">${verifierLine}</div>
+        <div class="points">${lvl.points}<span>points</span></div>
+      </div>
+      ${isAdmin ? `<div class="admin-col">
+        <div class="move-col">
+          <button class="move-up" title="${t.moveUpTitle}" ${i === 0 ? 'disabled' : ''}>▲</button>
+          <button class="move-down" title="${t.moveDownTitle}" ${i === arr.length - 1 ? 'disabled' : ''}>▼</button>
+        </div>
+        <div class="row-actions">
+          <button class="edit" title="${t.editTitle}">✎</button>
+          <button class="del" title="${t.deleteTitle}">✕</button>
+        </div>
+      </div>` : ''}
+    `;
+
+    if(cfg.showLevelInfo){
+      row.addEventListener('click', () => openDetailModal(lvl));
+    } else {
+      row.classList.add('no-click');
+    }
+
+    if(isAdmin){
+      row.querySelector('.move-up').addEventListener('click', (e) => { e.stopPropagation(); moveItem(lvl.id, -1); });
+      row.querySelector('.move-down').addEventListener('click', (e) => { e.stopPropagation(); moveItem(lvl.id, 1); });
+
+      row.querySelector('.del').addEventListener('click', (e) => {
+        e.stopPropagation();
+        if(!confirm(deleteConfirmText(cfg.deleteWord, lvl.name))) return;
+        const newArr = getArr().filter(l => l.id !== lvl.id);
+        if(cfg.autoRecalc) recalcPoints(newArr);
+        setArr(newArr);
+        render();
+        saveLevels();
+      });
+
+      row.querySelector('.edit').addEventListener('click', (e) => {
+        e.stopPropagation();
+        openEditForm(lvl);
+      });
+    }
+
+    list.appendChild(row);
+  });
+}
+
+// level detail modal
+function youtubeId(url){
+  if(!url) return '';
+  let id = '';
+  try{
+    const u = new URL(url);
+    if(u.hostname.includes('youtu.be')){
+      id = u.pathname.slice(1);
+    } else if(u.searchParams.get('v')){
+      id = u.searchParams.get('v');
+    } else if(u.pathname.includes('/embed/')){
+      id = u.pathname.split('/embed/')[1];
+    } else if(u.pathname.includes('/shorts/')){
+      id = u.pathname.split('/shorts/')[1];
+    }
+  }catch(e){
+    const m = String(url).match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([A-Za-z0-9_-]{6,})/);
+    if(m) id = m[1];
+  }
+  return (id || '').split(/[?&]/)[0];
+}
+function youtubeThumb(id){ return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : ''; }
+function rowThumbSrc(lvl){
+  if(lvl.thumbnail) return lvl.thumbnail;
+  const id = youtubeId(lvl.videoUrl);
+  return id ? youtubeThumb(id) : '';
+}
+
+function statBox(label, value, extraClass){
+  if(value === undefined || value === null || String(value).trim() === '') return '';
+  return `<div class="stat-box${extraClass ? ' ' + extraClass : ''}">
+    <div class="stat-label">${escapeHtml(label)}</div>
+    <div class="stat-value">${escapeHtml(value)}</div>
+  </div>`;
+}
+
+// position history / records helpers
+function countryFlag(code){
+  if(!code) return '🌐';
+  const c = String(code).trim();
+  if(/^[A-Za-z]{2}$/.test(c)){
+    const base = 0x1F1E6;
+    return [...c.toUpperCase()].map(ch => String.fromCodePoint(base + (ch.charCodeAt(0) - 65))).join('');
+  }
+  return c; // allow raw emoji / custom text
+}
+
+function buildHistoryEntries(lvl, idx, t){
+  const entries = [];
+  if(lvl.addedDate){
+    entries.push({
+      date: lvl.addedDate,
+      position: idx >= 0 ? (idx + 1) : null,
+      note: t.addedToList,
+      isAdd: true,
+    });
+  }
+  if(lvl.historyExtra){
+    String(lvl.historyExtra).split('\n').forEach(line => {
+      const parts = line.split('|').map(p => p.trim());
+      if(!parts[0]) return;
+      entries.push({ date: parts[0], position: parts[1] || null, note: parts[2] || '', isAdd: false });
+    });
+  }
+  entries.sort((a, b) => String(b.date).localeCompare(String(a.date)));
+  return entries;
+}
+
+function parseRecordEntries(lvl){
+  let recs = [];
+  if(lvl.records){
+    recs = String(lvl.records).split('\n').map(line => {
+      const parts = line.split('|').map(p => p.trim());
+      return { country: parts[0] || '', player: parts[1] || '', percent: parts[2] || '', videoUrl: parts[3] || '' };
+    }).filter(r => r.player);
+  }
+  if(!recs.length && lvl.verifier){
+    recs = [{ country: '', player: lvl.verifier, percent: '100', videoUrl: lvl.videoUrl || '' }];
+  }
+  return recs;
+}
+
+function renderHistorySection(lvl, idx){
+  const t = I18N[currentLang];
+  const entries = buildHistoryEntries(lvl, idx, t);
+  const body = document.getElementById('historySectionBody');
+  if(!body) return;
+  if(!entries.length){
+    body.innerHTML = `<div class="subsection-empty">${escapeHtml(t.historyEmpty)}</div>`;
+    return;
+  }
+  const itemsHtml = entries.map(e => {
+    const rankHtml = (e.position !== null && e.position !== '') ? `<div class="entry-rank">#${escapeHtml(e.position)}</div>` : '';
+    return `
+      <div class="entry-card">
+        <div class="entry-top-row">
+          <div class="entry-left">
+            <div class="entry-icon ${e.isAdd ? 'add' : 'move'}">${e.isAdd ? '+' : '↺'}</div>
+            <div class="entry-date">${escapeHtml(e.date)}</div>
+          </div>
+          ${rankHtml}
+        </div>
+        ${e.note ? `<div class="entry-note">${escapeHtml(e.note)}</div>` : ''}
+      </div>
+    `;
+  }).join('');
+  body.innerHTML = `<div class="subsection-list">${itemsHtml}</div>`;
+}
+
+function renderRecordsSection(lvl){
+  const t = I18N[currentLang];
+  const recs = parseRecordEntries(lvl);
+  const body = document.getElementById('recordsSectionBody');
+  if(!body) return;
+  const total = recs.length;
+  const fullCount = recs.filter(r => String(r.percent).trim() === '100').length;
+  const summaryText = t.recordsSummary.replace('{count}', String(total)).replace('{full}', String(fullCount));
+  if(!recs.length){
+    body.innerHTML = `
+      <div class="records-summary"><span class="rs-icon">🏆</span><span>${escapeHtml(summaryText)}</span></div>
+      <div class="subsection-empty">${escapeHtml(t.recordsEmpty)}</div>
+    `;
+    return;
+  }
+  const itemsHtml = recs.map(r => {
+    const playHtml = r.videoUrl
+      ? `<a class="record-play" href="${escapeHtml(r.videoUrl)}" target="_blank" rel="noopener noreferrer">▶</a>`
+      : '';
+    return `
+      <div class="record-card">
+        <div class="record-left">
+          <div class="record-flag">${countryFlag(r.country)}</div>
+          <div class="record-player">${escapeHtml(r.player)}</div>
+        </div>
+        <div class="record-right">
+          <div class="record-percent">${escapeHtml(r.percent)}%</div>
+          ${playHtml}
+        </div>
+      </div>
+    `;
+  }).join('');
+  body.innerHTML = `
+    <div class="records-summary"><span class="rs-icon">🏆</span><span>${escapeHtml(summaryText)}</span></div>
+    <div class="subsection-list">${itemsHtml}</div>
+  `;
+}
+
+function toggleSubsection(el){
+  el.classList.toggle('collapsed');
+}
+
+function openDetailModal(lvl){
+  const t = I18N[currentLang];
+  const cfg = TAB_CONFIG[currentTab];
+  const idx = getArr().findIndex(l => l.id === lvl.id);
+  const rankDisplay = idx >= 0 ? medalFor(idx) : '';
+
+  const ytId = cfg.showLevelInfo ? youtubeId(lvl.videoUrl) : '';
+  const mediaThumb = cfg.showLevelInfo ? (lvl.thumbnail || (ytId ? youtubeThumb(ytId) : '')) : '';
+  let mediaHtml = '';
+  if(ytId){
+    mediaHtml = `<a class="detail-media-link" href="https://www.youtube.com/watch?v=${ytId}" target="_blank" rel="noopener noreferrer">
+      <div class="detail-media">
+        <img src="${escapeHtml(mediaThumb)}" alt="" onerror="this.src='https://i.ytimg.com/vi/${ytId}/mqdefault.jpg'" />
+        <div class="play-badge"><span>▶</span></div>
+        <div class="yt-caption">▶ ${escapeHtml(t.watchOnYoutube)}</div>
+      </div>
+    </a>`;
+  } else if(mediaThumb){
+    mediaHtml = `<div class="detail-media"><img src="${escapeHtml(mediaThumb)}" alt="" /></div>`;
+  }
+
+  const verifiedHtml = lvl.verifier
+    ? `<div class="detail-verified">✓ ${escapeHtml(t.verifiedByPrefix)}<b>${escapeHtml(lvl.verifier)}</b></div>`
+    : '';
+  const creatorHtml = (cfg.showLevelInfo && lvl.creator)
+    ? `<div class="detail-creator">${escapeHtml(t.createdByPrefix)}<b>${escapeHtml(lvl.creator)}</b></div>`
+    : '';
+  const descHtml = lvl.description
+    ? `<div class="detail-desc">// ${escapeHtml(lvl.description)} //</div>`
+    : '';
+
+  const levelStats = cfg.showLevelInfo ? [
+    statBox(t.statID, lvl.levelId),
+    statBox(t.statPassword, lvl.password),
+    statBox(t.statLength, lvl.length),
+    statBox(t.statObjects, lvl.objects),
+    statBox(t.statVersion, lvl.version),
+  ] : [];
+  const stats = [
+    ...levelStats,
+    statBox(t.statTotalScore, lvl.points, 'accent'),
+  ].filter(Boolean).join('');
+
+  document.getElementById('detailContent').innerHTML = `
+    <div class="detail-head">
+      ${rankDisplay ? `<div class="detail-rank">#${idx + 1}</div>` : ''}
+      <div class="detail-title">${escapeHtml(lvl.name)}</div>
+      ${creatorHtml}
+      ${verifiedHtml}
+      ${descHtml}
+    </div>
+    ${mediaHtml}
+    ${stats ? `<div class="detail-stats">${stats}</div>` : ''}
+    ${isAdmin ? `<div class="detail-admin-actions">
+      <button class="edit-detail-btn">${t.editBtnDetail}</button>
+      <button class="del-detail-btn">${t.deleteBtnDetail}</button>
+    </div>` : ''}
+    <div class="detail-subsection" id="historySection">
+      <div class="subsection-header" id="historySectionHeader">
+        <span class="sh-icon">🕓</span>
+        <span class="sh-title">${escapeHtml(t.positionHistoryTitle)}</span>
+        <span class="sh-chevron">▲</span>
+      </div>
+      <div class="subsection-body" id="historySectionBody"></div>
+    </div>
+    <div class="detail-subsection" id="recordsSection">
+      <div class="subsection-header" id="recordsSectionHeader">
+        <span class="sh-icon">🏆</span>
+        <span class="sh-title">${escapeHtml(t.recordsTitle)}</span>
+        <span class="sh-chevron">▲</span>
+      </div>
+      <div class="subsection-body" id="recordsSectionBody"></div>
+    </div>
+  `;
+
+  renderHistorySection(lvl, idx);
+  renderRecordsSection(lvl);
+  document.getElementById('historySectionHeader').addEventListener('click', () => toggleSubsection(document.getElementById('historySection')));
+  document.getElementById('recordsSectionHeader').addEventListener('click', () => toggleSubsection(document.getElementById('recordsSection')));
+
+  if(isAdmin){
+    document.getElementById('detailContent').querySelector('.edit-detail-btn').addEventListener('click', () => {
+      closeDetailModal();
+      openEditForm(lvl);
+    });
+    document.getElementById('detailContent').querySelector('.del-detail-btn').addEventListener('click', () => {
+      if(!confirm(deleteConfirmText(cfg.deleteWord, lvl.name))) return;
+      const newArr = getArr().filter(l => l.id !== lvl.id);
+      if(cfg.autoRecalc) recalcPoints(newArr);
+      setArr(newArr);
+      closeDetailModal();
+      render();
+      saveLevels();
+    });
+  }
+
+  document.getElementById('detailModal').classList.add('open');
+}
+
+function closeDetailModal(){
+  document.getElementById('detailModal').classList.remove('open');
+  document.getElementById('detailContent').innerHTML = '';
+}
+
+document.getElementById('detailCloseBtn').addEventListener('click', closeDetailModal);
+document.getElementById('detailModal').addEventListener('click', (e) => {
+  if(e.target.id === 'detailModal') closeDetailModal();
+});
+
+// add / edit form
+const openFormBtn = document.getElementById('openFormBtn');
+const addForm = document.getElementById('addForm');
+const formTitle = document.getElementById('formTitle');
+const submitBtn = document.getElementById('submitBtn');
+const deleteFromFormBtn = document.getElementById('deleteFromFormBtn');
+const fName = document.getElementById('fName');
+const fVerifier = document.getElementById('fVerifier');
+const fPoints = document.getElementById('fPoints');
+const fExtra = document.getElementById('fExtra');
+const lblName = document.getElementById('lblName');
+const lblVerifier = document.getElementById('lblVerifier');
+const lblPoints = document.getElementById('lblPoints');
+const lblExtra = document.getElementById('lblExtra');
+const fCreator = document.getElementById('fCreator');
+const fThumb = document.getElementById('fThumb');
+const fVideo = document.getElementById('fVideo');
+const fDesc = document.getElementById('fDesc');
+const fLevelId = document.getElementById('fLevelId');
+const fPassword = document.getElementById('fPassword');
+const fLength = document.getElementById('fLength');
+const fObjects = document.getElementById('fObjects');
+const fVersion = document.getElementById('fVersion');
+const fAddedDate = document.getElementById('fAddedDate');
+const fHistoryExtra = document.getElementById('fHistoryExtra');
+const fRecords = document.getElementById('fRecords');
+const detailFields = [fCreator, fThumb, fVideo, fDesc, fLevelId, fPassword, fLength, fObjects, fVersion, fAddedDate, fHistoryExtra, fRecords];
+
+let editingId = null;
+
+function applyTabLabels(){
+  const cfg = TAB_CONFIG[currentTab];
+  openFormBtn.textContent = cfg.addLabel;
+  lblName.textContent = cfg.nameLabel;
+  fName.placeholder = cfg.namePlaceholder;
+  lblVerifier.textContent = cfg.verifierLabel;
+  fVerifier.placeholder = cfg.verifierPlaceholder;
+  lblPoints.textContent = cfg.pointsLabel;
+  lblExtra.textContent = cfg.extraLabel;
+  fExtra.placeholder = cfg.extraPlaceholder;
+  document.getElementById('levelInfoFields').style.display = cfg.showLevelInfo ? '' : 'none';
+  document.getElementById('levelStatFields').style.display = cfg.showLevelInfo ? '' : 'none';
+}
+
+openFormBtn.addEventListener('click', () => {
+  const cfg = TAB_CONFIG[currentTab];
+  editingId = null;
+  applyTabLabels();
+  formTitle.textContent = cfg.newTitle;
+  submitBtn.textContent = I18N[currentLang].addToList;
+  deleteFromFormBtn.style.display = 'none';
+  addForm.classList.add('open');
+  openFormBtn.style.display = 'none';
+  const arr = getArr();
+  const suggested = cfg.autoRecalc
+    ? Math.max(POINTS_BASE - arr.length * POINTS_STEP, 0)
+    : (arr.length ? Math.max(arr[arr.length - 1].points - 40, 0) : 1000);
+  fName.value = ''; fVerifier.value = ''; fExtra.value = '';
+  fPoints.value = suggested;
+  detailFields.forEach(f => f.value = '');
+  fAddedDate.value = new Date().toISOString().slice(0, 10);
+  fName.focus();
+});
+
+function openEditForm(lvl){
+  const cfg = TAB_CONFIG[currentTab];
+  editingId = lvl.id;
+  applyTabLabels();
+  formTitle.textContent = I18N[currentLang].editingPrefix + lvl.name;
+  submitBtn.textContent = I18N[currentLang].saveChanges;
+  deleteFromFormBtn.style.display = 'block';
+  deleteFromFormBtn.textContent = deleteThisText(cfg);
+  fName.value = lvl.name;
+  fVerifier.value = lvl.verifier;
+  fPoints.value = lvl.points;
+  fExtra.value = lvl.extra || '';
+  fCreator.value = lvl.creator || '';
+  fThumb.value = lvl.thumbnail || '';
+  fVideo.value = lvl.videoUrl || '';
+  fDesc.value = lvl.description || '';
+  fLevelId.value = lvl.levelId || '';
+  fPassword.value = lvl.password || '';
+  fLength.value = lvl.length || '';
+  fObjects.value = lvl.objects || '';
+  fVersion.value = lvl.version || '';
+  fAddedDate.value = lvl.addedDate || '';
+  fHistoryExtra.value = lvl.historyExtra || '';
+  fRecords.value = lvl.records || '';
+  addForm.classList.add('open');
+  openFormBtn.style.display = 'none';
+  addForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  fName.focus();
+}
+
+document.getElementById('cancelBtn').addEventListener('click', closeForm);
+
+function closeForm(){
+  addForm.classList.remove('open');
+  openFormBtn.style.display = 'block';
+  editingId = null;
+  fName.value = ''; fVerifier.value = ''; fPoints.value = ''; fExtra.value = '';
+  detailFields.forEach(f => f.value = '');
+}
+
+submitBtn.addEventListener('click', () => {
+  const cfg = TAB_CONFIG[currentTab];
+  if(!fName.value.trim()){
+    fName.focus();
+    return;
+  }
+  const arr = getArr();
+  const detailValues = {
+    creator: fCreator.value.trim(),
+    thumbnail: fThumb.value.trim(),
+    videoUrl: fVideo.value.trim(),
+    description: fDesc.value.trim(),
+    levelId: fLevelId.value.trim(),
+    password: fPassword.value.trim(),
+    length: fLength.value.trim(),
+    objects: fObjects.value.trim(),
+    version: fVersion.value.trim(),
+    addedDate: fAddedDate.value.trim(),
+    historyExtra: fHistoryExtra.value.trim(),
+    records: fRecords.value.trim(),
+  };
+  if(editingId){
+    const lvl = arr.find(l => l.id === editingId);
+    if(lvl){
+      lvl.name = fName.value.trim();
+      lvl.verifier = fVerifier.value.trim();
+      lvl.extra = fExtra.value.trim();
+      lvl.points = Number(fPoints.value) || 0;
+      Object.assign(lvl, detailValues);
+    }
+  } else {
+    arr.push({
+      id: uid(),
+      name: fName.value.trim(),
+      verifier: fVerifier.value.trim(),
+      extra: fExtra.value.trim(),
+      points: Number(fPoints.value) || 0,
+      ...detailValues,
+    });
+  }
+  if(cfg.autoRecalc) recalcPoints(arr);
+  closeForm();
+  render();
+  saveLevels();
+});
+
+deleteFromFormBtn.addEventListener('click', () => {
+  const cfg = TAB_CONFIG[currentTab];
+  if(!editingId) return;
+  const lvl = getArr().find(l => l.id === editingId);
+  if(lvl && !confirm(deleteConfirmText(cfg.deleteWord, lvl.name))) return;
+  const newArr = getArr().filter(l => l.id !== editingId);
+  if(cfg.autoRecalc) recalcPoints(newArr);
+  setArr(newArr);
+  closeForm();
+  render();
+  saveLevels();
+});
+
+[fName, fVerifier, fPoints, fExtra, ...detailFields].forEach(input => {
+  if(input.tagName === 'TEXTAREA') return; // allow multi-line input (Enter = new line)
+  input.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter') submitBtn.click();
+  });
+});
+
+(async function init(){
+  let savedLang = 'ru';
+  try{ savedLang = localStorage.getItem('gll_lang') || 'ru'; }catch(e){}
+  currentLang = (savedLang === 'en') ? 'en' : 'ru';
+  document.documentElement.lang = currentLang;
+  document.title = I18N[currentLang].docTitle;
+  applyStaticTexts();
+  setStatus(I18N[currentLang].statusLoading);
+  document.getElementById('langRuBtn').classList.toggle('active', currentLang === 'ru');
+  document.getElementById('langEnBtn').classList.toggle('active', currentLang === 'en');
+
+  restoreAdminSession();
+  await loadLevels();
+
+  const tabMainBtn = document.getElementById('tabMainBtn');
+  const tabFutureBtn = document.getElementById('tabFutureBtn');
+  const tabPlayersBtn = document.getElementById('tabPlayersBtn');
+
+  function switchTab(tab){
+    currentTab = tab;
+    tabMainBtn.classList.toggle('active', tab === 'main');
+    tabFutureBtn.classList.toggle('active', tab === 'future');
+    tabPlayersBtn.classList.toggle('active', tab === 'players');
+    applyTabLabels();
+    closeForm();
+    render();
+  }
+
+  tabMainBtn.addEventListener('click', () => switchTab('main'));
+  tabFutureBtn.addEventListener('click', () => switchTab('future'));
+  tabPlayersBtn.addEventListener('click', () => switchTab('players'));
+
+  document.getElementById('langRuBtn').addEventListener('click', () => setLanguage('ru'));
+  document.getElementById('langEnBtn').addEventListener('click', () => setLanguage('en'));
+
+  applyTabLabels();
+  render();
+})();
+</script>
+
+</body>
+</html>
