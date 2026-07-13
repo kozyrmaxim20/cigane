@@ -888,15 +888,15 @@
       <div class="lemon-slice"></div>
       <div class="eyebrow">GYPSY EDITION</div>
       <div class="title"><span id="titleLine1">ЦЫГАНСКИЙ</span><br><span id="titleLine2" class="accent">ЛЕМОН ЛИСТ</span></div>
-      <div class="subtitle" id="subtitle">РЕЙТИНГ УРОВНЕЙ</div>
     </div>
 
     <div class="config-warning" id="configWarning">
     </div>
 
     <div class="tabs">
-      <button class="tab-btn active" id="tabMainBtn">Уровни</button>
-      <button class="tab-btn" id="tabFutureBtn">Будущие</button>
+      <button class="tab-btn active" id="tabMainBtn">Классический</button>
+      <button class="tab-btn" id="tabFutureBtn">Будущий</button>
+      <button class="tab-btn" id="tabNonListedBtn">Вне листа</button>
       <button class="tab-btn" id="tabPlayersBtn">Рейтинг игроков</button>
     </div>
 
@@ -919,7 +919,7 @@
           <label id="lblName">Название уровня</label>
           <input type="text" id="fName" placeholder="Название" />
         </div>
-        <div class="grid2">
+        <div class="grid2" id="rankingFields">
           <div>
             <label id="lblVerifier">Верификатор</label>
             <input type="text" id="fVerifier" placeholder="Ник" />
@@ -1073,8 +1073,9 @@ const I18N = {
     titleLine1: 'ЦЫГАНСКИЙ',
     titleLine2: 'ЛЕМОН ЛИСТ',
     configWarning: '⚠ JSONBin не настроен. Открой файл, найди JSONBIN_API_KEY и JSONBIN_BIN_ID в <script> и вставь свои значения с jsonbin.io.',
-    tabMain: 'Уровни',
-    tabFuture: 'Будущие',
+    tabMain: 'Классический',
+    tabFuture: 'Будущий',
+    tabNonListed: 'Вне листа',
     tabPlayers: 'Рейтинг игроков',
     adminLoginBtn: '🔒 Войти как админ',
     loggedInPrefix: 'Вы вошли как',
@@ -1144,6 +1145,7 @@ const I18N = {
     configWarning: '⚠ JSONBin is not configured. Open the file, find JSONBIN_API_KEY and JSONBIN_BIN_ID in <script> and paste your values from jsonbin.io.',
     tabMain: 'Main list',
     tabFuture: 'Future List',
+    tabNonListed: 'Non-listed',
     tabPlayers: 'Player rankings',
     adminLoginBtn: '🔒 Admin Panel',
     loggedInPrefix: 'Logged in as',
@@ -1227,6 +1229,7 @@ const TAB_CONFIG_I18N = {
       deleteWord: 'уровень',
       deleteWordKey: 'level',
       showLevelInfo: true,
+      showRanking: true,
     },
     future: {
       key: 'futureLevels',
@@ -1245,6 +1248,26 @@ const TAB_CONFIG_I18N = {
       deleteWord: 'уровень',
       deleteWordKey: 'level',
       showLevelInfo: true,
+      showRanking: false,
+    },
+    nonListed: {
+      key: 'nonListedLevels',
+      addLabel: '+ Добавить уровень',
+      newTitle: 'Новый уровень (Non-listed)',
+      nameLabel: 'Название уровня',
+      namePlaceholder: 'Название',
+      verifierLabel: 'Верификатор',
+      verifierPlaceholder: 'Ник (если есть)',
+      verifierPrefix: 'Верификатор: ',
+      extraLabel: 'Доп. инфо (необязательно)',
+      extraPlaceholder: 'Заметка...',
+      pointsLabel: 'Очки',
+      subtitlePrefix: 'NON-LISTED · ',
+      autoRecalc: false,
+      deleteWord: 'уровень',
+      deleteWordKey: 'level',
+      showLevelInfo: true,
+      showRanking: false,
     },
     players: {
       key: 'players',
@@ -1263,6 +1286,7 @@ const TAB_CONFIG_I18N = {
       deleteWord: 'игрока',
       deleteWordKey: 'player',
       showLevelInfo: false,
+      showRanking: true,
     },
   },
   en: {
@@ -1283,6 +1307,7 @@ const TAB_CONFIG_I18N = {
       deleteWord: 'level',
       deleteWordKey: 'level',
       showLevelInfo: true,
+      showRanking: true,
     },
     future: {
       key: 'futureLevels',
@@ -1301,6 +1326,26 @@ const TAB_CONFIG_I18N = {
       deleteWord: 'level',
       deleteWordKey: 'level',
       showLevelInfo: true,
+      showRanking: false,
+    },
+    nonListed: {
+      key: 'nonListedLevels',
+      addLabel: '+ Add level',
+      newTitle: 'New level (Non-listed)',
+      nameLabel: 'Level name',
+      namePlaceholder: 'Name',
+      verifierLabel: 'Verifier',
+      verifierPlaceholder: 'Nickname (if any)',
+      verifierPrefix: 'Verifier: ',
+      extraLabel: 'Extra info (optional)',
+      extraPlaceholder: 'Note...',
+      pointsLabel: 'Points',
+      subtitlePrefix: 'NON-LISTED · ',
+      autoRecalc: false,
+      deleteWord: 'level',
+      deleteWordKey: 'level',
+      showLevelInfo: true,
+      showRanking: false,
     },
     players: {
       key: 'players',
@@ -1319,6 +1364,7 @@ const TAB_CONFIG_I18N = {
       deleteWord: 'player',
       deleteWordKey: 'player',
       showLevelInfo: false,
+      showRanking: true,
     },
   },
 };
@@ -1329,8 +1375,8 @@ const TAB_CONFIG = new Proxy({}, {
   get(_, tab){ return TAB_CONFIG_I18N[currentLang][tab]; }
 });
 
-const state = { levels: [], futureLevels: [], players: [] };
-let currentTab = 'main'; // 'main' | 'future' | 'players'
+const state = { levels: [], futureLevels: [], nonListedLevels: [], players: [] };
+let currentTab = 'main'; // 'main' | 'future' | 'nonListed' | 'players'
 
 /* ===================== ADMИН-ДОСТУП ===================== */
 const ADMINS = [
@@ -1420,6 +1466,7 @@ function applyStaticTexts(){
   document.getElementById('configWarning').textContent = t.configWarning;
   document.getElementById('tabMainBtn').textContent = t.tabMain;
   document.getElementById('tabFutureBtn').textContent = t.tabFuture;
+  document.getElementById('tabNonListedBtn').textContent = t.tabNonListed;
   document.getElementById('tabPlayersBtn').textContent = t.tabPlayers;
   document.getElementById('adminLoginOpenBtn').textContent = t.adminLoginBtn;
   document.getElementById('loggedInPrefix').textContent = t.loggedInPrefix;
@@ -1476,6 +1523,7 @@ async function loadLevels(){
     document.getElementById('configWarning').classList.add('show');
     state.levels = withIds(DEFAULT_LEVELS);
     state.futureLevels = [];
+    state.nonListedLevels = [];
     state.players = [];
     setStatus(I18N[currentLang].statusDefaultNoConfig);
     return;
@@ -1494,12 +1542,14 @@ async function loadLevels(){
     state.levels = (record && Array.isArray(record.levels) && record.levels.length)
       ? withIds(record.levels) : withIds(DEFAULT_LEVELS);
     state.futureLevels = (record && Array.isArray(record.futureLevels)) ? withIds(record.futureLevels) : [];
+    state.nonListedLevels = (record && Array.isArray(record.nonListedLevels)) ? withIds(record.nonListedLevels) : [];
     state.players = (record && Array.isArray(record.players)) ? withIds(record.players) : [];
     setStatus(I18N[currentLang].statusLoaded);
   }catch(e){
     console.warn('JSONBin load failed, falling back to defaults:', e);
     state.levels = withIds(DEFAULT_LEVELS);
     state.futureLevels = [];
+    state.nonListedLevels = [];
     state.players = [];
     setStatus(I18N[currentLang].statusLoadError + e.message);
   }
@@ -1520,7 +1570,7 @@ async function doSave(){
     setStatus(I18N[currentLang].statusSaveNoConfig);
     return;
   }
-  const payload = { levels: state.levels, futureLevels: state.futureLevels, players: state.players };
+  const payload = { levels: state.levels, futureLevels: state.futureLevels, nonListedLevels: state.nonListedLevels, players: state.players };
   try{
     const res = await fetch(`${JSONBIN_BASE}/${JSONBIN_BIN_ID}`, {
       method: 'PUT',
@@ -1602,18 +1652,15 @@ function render(){
   list.innerHTML = '';
   const arr = getArr();
 
-  document.getElementById('subtitle').textContent = `${cfg.subtitlePrefix}${arr.length}`;
-
   arr.forEach((lvl, i) => {
     const row = document.createElement('div');
-    const isTop = i < 3;
-    row.className = `row ${isTop ? 'top ' : ''}${rankClass(i)}`.trim();
+    const isTop = cfg.showRanking && i < 3;
+    row.className = `row ${isTop ? 'top ' : ''}${cfg.showRanking ? rankClass(i) : ''}`.trim();
 
     const verifierLine = lvl.extra
       ? `${cfg.verifierPrefix}<b>${escapeHtml(lvl.verifier)}</b> · <span class="fv">${escapeHtml(lvl.extra)}</span>`
       : `${cfg.verifierPrefix}<b>${escapeHtml(lvl.verifier)}</b>`;
 
-    const rankDisplay = medalFor(i);
     const t = I18N[currentLang];
 
     const thumbSrc = cfg.showLevelInfo ? rowThumbSrc(lvl) : '';
@@ -1625,11 +1672,11 @@ function render(){
       ${cfg.showLevelInfo ? `<div class="thumb">${thumbInner}</div>` : ''}
       <div class="row-body">
         <div class="title-line">
-          <span class="rank-badge">#${i + 1}</span>
+          ${cfg.showRanking ? `<span class="rank-badge">#${i + 1}</span>` : ''}
           <span class="level-name">${escapeHtml(lvl.name)}</span>
         </div>
-        <div class="verifier">${verifierLine}</div>
-        <div class="points">${lvl.points}<span>points</span></div>
+        ${cfg.showRanking ? `<div class="verifier">${verifierLine}</div>` : ''}
+        ${cfg.showRanking ? `<div class="points">${lvl.points}<span>points</span></div>` : ''}
       </div>
       ${isAdmin ? `<div class="admin-col">
         <div class="move-col">
@@ -1828,7 +1875,7 @@ function openDetailModal(lvl){
   const t = I18N[currentLang];
   const cfg = TAB_CONFIG[currentTab];
   const idx = getArr().findIndex(l => l.id === lvl.id);
-  const rankDisplay = idx >= 0 ? medalFor(idx) : '';
+  const rankDisplay = (cfg.showRanking && idx >= 0) ? medalFor(idx) : '';
 
   const ytId = cfg.showLevelInfo ? youtubeId(lvl.videoUrl) : '';
   const mediaThumb = cfg.showLevelInfo ? (lvl.thumbnail || (ytId ? youtubeThumb(ytId) : '')) : '';
@@ -1845,7 +1892,7 @@ function openDetailModal(lvl){
     mediaHtml = `<div class="detail-media"><img src="${escapeHtml(mediaThumb)}" alt="" /></div>`;
   }
 
-  const verifiedHtml = lvl.verifier
+  const verifiedHtml = (cfg.showRanking && lvl.verifier)
     ? `<div class="detail-verified">✓ ${escapeHtml(t.verifiedByPrefix)}<b>${escapeHtml(lvl.verifier)}</b></div>`
     : '';
   const creatorHtml = (cfg.showLevelInfo && lvl.creator)
@@ -1864,7 +1911,7 @@ function openDetailModal(lvl){
   ] : [];
   const stats = [
     ...levelStats,
-    statBox(t.statTotalScore, lvl.points, 'accent'),
+    cfg.showRanking ? statBox(t.statTotalScore, lvl.points, 'accent') : '',
   ].filter(Boolean).join('');
 
   document.getElementById('detailContent').innerHTML = `
@@ -1975,6 +2022,7 @@ function applyTabLabels(){
   fExtra.placeholder = cfg.extraPlaceholder;
   document.getElementById('levelInfoFields').style.display = cfg.showLevelInfo ? '' : 'none';
   document.getElementById('levelStatFields').style.display = cfg.showLevelInfo ? '' : 'none';
+  document.getElementById('rankingFields').style.display = cfg.showRanking ? '' : 'none';
 }
 
 openFormBtn.addEventListener('click', () => {
@@ -2119,12 +2167,14 @@ deleteFromFormBtn.addEventListener('click', () => {
 
   const tabMainBtn = document.getElementById('tabMainBtn');
   const tabFutureBtn = document.getElementById('tabFutureBtn');
+  const tabNonListedBtn = document.getElementById('tabNonListedBtn');
   const tabPlayersBtn = document.getElementById('tabPlayersBtn');
 
   function switchTab(tab){
     currentTab = tab;
     tabMainBtn.classList.toggle('active', tab === 'main');
     tabFutureBtn.classList.toggle('active', tab === 'future');
+    tabNonListedBtn.classList.toggle('active', tab === 'nonListed');
     tabPlayersBtn.classList.toggle('active', tab === 'players');
     applyTabLabels();
     closeForm();
@@ -2133,6 +2183,7 @@ deleteFromFormBtn.addEventListener('click', () => {
 
   tabMainBtn.addEventListener('click', () => switchTab('main'));
   tabFutureBtn.addEventListener('click', () => switchTab('future'));
+  tabNonListedBtn.addEventListener('click', () => switchTab('nonListed'));
   tabPlayersBtn.addEventListener('click', () => switchTab('players'));
 
   document.getElementById('langRuBtn').addEventListener('click', () => setLanguage('ru'));
