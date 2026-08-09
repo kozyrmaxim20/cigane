@@ -330,6 +330,7 @@
     font-family:'Oswald',sans-serif; font-weight:600; font-size:21px; letter-spacing:.01em;
     color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0;
   }
+  .add-form.inline-edit{ margin:8px 0 14px; }
   .verifier{ font-size:13.5px; color:var(--muted); }
   .verifier b{ color:var(--ink); font-weight:600; }
   .verifier .fv{ color:var(--cyan); }
@@ -757,16 +758,20 @@
   .pr-admin-badge svg{ display:block; }
 
   /* levels the logged-in player has completed */
-  .row.beaten{
+  .vis-menu{ position:absolute; z-index:60; min-width:230px; padding:6px; border-radius:12px; background:rgba(24,20,40,0.97); border:1px solid rgba(255,255,255,0.12); box-shadow:0 12px 32px rgba(0,0,0,0.5); }
+  .vis-menu button{ display:block; width:100%; text-align:left; padding:9px 11px; border:0; border-radius:8px; background:transparent; color:#e9e6f5; font-size:13px; cursor:pointer; }
+  .vis-menu button:hover{ background:rgba(255,255,255,0.08); }
+  .vis-menu button.active{ color:var(--lemon); }
+  body:not(.hide-beaten) .row.beaten{
     background:linear-gradient(100deg, rgba(92,240,228,0.16), rgba(92,240,228,0.05) 60%, rgba(38,28,66,0.62));
     border-color:rgba(92,240,228,0.4);
   }
-  .row.beaten:hover{
+  body:not(.hide-beaten) .row.beaten:hover{
     border-color:rgba(92,240,228,0.62);
     box-shadow:0 24px 50px -22px rgba(60,220,200,0.5);
   }
-  .row.beaten .level-name{ color:#dffffb; }
-  .row.beaten::after{
+  body:not(.hide-beaten) .row.beaten .level-name{ color:#dffffb; }
+  body:not(.hide-beaten) .row.beaten::after{
     content:"✔"; position:absolute; top:10px; right:12px; z-index:4;
     width:20px; height:20px; border-radius:50%;
     display:flex; align-items:center; justify-content:center;
@@ -775,7 +780,7 @@
     pointer-events:none;
   }
   /* у топ-1 уже есть ::before с золотой рамкой — метку не двигаем */
-  .row.beaten.rank-1{ border-color:rgba(255,214,107,0.5); }
+  body:not(.hide-beaten) .row.beaten.rank-1{ border-color:rgba(255,214,107,0.5); }
 
   /* ══ SUBSECTIONS ══ */
   .detail-subsection{
@@ -805,6 +810,31 @@
   .records-summary{
     padding:8px 20px 2px; font-size:13px; color:var(--muted);
   }
+  .lvl-group{ margin:0 0 16px; }
+  .lvl-group:last-child{ margin-bottom:0; }
+  .lvl-group-head{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin:0 0 9px; }
+  .lvl-group-title{ display:flex; align-items:center; gap:8px; font-family:'Oswald',sans-serif; font-size:12.5px; letter-spacing:0.1em; text-transform:uppercase; color:#efeaff; }
+  .g-dot{ width:9px; height:9px; border-radius:50%; display:inline-block; }
+  .g-dot.g-main{ background:var(--lemon); box-shadow:0 0 9px -1px var(--lemon); }
+  .g-dot.g-future{ background:var(--mystic); box-shadow:0 0 9px -1px var(--mystic); }
+  .g-dot.g-non{ background:var(--cyan); box-shadow:0 0 9px -1px var(--cyan); }
+  .g-dot.g-other{ background:rgba(255,255,255,0.35); }
+  .lvl-group-count{ min-width:26px; padding:2px 8px; border-radius:999px; text-align:center;
+    background:rgba(255,255,255,0.07); border:1px solid var(--glass-line);
+    font-family:'Oswald',sans-serif; font-size:11.5px; color:var(--mystic); }
+  .lvl-chips{ display:flex; flex-wrap:wrap; gap:7px; }
+  .lvl-chip{ display:inline-flex; align-items:center; gap:6px; padding:6px 11px; border-radius:999px;
+    background:rgba(255,255,255,0.045); border:1px solid var(--glass-line);
+    font-size:13px; color:#e9e6f5; transition:border-color .2s, background .2s; }
+  .lvl-chip:hover{ background:rgba(255,255,255,0.08); border-color:var(--glass-line-bright); }
+  .lvl-chip.partial{ border-style:dashed; opacity:0.82; }
+  .chip-rank{ font-family:'Oswald',sans-serif; font-size:11px; color:var(--lemon); }
+  .chip-pct{ font-family:'Oswald',sans-serif; font-size:11px; color:var(--mystic); }
+  .chip-play{ text-decoration:none; font-size:10px; color:var(--cyan); }
+  .rec-group{ display:flex; align-items:baseline; justify-content:space-between; gap:10px; margin:12px 0 6px; font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--mystic); opacity:0.85; }
+  .rec-group:first-child{ margin-top:0; }
+  .rec-group-pts{ font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:0.06em; color:var(--lemon); opacity:0.9; }
+  .rec-gain{ font-family:'Oswald',sans-serif; font-size:11.5px; font-weight:600; color:var(--lemon); opacity:0.92; }
   .record-card{
     display:flex; align-items:center; justify-content:space-between; gap:12px;
     padding:13px 16px; border-radius:12px;
@@ -1014,7 +1044,7 @@
             <label id="lblVerifier">Верификатор</label>
             <input type="text" id="fVerifier" placeholder="Ник" />
           </div>
-          <div>
+          <div id="pointsField">
             <label id="lblPoints">Очки</label>
             <input type="number" id="fPoints" placeholder="1000" />
           </div>
@@ -1195,6 +1225,7 @@ const I18N = {
     titleLine1: 'ЦЫГАНСКИЙ',
     titleLine2: 'ЛЕМОН ЛИСТ',
     configWarning: '⚠ JSONBin не настроен. Открой файл, найди JSONBIN_API_KEY и JSONBIN_BIN_ID в <script> и вставь свои значения с jsonbin.io.',
+    recGroupOther: 'Прочее',
     tabMain: 'Классический',
     tabFuture: 'Будущий',
     tabNonListed: 'Вне листа',
@@ -1236,6 +1267,10 @@ const I18N = {
     backToList: 'К списку',
     noCompletions: 'нету',
     hideControls: 'Скрыть кнопки управления',
+    visNone: 'Показывать всё',
+    visControls: 'Скрыть только элементы управления',
+    visBeaten: 'Скрыть только галочки пройденных',
+    visBoth: 'Скрыть и элементы, и галочки',
     showControls: 'Показать кнопки управления',
     adminBadge: 'Админ',
     noNotifications: 'Уведомлений пока нет',
@@ -1259,6 +1294,7 @@ const I18N = {
     statObjects: 'Объекты',
     statVersion: 'Версия',
     statTotalScore: 'Очки',
+    statBestProgress: 'Лучший прогресс',
     watchOnYoutube: 'Смотреть на YouTube',
     editBtnDetail: '✎ Редактировать',
     deleteBtnDetail: '✕ Удалить',
@@ -1280,6 +1316,7 @@ const I18N = {
     titleLine1: 'GYPSY',
     titleLine2: 'LEMON LIST',
     configWarning: '⚠ JSONBin is not configured. Open the file, find JSONBIN_API_KEY and JSONBIN_BIN_ID in <script> and paste your values from jsonbin.io.',
+    recGroupOther: 'Other',
     tabMain: 'Main list',
     tabFuture: 'Future List',
     tabNonListed: 'Non-listed',
@@ -1321,6 +1358,10 @@ const I18N = {
     backToList: 'Back to list',
     noCompletions: 'none',
     hideControls: 'Hide edit controls',
+    visNone: 'Show everything',
+    visControls: 'Hide edit controls only',
+    visBeaten: 'Hide completed marks only',
+    visBoth: 'Hide controls and marks',
     showControls: 'Show edit controls',
     adminBadge: 'Admin',
     noNotifications: 'No notifications yet',
@@ -1344,6 +1385,7 @@ const I18N = {
     statObjects: 'Objects',
     statVersion: 'Version',
     statTotalScore: 'Points',
+    statBestProgress: 'Best progress',
     watchOnYoutube: 'Watch on YouTube',
     editBtnDetail: '✎ Edit',
     deleteBtnDetail: '✕ Delete',
@@ -1382,6 +1424,8 @@ const TAB_CONFIG_I18N = {
       deleteWordKey: 'level',
       showLevelInfo: true,
       showRanking: true,
+      showMeta: true,
+      metaKind: 'points',
     },
     future: {
       key: 'futureLevels',
@@ -1394,13 +1438,15 @@ const TAB_CONFIG_I18N = {
       verifierPrefix: 'Верификатор: ',
       extraLabel: 'Доп. инфо (необязательно)',
       extraPlaceholder: 'Заметка...',
-      pointsLabel: 'Ожидаемые очки',
+      pointsLabel: 'Лучший прогресс (%)',
       subtitlePrefix: 'СПИСОК ОЖИДАНИЯ · ',
       autoRecalc: false,
       deleteWord: 'уровень',
       deleteWordKey: 'level',
       showLevelInfo: true,
       showRanking: false,
+      showMeta: true,
+      metaKind: 'progress',
     },
     nonListed: {
       key: 'nonListedLevels',
@@ -1420,6 +1466,8 @@ const TAB_CONFIG_I18N = {
       deleteWordKey: 'level',
       showLevelInfo: true,
       showRanking: false,
+      showMeta: true,
+      metaKind: 'points',
     },
     players: {
       key: 'players',
@@ -1439,6 +1487,9 @@ const TAB_CONFIG_I18N = {
       deleteWordKey: 'player',
       showLevelInfo: false,
       showRanking: true,
+      showMeta: true,
+      metaKind: 'points',
+      hideVerifierLine: true,
     },
   },
   en: {
@@ -1460,6 +1511,8 @@ const TAB_CONFIG_I18N = {
       deleteWordKey: 'level',
       showLevelInfo: true,
       showRanking: true,
+      showMeta: true,
+      metaKind: 'points',
     },
     future: {
       key: 'futureLevels',
@@ -1472,13 +1525,15 @@ const TAB_CONFIG_I18N = {
       verifierPrefix: 'Verifier: ',
       extraLabel: 'Extra info (optional)',
       extraPlaceholder: 'Note...',
-      pointsLabel: 'Expected points',
+      pointsLabel: 'Best progress (%)',
       subtitlePrefix: 'WAITING LIST · ',
       autoRecalc: false,
       deleteWord: 'level',
       deleteWordKey: 'level',
       showLevelInfo: true,
       showRanking: false,
+      showMeta: true,
+      metaKind: 'progress',
     },
     nonListed: {
       key: 'nonListedLevels',
@@ -1498,6 +1553,8 @@ const TAB_CONFIG_I18N = {
       deleteWordKey: 'level',
       showLevelInfo: true,
       showRanking: false,
+      showMeta: true,
+      metaKind: 'points',
     },
     players: {
       key: 'players',
@@ -1517,6 +1574,9 @@ const TAB_CONFIG_I18N = {
       deleteWordKey: 'player',
       showLevelInfo: false,
       showRanking: true,
+      showMeta: true,
+      metaKind: 'points',
+      hideVerifierLine: true,
     },
   },
 };
@@ -1837,22 +1897,22 @@ function medalFor(i){
   if(i === 2) return '🥉';
   return String(i + 1);
 }
-// пройден ли уровень тем, кто сейчас вошёл
+// пройден ли уровень тем, кто сейчас вошёл (засчитываем только 100%)
 function isLevelBeatenByMe(lvl){
   if(!isAdmin || !currentAdminNick) return false;
   const me = currentAdminNick.trim().toLowerCase();
   if(!me) return false;
 
-  // 1) рекорд этого игрока на самом уровне
-  const hit = parseRecordEntries(lvl)
-    .some(r => String(r.player).trim().toLowerCase() === me);
-  if(hit) return true;
+  // если на уровне есть запись этого игрока — решает её процент
+  const rec = parseRecordEntries(lvl)
+    .find(r => String(r.player).trim().toLowerCase() === me);
+  if(rec) return String(rec.percent).trim() === '100';
 
-  // 2) уровень указан в «Прохождениях» игрока
+  // записи нет — смотрим «Прохождения» игрока (там подразумевается 100%)
   const players = Array.isArray(state.players) ? state.players : [];
-  const rec = players.find(p => String(p.name).trim().toLowerCase() === me);
-  if(!rec) return false;
-  return String(rec.verifier || '')
+  const p = players.find(x => String(x.name).trim().toLowerCase() === me);
+  if(!p) return false;
+  return String(p.verifier || '')
     .split(/[,\n]/).map(x => x.trim().toLowerCase()).filter(Boolean)
     .includes(String(lvl.name).trim().toLowerCase());
 }
@@ -1897,8 +1957,13 @@ function moveItem(id, dir){
 function render(){
   const cfg = TAB_CONFIG[currentTab];
   const list = document.getElementById('list');
+  restoreFormHome();
   list.innerHTML = '';
   const arr = getArr();
+  if(currentTab === 'players'){
+    arr.forEach(p => { p.points = computePlayerPoints(p); });
+    arr.sort((a, b) => (b.points || 0) - (a.points || 0));
+  }
 
   arr.forEach((lvl, i) => {
     const row = document.createElement('div');
@@ -1933,10 +1998,9 @@ function render(){
           ${cfg.showRanking ? `<span class="rank-badge">#${i + 1}</span>` : ''}
           <span class="level-name">${escapeHtml(lvl.name)}</span>
         </div>
-        ${cfg.showRanking ? `<div class="meta-line">
-          <span class="verifier">${verifierLine}</span>
-          <span class="meta-sep">·</span>
-          <span class="points">${lvl.points}<span>points</span></span>
+        ${cfg.showMeta ? `<div class="meta-line">
+          ${cfg.hideVerifierLine ? '' : `<span class="verifier">${verifierLine}</span><span class="meta-sep">·</span>`}
+          <span class="points">${cfg.metaKind === 'progress' ? (lvl.progress ?? 0) + '%' : lvl.points}<span>${cfg.metaKind === 'progress' ? 'best progress' : 'points'}</span></span>
         </div>` : ''}
       </div>
       ${isAdmin ? `<div class="admin-col">
@@ -1975,7 +2039,7 @@ function render(){
 
       row.querySelector('.edit').addEventListener('click', (e) => {
         e.stopPropagation();
-        openEditForm(lvl);
+        openEditForm(lvl, row);
       });
     }
 
@@ -2159,21 +2223,30 @@ function collectPlayerRecords(player){
 
   const out = [];
   const seen = new Set();                       // ключ — имя уровня в нижнем регистре
-  const push = (levelName, position, percent, videoUrl) => {
+  const push = (levelName, position, percent, videoUrl, listKey, lvlIdx) => {
     const key = String(levelName).trim().toLowerCase();
     if(!key || seen.has(key)) return;
     seen.add(key);
-    out.push({ levelName, position, percent: percent || '100', videoUrl: videoUrl || '' });
+    const pc = percent || '100';
+    const src = (listKey && Array.isArray(state[listKey])) ? state[listKey][lvlIdx] : null;
+    // очки начисляются только за полное прохождение уровня, у которого они заданы
+    const gained = (String(pc).trim() === '100' && src) ? (Number(src.points) || 0) : 0;
+    out.push({
+      levelName, position, percent: pc, videoUrl: videoUrl || '',
+      listKey: listKey || 'other', lvlIdx: (lvlIdx ?? null), gained,
+    });
   };
 
   // ── 1. прохождения, вбитые админом ──
   String(raw || '').split(/[,\n]/).map(x => x.trim()).filter(Boolean).forEach(name => {
-    let position = null, percent = '100', videoUrl = '';
-    for(const key of ['levels', 'future', 'nonListed']){
+    let position = null, percent = '100', videoUrl = '', foundKey = 'other', foundIdx = null;
+    for(const key of ['levels', 'futureLevels', 'nonListedLevels']){
       const arr = state[key];
       if(!Array.isArray(arr)) continue;
       const idx = arr.findIndex(l => String(l.name).trim().toLowerCase() === name.toLowerCase());
       if(idx < 0) continue;
+      foundKey = key;
+      foundIdx = idx;
       if(key === 'levels') position = idx + 1;
       const rec = parseRecordEntries(arr[idx])
         .find(r => String(r.player).trim().toLowerCase() === nickKey);
@@ -2183,25 +2256,38 @@ function collectPlayerRecords(player){
       }
       break;
     }
-    push(name, position, percent, videoUrl);
+    push(name, position, percent, videoUrl, foundKey, foundIdx);
   });
 
   // ── 2. рекорды со страниц уровней ──
   if(nickKey){
-    ['levels', 'future', 'nonListed'].forEach(key => {
+    ['levels', 'futureLevels', 'nonListedLevels'].forEach(key => {
       const arr = state[key];
       if(!Array.isArray(arr)) return;
       arr.forEach((lvl, idx) => {
         parseRecordEntries(lvl).forEach(r => {
           if(String(r.player).trim().toLowerCase() !== nickKey) return;
-          push(lvl.name, key === 'levels' ? idx + 1 : null, r.percent, r.videoUrl);
+          push(lvl.name, key === 'levels' ? idx + 1 : null, r.percent, r.videoUrl, key, idx);
         });
       });
     });
   }
 
-  out.sort((a, b) => (a.position || 9999) - (b.position || 9999));
+  const ORDER = { levels: 0, futureLevels: 1, nonListedLevels: 2, other: 3 };
+  out.sort((a, b) =>
+    (ORDER[a.listKey] - ORDER[b.listKey]) || ((a.position || 9999) - (b.position || 9999))
+  );
   return out;
+}
+
+// очки игрока = сумма очков пройденных уровней классического листа
+function computePlayerPoints(player){
+  return collectPlayerRecords(player).reduce((sum, r) => sum + (r.gained || 0), 0);
+}
+
+// сумма очков по конкретному листу — для разбивки в профиле
+function pointsByList(recs, listKey){
+  return recs.filter(r => r.listKey === listKey).reduce((sum, r) => sum + (r.gained || 0), 0);
 }
 
 function openPlayerProfile(player, idx){
@@ -2234,33 +2320,42 @@ function renderPlayerProfile(){
   const initial = (player.name || '?').trim().charAt(0).toUpperCase() || '?';
   const isAdminNick = ADMINS.some(a => a.nick.toLowerCase() === String(player.name || '').trim().toLowerCase());
 
-  const pages = Math.max(1, Math.ceil(recs.length / PAGE_SIZE));
-  if(playerRecordsPage > pages - 1) playerRecordsPage = pages - 1;
-  if(playerRecordsPage < 0) playerRecordsPage = 0;
-  const slice = recs.slice(playerRecordsPage * PAGE_SIZE, playerRecordsPage * PAGE_SIZE + PAGE_SIZE);
+  const groupLabel = (k) => k === 'levels' ? t.tabMain
+    : k === 'futureLevels' ? t.tabFuture
+    : k === 'nonListedLevels' ? t.tabNonListed
+    : t.recGroupOther;
+  const GROUP_DOT = { levels: 'g-main', futureLevels: 'g-future', nonListedLevels: 'g-non', other: 'g-other' };
 
-  const recItems = slice.map(r => {
-    const playHtml = r.videoUrl
-      ? `<a class="record-play" href="${escapeHtml(r.videoUrl)}" target="_blank" rel="noopener noreferrer">▶</a>`
-      : '';
-    const isFull = String(r.percent).trim() === '100';
-    return `
-      <div class="record-card">
-        <div class="record-left">
-          ${r.position ? `<span class="pr-rank">#${r.position}</span>` : ''}
-          <span class="record-player">${escapeHtml(r.levelName)}</span>
-        </div>
-        <div class="record-right">
-          <span class="record-percent${isFull ? ' full' : ''}">${escapeHtml(r.percent)}%</span>
-          ${playHtml}
-        </div>
-      </div>`;
+  // уровни группируются по листам и выводятся плитками-чипами
+  const groups = [];
+  recs.forEach(r => {
+    let g = groups.find(x => x.key === r.listKey);
+    if(!g){ g = { key: r.listKey, items: [] }; groups.push(g); }
+    g.items.push(r);
+  });
+
+  const recItems = groups.map(g => {
+    const chips = g.items.map(r => {
+      const isFull = String(r.percent).trim() === '100';
+      return `<span class="lvl-chip${isFull ? '' : ' partial'}">
+        ${r.position ? `<b class="chip-rank">#${r.position}</b>` : ''}
+        <span class="chip-name">${escapeHtml(r.levelName)}</span>
+        ${isFull ? '' : `<span class="chip-pct">${escapeHtml(r.percent)}%</span>`}
+        ${r.videoUrl ? `<a class="chip-play" href="${escapeHtml(r.videoUrl)}" target="_blank" rel="noopener noreferrer">▶</a>` : ''}
+      </span>`;
+    }).join('');
+    return `<div class="lvl-group">
+      <div class="lvl-group-head">
+        <span class="lvl-group-title"><i class="g-dot ${GROUP_DOT[g.key] || 'g-other'}"></i>${escapeHtml(groupLabel(g.key))}</span>
+        <span class="lvl-group-count">${g.items.length}</span>
+      </div>
+      <div class="lvl-chips">${chips}</div>
+    </div>`;
   }).join('');
 
   const recordsBody = recs.length
     ? `<div class="subsection-inner">
          <div class="subsection-list">${recItems}</div>
-         ${pagerHtml('playerRecords', playerRecordsPage, pages)}
        </div>`
     : `<div class="subsection-inner">
          <div class="pr-empty">
@@ -2291,7 +2386,7 @@ function renderPlayerProfile(){
       <div class="pr-stat">
         <span class="pr-stat-ico score">✦</span>
         <div class="pr-stat-text">
-          <div class="pr-stat-value">${escapeHtml(String(player.points ?? 0))}</div>
+          <div class="pr-stat-value">${escapeHtml(String(computePlayerPoints(player)))}</div>
           <div class="pr-stat-label">${escapeHtml(t.profileScore)}</div>
         </div>
       </div>
@@ -2439,7 +2534,7 @@ function openDetailModal(lvl){
     mediaHtml = `<div class="detail-media"><div class="media-frame"><img src="${escapeHtml(mediaThumb)}" alt="" /></div></div>`;
   }
 
-  const verifiedHtml = (cfg.showRanking && lvl.verifier)
+  const verifiedHtml = (cfg.showMeta && lvl.verifier)
     ? `<div class="detail-verified"><span class="dv-icon">✔</span>${escapeHtml(t.verifiedByPrefix)}<b>${escapeHtml(lvl.verifier)}</b></div>`
     : '';
   const creatorHtml = (cfg.showLevelInfo && lvl.creator)
@@ -2458,7 +2553,7 @@ function openDetailModal(lvl){
   ] : [];
   const stats = [
     ...levelStats,
-    cfg.showRanking ? statBox(t.statTotalScore, lvl.points, 'accent') : '',
+    cfg.showMeta ? (cfg.metaKind === 'progress' ? statBox(t.statBestProgress, (lvl.progress ?? 0) + '%', 'accent') : statBox(t.statTotalScore, lvl.points, 'accent')) : '',
   ].filter(Boolean).join('');
 
   document.getElementById('detailContent').innerHTML = `
@@ -2573,26 +2668,68 @@ function openNotifView(){
   nv.classList.add('page-in');
   window.scrollTo({ top: 0, behavior: 'auto' });
 }
-/* ── переключатель кнопок управления на строках ── */
+/* ── переключатель видимости: элементы управления / галочки пройденных ── */
 const CONTROLS_KEY = 'gll_hide_controls';
-let controlsHidden = false;
-try{ controlsHidden = localStorage.getItem(CONTROLS_KEY) === '1'; }catch(e){}
+const VIS_MODES = ['none', 'controls', 'beaten', 'both'];
+let visMode = 'none';
+try{
+  const raw = localStorage.getItem(CONTROLS_KEY);
+  visMode = VIS_MODES.includes(raw) ? raw : (raw === '1' ? 'controls' : 'none');
+}catch(e){}
 
 function applyControlsVisibility(){
-  document.body.classList.toggle('hide-row-controls', controlsHidden);
+  const hideCtl = (visMode === 'controls' || visMode === 'both');
+  const hideBt  = (visMode === 'beaten'   || visMode === 'both');
+  document.body.classList.toggle('hide-row-controls', hideCtl);
+  document.body.classList.toggle('hide-beaten', hideBt);
   const btn = document.getElementById('toggleControlsBtn');
   if(btn){
-    btn.classList.toggle('is-off', controlsHidden);
+    btn.classList.toggle('is-off', visMode !== 'none');
     const t = I18N[currentLang];
-    const label = controlsHidden ? t.showControls : t.hideControls;
+    const label = (visMode === 'none') ? t.hideControls : t.showControls;
     btn.title = label;
     btn.setAttribute('aria-label', label);
   }
 }
-document.getElementById('toggleControlsBtn').addEventListener('click', () => {
-  controlsHidden = !controlsHidden;
-  try{ localStorage.setItem(CONTROLS_KEY, controlsHidden ? '1' : '0'); }catch(e){}
-  applyControlsVisibility();
+
+function closeVisMenu(){
+  const m = document.getElementById('visMenu');
+  if(m) m.remove();
+  document.removeEventListener('click', onVisOutside, true);
+}
+function onVisOutside(e){
+  const m = document.getElementById('visMenu');
+  const btn = document.getElementById('toggleControlsBtn');
+  if(m && !m.contains(e.target) && btn && !btn.contains(e.target)) closeVisMenu();
+}
+
+document.getElementById('toggleControlsBtn').addEventListener('click', (e) => {
+  e.stopPropagation();
+  if(document.getElementById('visMenu')){ closeVisMenu(); return; }
+  const t = I18N[currentLang];
+  const btn = e.currentTarget;
+  const menu = document.createElement('div');
+  menu.className = 'vis-menu';
+  menu.id = 'visMenu';
+  menu.innerHTML = [
+    ['none', t.visNone], ['controls', t.visControls],
+    ['beaten', t.visBeaten], ['both', t.visBoth],
+  ].map(([mode, label]) =>
+    `<button data-mode="${mode}" class="${visMode === mode ? 'active' : ''}">${label}</button>`
+  ).join('');
+  document.body.appendChild(menu);
+  const r = btn.getBoundingClientRect();
+  menu.style.top  = (window.scrollY + r.bottom + 8) + 'px';
+  menu.style.left = (window.scrollX + Math.min(r.left, window.innerWidth - menu.offsetWidth - 12)) + 'px';
+  menu.querySelectorAll('button').forEach(b => {
+    b.addEventListener('click', () => {
+      visMode = b.getAttribute('data-mode');
+      try{ localStorage.setItem(CONTROLS_KEY, visMode); }catch(err){}
+      applyControlsVisibility();
+      closeVisMenu();
+    });
+  });
+  document.addEventListener('click', onVisOutside, true);
 });
 applyControlsVisibility();
 
@@ -2617,6 +2754,14 @@ document.addEventListener('keydown', (e) => {
 
 // add / edit form
 const openFormBtn = document.getElementById('openFormBtn');
+const formHome = document.getElementById('addZone');
+function restoreFormHome(){
+  const form = document.getElementById('addForm');
+  if(form && form.parentNode !== formHome){
+    formHome.appendChild(form);
+    form.classList.remove('inline-edit');
+  }
+}
 const addForm = document.getElementById('addForm');
 const formTitle = document.getElementById('formTitle');
 const submitBtn = document.getElementById('submitBtn');
@@ -2657,9 +2802,11 @@ function applyTabLabels(){
   fExtra.placeholder = cfg.extraPlaceholder;
   document.getElementById('levelInfoFields').style.display = cfg.showLevelInfo ? '' : 'none';
   document.getElementById('levelStatFields').style.display = cfg.showLevelInfo ? '' : 'none';
-  document.getElementById('rankingFields').style.display = cfg.showRanking ? '' : 'none';
+  document.getElementById('rankingFields').style.display = cfg.showMeta ? '' : 'none';
   const vf = document.getElementById('verifierField');
   if(vf) vf.style.display = '';
+  const pf = document.getElementById('pointsField');
+  if(pf) pf.style.display = (currentTab === 'players') ? 'none' : '';
   const titleEl = document.getElementById('currentListTitle');
   const btn = document.getElementById(
     currentTab === 'main' ? 'tabMainBtn' :
@@ -2682,13 +2829,13 @@ openFormBtn.addEventListener('click', () => {
     ? Math.max(POINTS_BASE - arr.length * POINTS_STEP, 0)
     : (arr.length ? Math.max(arr[arr.length - 1].points - 40, 0) : 1000);
   fName.value = ''; fVerifier.value = ''; fExtra.value = '';
-  fPoints.value = suggested;
+  fPoints.value = cfg.metaKind === 'progress' ? '' : suggested;
   detailFields.forEach(f => f.value = '');
   fAddedDate.value = new Date().toISOString().slice(0, 10);
   fName.focus();
 });
 
-function openEditForm(lvl){
+function openEditForm(lvl, rowEl){
   const cfg = TAB_CONFIG[currentTab];
   editingId = lvl.id;
   applyTabLabels();
@@ -2698,7 +2845,7 @@ function openEditForm(lvl){
   deleteFromFormBtn.textContent = deleteThisText(cfg);
   fName.value = lvl.name;
   fVerifier.value = lvl.verifier;
-  fPoints.value = lvl.points;
+  fPoints.value = cfg.metaKind === 'progress' ? (lvl.progress ?? '') : lvl.points;
   fExtra.value = lvl.extra || '';
   fCreator.value = lvl.creator || '';
   fThumb.value = lvl.thumbnail || '';
@@ -2712,6 +2859,10 @@ function openEditForm(lvl){
   fAddedDate.value = lvl.addedDate || '';
   fHistoryExtra.value = lvl.historyExtra || '';
   fRecords.value = lvl.records || '';
+  if(rowEl && rowEl.parentNode){
+    rowEl.parentNode.insertBefore(addForm, rowEl.nextSibling);
+    addForm.classList.add('inline-edit');
+  }
   addForm.classList.add('open');
   openFormBtn.style.display = 'none';
   addForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -2721,6 +2872,7 @@ function openEditForm(lvl){
 document.getElementById('cancelBtn').addEventListener('click', closeForm);
 
 function closeForm(){
+  restoreFormHome();
   addForm.classList.remove('open');
   openFormBtn.style.display = 'block';
   editingId = null;
@@ -2755,7 +2907,8 @@ submitBtn.addEventListener('click', () => {
       lvl.name = fName.value.trim();
       lvl.verifier = fVerifier.value.trim();
       lvl.extra = fExtra.value.trim();
-      lvl.points = Number(fPoints.value) || 0;
+      if(cfg.metaKind === 'progress') lvl.progress = Math.max(0, Math.min(100, Number(fPoints.value) || 0));
+      else lvl.points = Number(fPoints.value) || 0;
       Object.assign(lvl, detailValues);
     }
   } else {
@@ -2764,7 +2917,9 @@ submitBtn.addEventListener('click', () => {
       name: fName.value.trim(),
       verifier: fVerifier.value.trim(),
       extra: fExtra.value.trim(),
-      points: Number(fPoints.value) || 0,
+      ...(cfg.metaKind === 'progress'
+        ? { points: 0, progress: Math.max(0, Math.min(100, Number(fPoints.value) || 0)) }
+        : { points: Number(fPoints.value) || 0 }),
       ...detailValues,
     });
   }
