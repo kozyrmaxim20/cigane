@@ -810,6 +810,62 @@
   .records-summary{
     padding:8px 20px 2px; font-size:13px; color:var(--muted);
   }
+  .rules-head{ padding:24px 30px 6px; }
+  .rules-title{ font-family:'Oswald',sans-serif; font-size:26px; letter-spacing:0.04em; color:#f4f1ff; }
+  .rules-sub{ margin-top:6px; font-size:13.5px; color:var(--mystic); opacity:0.9; }
+  .rules-block{ margin:16px 22px 0; padding:16px 18px; border-radius:14px;
+    background:rgba(255,255,255,0.035); border:1px solid var(--glass-line); }
+  .rules-block:last-child{ margin-bottom:24px; }
+  .rules-block h3{ display:flex; align-items:center; gap:9px; margin:0 0 10px;
+    font-family:'Oswald',sans-serif; font-size:14.5px; letter-spacing:0.09em; text-transform:uppercase; color:var(--lemon); }
+  .rules-block ol, .rules-block ul{ margin:0; padding-left:20px; }
+  .rules-block li{ margin:7px 0; font-size:13.8px; line-height:1.55; color:#ddd8ef; }
+  .rules-head{ position:relative; }
+  .rules-edit-btn{ position:absolute; top:0; right:8px; display:inline-flex; align-items:center; gap:7px;
+    height:36px; padding:0 16px; border-radius:10px; cursor:pointer;
+    background:rgba(255,255,255,0.06); border:1px solid var(--glass-line); color:#e9e6f5;
+    font-family:'Oswald',sans-serif; font-size:12px; letter-spacing:0.08em; text-transform:uppercase;
+    transition:background .2s, border-color .2s; }
+  .rules-edit-btn:hover{ background:rgba(255,255,255,0.11); border-color:var(--glass-line-bright); }
+  .rules-editor-actions button{ height:38px; padding:0 20px; border-radius:10px; cursor:pointer;
+    font-family:'Oswald',sans-serif; font-size:12.5px; letter-spacing:0.07em; text-transform:uppercase;
+    border:1px solid var(--glass-line); transition:filter .2s, background .2s; }
+  .rules-editor-actions .primary{ border:0; color:#1a1330;
+    background:linear-gradient(135deg, var(--lemon), #b9f56b); font-weight:600; }
+  .rules-editor-actions .primary:hover{ filter:brightness(1.07); }
+  .rules-editor-actions .ghost{ background:rgba(255,255,255,0.05); color:#ded9f0; }
+  .rules-editor-actions .ghost:hover{ background:rgba(255,255,255,0.1); }
+  .rules-editor{ margin:16px 22px 24px; }
+  .rules-editor textarea{ width:100%; min-height:340px; padding:14px 16px; border-radius:12px; resize:vertical;
+    background:rgba(10,8,20,0.6); border:1px solid var(--glass-line); color:#e9e6f5;
+    font-family:ui-monospace,Menlo,Consolas,monospace; font-size:13px; line-height:1.6; }
+  .rules-editor-hint{ margin:8px 2px 0; font-size:12px; color:var(--mystic); opacity:0.85; line-height:1.5; }
+  .rules-editor-actions{ display:flex; align-items:center; gap:10px; margin-top:12px; flex-wrap:wrap; }
+  .rules-note{ margin:14px 22px 24px; padding:13px 16px; border-radius:12px; font-size:13px; line-height:1.55;
+    color:var(--mystic); background:rgba(160,120,255,0.08); border:1px solid rgba(160,120,255,0.22); }
+  body.only-beaten #list .row:not(.beaten){ display:none; }
+  .search-bar{ margin:0 0 14px; }
+  .search-box{ position:relative; display:flex; align-items:center; gap:11px; height:50px; padding:0 6px 0 17px;
+    border-radius:16px; background:linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.02));
+    border:1px solid var(--glass-line); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+    box-shadow:0 8px 26px -18px rgba(0,0,0,0.9);
+    transition:border-color .25s, box-shadow .25s, background .25s; }
+  .search-box::after{ content:''; position:absolute; inset:-1px; border-radius:16px; pointer-events:none;
+    background:linear-gradient(120deg, transparent 30%, rgba(214,255,110,0.16), transparent 70%);
+    opacity:0; transition:opacity .3s; }
+  .search-box:focus-within{ border-color:rgba(214,255,110,0.4);
+    box-shadow:0 0 0 3px rgba(214,255,110,0.09), 0 10px 30px -18px rgba(0,0,0,0.9); }
+  .search-box:focus-within::after{ opacity:1; }
+  .search-ico{ display:flex; color:var(--mystic); opacity:0.7; transition:color .25s, opacity .25s; }
+  .search-box:focus-within .search-ico{ color:var(--lemon); opacity:1; }
+  .search-box input{ flex:1; height:100%; background:transparent; border:0; outline:none; color:#f0edfa;
+    font-size:14.5px; letter-spacing:0.01em; }
+  .search-box input::placeholder{ color:var(--mystic); opacity:0.6; }
+  .search-clear{ display:flex; align-items:center; justify-content:center; width:34px; height:34px; margin-right:6px;
+    border:0; border-radius:11px; background:rgba(255,255,255,0.06); color:var(--mystic); cursor:pointer;
+    transition:background .2s, color .2s; }
+  .search-clear:hover{ background:rgba(255,255,255,0.12); color:#fff; }
+  .search-empty{ padding:26px 10px; text-align:center; color:var(--mystic); font-size:14px; opacity:0.85; }
   .lvl-group{ margin:0 0 16px; }
   .lvl-group:last-child{ margin-bottom:0; }
   .lvl-group-head{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin:0 0 9px; }
@@ -828,8 +884,11 @@
     font-size:13px; color:#e9e6f5; transition:border-color .2s, background .2s; }
   .lvl-chip:hover{ background:rgba(255,255,255,0.08); border-color:var(--glass-line-bright); }
   .lvl-chip.partial{ border-style:dashed; opacity:0.82; }
+  .lvl-chip.pending{ opacity:0.45; background:transparent; border-style:dashed; }
+  .lvl-chip.pending:hover{ opacity:0.7; background:rgba(255,255,255,0.04); }
   .chip-rank{ font-family:'Oswald',sans-serif; font-size:11px; color:var(--lemon); }
   .chip-pct{ font-family:'Oswald',sans-serif; font-size:11px; color:var(--mystic); }
+  .chip-ver{ font-size:10.5px; color:var(--cyan); }
   .chip-play{ text-decoration:none; font-size:10px; color:var(--cyan); }
   .rec-group{ display:flex; align-items:baseline; justify-content:space-between; gap:10px; margin:12px 0 6px; font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--mystic); opacity:0.85; }
   .rec-group:first-child{ margin-top:0; }
@@ -967,7 +1026,16 @@
           <button class="tab-btn active" id="tabMainBtn">Классический</button>
           <button class="tab-btn" id="tabFutureBtn">Будущий</button>
           <button class="tab-btn" id="tabNonListedBtn">Вне листа</button>
+        </div>
+      </div>
+
+      <div class="nav-item" id="moreMenu">
+        <button class="nav-trigger" id="moreTrigger">
+          <span class="nav-ico">☰</span><span id="navMoreLabel">Ещё</span><span class="nav-caret">▾</span>
+        </button>
+        <div class="nav-dropdown" id="moreDropdown">
           <button class="tab-btn" id="tabPlayersBtn">Рейтинг игроков</button>
+          <button class="tab-btn" id="rulesBtn">Правила</button>
         </div>
       </div>
     </nav>
@@ -1022,6 +1090,22 @@
 </header>
 
 <div class="wrap">
+  <div class="search-bar" id="searchBar">
+    <div class="search-box">
+      <span class="search-ico">
+        <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
+        </svg>
+      </span>
+      <input type="text" id="listSearch" placeholder="Поиск по названию" autocomplete="off" />
+      <button class="search-clear" id="listSearchClear" style="display:none;" aria-label="Очистить">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+          <path d="M6 6l12 12M18 6 6 18"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
   <div class="card" id="listView">
     <div class="section-head">
       <h1 class="section-title" id="currentListTitle">Классический список</h1>
@@ -1141,6 +1225,13 @@
     <div id="playerContent"></div>
   </div>
 
+  <div class="card detail-page" id="rulesView" style="display:none;">
+    <button class="detail-back" id="rulesCloseBtn">
+      <span class="db-arrow">←</span><span id="backFromRulesLabel">К списку</span>
+    </button>
+    <div id="rulesContent"></div>
+  </div>
+
   <div class="card detail-page" id="notifView" style="display:none;">
     <button class="detail-back" id="notifCloseBtn">
       <span class="db-arrow">←</span><span id="backFromNotifLabel">К списку</span>
@@ -1226,6 +1317,25 @@ const I18N = {
     titleLine2: 'ЛЕМОН ЛИСТ',
     configWarning: '⚠ JSONBin не настроен. Открой файл, найди JSONBIN_API_KEY и JSONBIN_BIN_ID в <script> и вставь свои значения с jsonbin.io.',
     recGroupOther: 'Прочее',
+    navMore: "Ещё",
+    rulesTab: "Правила",
+    backFromRules: "К списку",
+    searchPlaceholder: "Поиск по названию",
+    searchEmpty: "Ничего не найдено",
+    rulesEdit: "Редактировать",
+    rulesSave: "Сохранить",
+    rulesReset: "Вернуть стандартные",
+    rulesCancel: "Отмена",
+    rulesEditHint: "Первая строка — заголовок, вторая — подзаголовок. Строка с «#» начинает новый блок, обычные строки — пункты, строка с «>» — примечание внизу.",
+    rulesTitle: "Правила листа",
+    rulesSub: "Как уровни попадают в лист и как засчитываются прохождения",
+    rulesSubmitH: "Подача рекорда",
+    rulesSubmit: ["Рекорд подаётся с видео полного прохождения от начала до конца, без склеек и обрывов.", "На видео должен быть виден конец уровня и экран завершения.", "Включённый счётчик попыток и индикатор процента желательны — без них рекорд может быть отклонён.", "Читы, хаки, изменение скорости игры, а также редактирование уровня под себя запрещены.", "FPS выше 360 не принимается. Использование бота — мгновенный отказ.", "Один и тот же рекорд от одного игрока подаётся один раз."],
+    rulesListH: "Уровни в листе",
+    rulesList: ["В классический лист попадают уровни, прошедшие верификацию: у уровня указан верификатор и есть видео верификации.", "Позиция уровня определяется голосованием команды листа; сложность оценивается по совокупности мнений.", "Уровень, признанный слишком лёгким для листа, переносится в «Вне листа».", "Уровни, ожидающие верификации или ещё не пройденные, находятся в «Будущем листе».", "Уровень, удалённый с серверов или признанный нечестным, снимается с листа."],
+    rulesPtsH: "Очки",
+    rulesPts: ["Очки начисляются только за прохождение на 100%.", "Количество очков равно значению уровня в момент подсчёта и меняется вместе с его позицией.", "Уровни классического листа и «Вне листа» дают очки; уровни «Будущего листа» — нет.", "Итоговый счёт игрока — сумма очков всех его засчитанных прохождений.", "Частичные прохождения отображаются в профиле, но очков не приносят."],
+    rulesNote: "Правила могут дополняться. Спорные ситуации решает команда листа; решение команды окончательное.",
     tabMain: 'Классический',
     tabFuture: 'Будущий',
     tabNonListed: 'Вне листа',
@@ -1271,6 +1381,7 @@ const I18N = {
     visControls: 'Скрыть только элементы управления',
     visBeaten: 'Скрыть только галочки пройденных',
     visBoth: 'Скрыть и элементы, и галочки',
+    visOnlyBeaten: 'Оставить только пройденные уровни',
     showControls: 'Показать кнопки управления',
     adminBadge: 'Админ',
     noNotifications: 'Уведомлений пока нет',
@@ -1317,6 +1428,25 @@ const I18N = {
     titleLine2: 'LEMON LIST',
     configWarning: '⚠ JSONBin is not configured. Open the file, find JSONBIN_API_KEY and JSONBIN_BIN_ID in <script> and paste your values from jsonbin.io.',
     recGroupOther: 'Other',
+    navMore: "More",
+    rulesTab: "Guidelines",
+    backFromRules: "Back to list",
+    searchPlaceholder: "Search by name",
+    searchEmpty: "Nothing found",
+    rulesEdit: "Edit",
+    rulesSave: "Save",
+    rulesReset: "Restore defaults",
+    rulesCancel: "Cancel",
+    rulesEditHint: "First line is the title, second is the subtitle. A line starting with # opens a new block, plain lines are items, a line starting with > is the footnote.",
+    rulesTitle: "List guidelines",
+    rulesSub: "How levels enter the list and how records are accepted",
+    rulesSubmitH: "Record submission",
+    rulesSubmit: ["A record must include an uncut video of the full run from start to finish.", "The end of the level and the completion screen must be visible.", "An attempt counter and a percentage indicator are strongly recommended; without them a record may be rejected.", "Cheats, hacks, speed modification and editing the level itself are forbidden.", "FPS above 360 is not accepted. Bot usage means an instant rejection.", "The same record from the same player is submitted only once."],
+    rulesListH: "Levels on the list",
+    rulesList: ["The main list contains verified levels: a verifier is credited and a verification video exists.", "A level position is decided by a team vote based on combined difficulty opinions.", "A level considered too easy for the list is moved to the non-listed section.", "Levels awaiting verification or not beaten yet stay on the future list.", "A level removed from the servers or found to be unfair is taken off the list."],
+    rulesPtsH: "Points",
+    rulesPts: ["Points are awarded for 100% completions only.", "A record is worth the level current value, so it changes together with the level position.", "Main list and non-listed levels give points; future list levels do not.", "A player total score is the sum of all their accepted completions.", "Partial progress is shown on the profile but grants no points."],
+    rulesNote: "These guidelines may be extended. Disputes are settled by the list team, whose decision is final.",
     tabMain: 'Main list',
     tabFuture: 'Future List',
     tabNonListed: 'Non-listed',
@@ -1362,6 +1492,7 @@ const I18N = {
     visControls: 'Hide edit controls only',
     visBeaten: 'Hide completed marks only',
     visBoth: 'Hide controls and marks',
+    visOnlyBeaten: 'Show completed levels only',
     showControls: 'Show edit controls',
     adminBadge: 'Admin',
     noNotifications: 'No notifications yet',
@@ -1438,7 +1569,7 @@ const TAB_CONFIG_I18N = {
       verifierPrefix: 'Верификатор: ',
       extraLabel: 'Доп. инфо (необязательно)',
       extraPlaceholder: 'Заметка...',
-      pointsLabel: 'Лучший прогресс (%)',
+      pointsLabel: 'Лучший прогресс (напр. 50 или 55-100)',
       subtitlePrefix: 'СПИСОК ОЖИДАНИЯ · ',
       autoRecalc: false,
       deleteWord: 'уровень',
@@ -1525,7 +1656,7 @@ const TAB_CONFIG_I18N = {
       verifierPrefix: 'Verifier: ',
       extraLabel: 'Extra info (optional)',
       extraPlaceholder: 'Note...',
-      pointsLabel: 'Best progress (%)',
+      pointsLabel: 'Best progress (e.g. 50 or 55-100)',
       subtitlePrefix: 'WAITING LIST · ',
       autoRecalc: false,
       deleteWord: 'level',
@@ -1587,7 +1718,8 @@ const TAB_CONFIG = new Proxy({}, {
   get(_, tab){ return TAB_CONFIG_I18N[currentLang][tab]; }
 });
 
-const state = { levels: [], futureLevels: [], nonListedLevels: [], players: [] };
+const state = { levels: [], futureLevels: [], nonListedLevels: [], players: [], rules: null };
+let searchQuery = '';
 let currentTab = 'main'; // 'main' | 'future' | 'nonListed' | 'players'
 
 /* ===================== ADMИН-ДОСТУП ===================== */
@@ -1738,6 +1870,15 @@ function applyStaticTexts(){
   document.getElementById('tabFutureBtn').textContent = t.tabFuture;
   document.getElementById('tabNonListedBtn').textContent = t.tabNonListed;
   document.getElementById('tabPlayersBtn').textContent = t.tabPlayers;
+  const si = document.getElementById('listSearch');
+  if(si) si.placeholder = t.searchPlaceholder;
+  const nml = document.getElementById('navMoreLabel');
+  if(nml) nml.textContent = t.navMore;
+  const rb = document.getElementById('rulesBtn');
+  if(rb) rb.textContent = t.rulesTab;
+  const bfr = document.getElementById('backFromRulesLabel');
+  if(bfr) bfr.textContent = t.backFromRules;
+  if(document.getElementById('rulesView').style.display !== 'none') openRulesPage();
   document.getElementById('adminLoginOpenBtn').textContent = t.adminLoginBtn;
   document.getElementById('loggedInPrefix').textContent = t.loggedInPrefix;
   const logoutBtn = document.getElementById('adminLogoutBtn');
@@ -1832,6 +1973,7 @@ async function loadLevels(){
     state.futureLevels = (record && Array.isArray(record.futureLevels)) ? withIds(record.futureLevels) : [];
     state.nonListedLevels = (record && Array.isArray(record.nonListedLevels)) ? withIds(record.nonListedLevels) : [];
     state.players = (record && Array.isArray(record.players)) ? withIds(record.players) : [];
+    state.rules = (record && record.rules && typeof record.rules === 'object') ? record.rules : null;
     setStatus(I18N[currentLang].statusLoaded);
   }catch(e){
     console.warn('JSONBin load failed, falling back to defaults:', e);
@@ -1858,7 +2000,7 @@ async function doSave(){
     setStatus(I18N[currentLang].statusSaveNoConfig);
     return;
   }
-  const payload = { levels: state.levels, futureLevels: state.futureLevels, nonListedLevels: state.nonListedLevels, players: state.players };
+  const payload = { levels: state.levels, futureLevels: state.futureLevels, nonListedLevels: state.nonListedLevels, players: state.players, rules: state.rules };
   try{
     const res = await fetch(`${JSONBIN_BASE}/${JSONBIN_BIN_ID}`, {
       method: 'PUT',
@@ -1956,6 +2098,8 @@ function moveItem(id, dir){
 
 function render(){
   const cfg = TAB_CONFIG[currentTab];
+  const sb = document.getElementById('searchBar');
+  if(sb) sb.style.display = (currentTab === 'players') ? 'none' : '';
   const list = document.getElementById('list');
   restoreFormHome();
   list.innerHTML = '';
@@ -1965,7 +2109,13 @@ function render(){
     arr.sort((a, b) => (b.points || 0) - (a.points || 0));
   }
 
+  // поиск не меняет данные — прячется только то, что не совпало
+  const q = searchQuery.trim().toLowerCase();
+  let shown = 0;
+
   arr.forEach((lvl, i) => {
+    if(q && !String(lvl.name || '').toLowerCase().includes(q)) return;
+    shown++;
     const row = document.createElement('div');
     const isTop = cfg.showRanking && i < 3;
     const beaten = cfg.showLevelInfo && isLevelBeatenByMe(lvl);
@@ -2000,7 +2150,7 @@ function render(){
         </div>
         ${cfg.showMeta ? `<div class="meta-line">
           ${cfg.hideVerifierLine ? '' : `<span class="verifier">${verifierLine}</span><span class="meta-sep">·</span>`}
-          <span class="points">${cfg.metaKind === 'progress' ? (lvl.progress ?? 0) + '%' : lvl.points}<span>${cfg.metaKind === 'progress' ? 'best progress' : 'points'}</span></span>
+          <span class="points">${cfg.metaKind === 'progress' ? formatProgress(lvl.progress) : lvl.points}<span>${cfg.metaKind === 'progress' ? 'best progress' : 'points'}</span></span>
         </div>` : ''}
       </div>
       ${isAdmin ? `<div class="admin-col">
@@ -2070,6 +2220,13 @@ function render(){
       attachRankInteraction(row, ripple, i);
     }
   });
+
+  if(q && shown === 0){
+    const empty = document.createElement('div');
+    empty.className = 'search-empty';
+    empty.textContent = I18N[currentLang].searchEmpty;
+    list.appendChild(empty);
+  }
 }
 
 // level detail modal
@@ -2223,17 +2380,18 @@ function collectPlayerRecords(player){
 
   const out = [];
   const seen = new Set();                       // ключ — имя уровня в нижнем регистре
-  const push = (levelName, position, percent, videoUrl, listKey, lvlIdx) => {
+  const push = (levelName, position, percent, videoUrl, listKey, lvlIdx, isVerifier) => {
     const key = String(levelName).trim().toLowerCase();
     if(!key || seen.has(key)) return;
     seen.add(key);
     const pc = percent || '100';
     const src = (listKey && Array.isArray(state[listKey])) ? state[listKey][lvlIdx] : null;
     // очки начисляются только за полное прохождение уровня, у которого они заданы
-    const gained = (String(pc).trim() === '100' && src) ? (Number(src.points) || 0) : 0;
+    const gained = (String(pc).trim() === '100' && src && listKey !== 'futureLevels') ? (Number(src.points) || 0) : 0;
     out.push({
       levelName, position, percent: pc, videoUrl: videoUrl || '',
       listKey: listKey || 'other', lvlIdx: (lvlIdx ?? null), gained,
+      isVerifier: !!isVerifier,
     });
   };
 
@@ -2259,7 +2417,22 @@ function collectPlayerRecords(player){
     push(name, position, percent, videoUrl, foundKey, foundIdx);
   });
 
-  // ── 2. рекорды со страниц уровней ──
+  // ── 2. уровни, где игрок указан верификатором — засчитываются как 100% ──
+  if(nickKey){
+    ['levels', 'nonListedLevels', 'futureLevels'].forEach(key => {
+      const arr = state[key];
+      if(!Array.isArray(arr)) return;
+      arr.forEach((lvl, idx) => {
+        const vs = String(lvl.verifier || '').split(/[,\n]/).map(x => x.trim().toLowerCase());
+        if(!vs.includes(nickKey)) return;
+        // будущий уровень ещё не пройден: без процента и без очков
+        const pc = (key === 'futureLevels') ? (parseProgress(lvl.progress) || '0') : '100';
+        push(lvl.name, key === 'levels' ? idx + 1 : null, pc, lvl.verificationUrl || lvl.videoUrl || '', key, idx, true);
+      });
+    });
+  }
+
+  // ── 3. рекорды со страниц уровней ──
   if(nickKey){
     ['levels', 'futureLevels', 'nonListedLevels'].forEach(key => {
       const arr = state[key];
@@ -2273,7 +2446,7 @@ function collectPlayerRecords(player){
     });
   }
 
-  const ORDER = { levels: 0, futureLevels: 1, nonListedLevels: 2, other: 3 };
+  const ORDER = { levels: 0, nonListedLevels: 1, futureLevels: 2, other: 3 };
   out.sort((a, b) =>
     (ORDER[a.listKey] - ORDER[b.listKey]) || ((a.position || 9999) - (b.position || 9999))
   );
@@ -2281,6 +2454,23 @@ function collectPlayerRecords(player){
 }
 
 // очки игрока = сумма очков пройденных уровней классического листа
+// прогресс: одно число («50») либо диапазон («55-100»)
+function parseProgress(raw){
+  const str = String(raw ?? '').trim().replace(/%/g, '').replace(/\s*[–—]\s*/g, '-').replace(/\s*-\s*/g, '-');
+  if(!str) return '';
+  const m = str.match(/^(\d{1,3})(?:-(\d{1,3}))?$/);
+  if(!m) return '';
+  const cl = (n) => Math.max(0, Math.min(100, Number(n)));
+  const a = cl(m[1]);
+  if(m[2] === undefined) return String(a);
+  const b = cl(m[2]);
+  return (a <= b) ? `${a}-${b}` : `${b}-${a}`;
+}
+function formatProgress(raw){
+  const v = parseProgress(raw);
+  return v ? v + '%' : '0%';
+}
+
 function computePlayerPoints(player){
   return collectPlayerRecords(player).reduce((sum, r) => sum + (r.gained || 0), 0);
 }
@@ -2294,6 +2484,8 @@ function openPlayerProfile(player, idx){
   playerRecordsPage = 0;
   playerCtx = { player, idx };
   renderPlayerProfile();
+  const sbHide = document.getElementById('searchBar');
+  if(sbHide) sbHide.style.display = 'none';
   document.getElementById('listView').style.display = 'none';
   document.getElementById('detailView').style.display = 'none';
   document.getElementById('notifView').style.display = 'none';
@@ -2309,6 +2501,8 @@ function closePlayerProfile(){
   document.getElementById('playerView').style.display = 'none';
   document.getElementById('playerContent').innerHTML = '';
   document.getElementById('listView').style.display = '';
+  const sbShow = document.getElementById('searchBar');
+  if(sbShow) sbShow.style.display = (currentTab === 'players') ? 'none' : '';
   window.scrollTo({ top: 0, behavior: 'auto' });
 }
 
@@ -2337,9 +2531,11 @@ function renderPlayerProfile(){
   const recItems = groups.map(g => {
     const chips = g.items.map(r => {
       const isFull = String(r.percent).trim() === '100';
-      return `<span class="lvl-chip${isFull ? '' : ' partial'}">
+      const pending = (r.listKey === 'futureLevels');
+      return `<span class="lvl-chip${isFull && !pending ? '' : ' partial'}${pending ? ' pending' : ''}">
         ${r.position ? `<b class="chip-rank">#${r.position}</b>` : ''}
         <span class="chip-name">${escapeHtml(r.levelName)}</span>
+        ${(isFull && r.listKey !== 'futureLevels') ? '<span class="chip-ver" title="100%">✔</span>' : ''}
         ${isFull ? '' : `<span class="chip-pct">${escapeHtml(r.percent)}%</span>`}
         ${r.videoUrl ? `<a class="chip-play" href="${escapeHtml(r.videoUrl)}" target="_blank" rel="noopener noreferrer">▶</a>` : ''}
       </span>`;
@@ -2553,7 +2749,7 @@ function openDetailModal(lvl){
   ] : [];
   const stats = [
     ...levelStats,
-    cfg.showMeta ? (cfg.metaKind === 'progress' ? statBox(t.statBestProgress, (lvl.progress ?? 0) + '%', 'accent') : statBox(t.statTotalScore, lvl.points, 'accent')) : '',
+    cfg.showMeta ? (cfg.metaKind === 'progress' ? statBox(t.statBestProgress, formatProgress(lvl.progress), 'accent') : statBox(t.statTotalScore, lvl.points, 'accent')) : '',
   ].filter(Boolean).join('');
 
   document.getElementById('detailContent').innerHTML = `
@@ -2617,6 +2813,8 @@ function openDetailModal(lvl){
 }
 
 function showDetailView(){
+  const sbHide2 = document.getElementById('searchBar');
+  if(sbHide2) sbHide2.style.display = 'none';
   document.getElementById('listView').style.display = 'none';
   document.getElementById('playerView').style.display = 'none';
   document.getElementById('notifView').style.display = 'none';
@@ -2632,6 +2830,8 @@ function closeDetailModal(){
   document.getElementById('detailView').style.display = 'none';
   document.getElementById('detailContent').innerHTML = '';
   document.getElementById('listView').style.display = '';
+  const sbShow = document.getElementById('searchBar');
+  if(sbShow) sbShow.style.display = (currentTab === 'players') ? 'none' : '';
   if(!document.querySelector('.modal-overlay.open')) document.body.classList.remove('modal-open');
   window.scrollTo({ top: 0, behavior: 'auto' });
 }
@@ -2643,6 +2843,8 @@ document.getElementById('playerCloseBtn').addEventListener('click', closePlayerP
 function closeNotifView(){
   document.getElementById('notifView').style.display = 'none';
   document.getElementById('listView').style.display = '';
+  const sbShow = document.getElementById('searchBar');
+  if(sbShow) sbShow.style.display = (currentTab === 'players') ? 'none' : '';
   window.scrollTo({ top: 0, behavior: 'auto' });
 }
 function openNotifView(){
@@ -2658,6 +2860,8 @@ function openNotifView(){
       </div>
       <div>${escapeHtml(t.noNotifications)}</div>
     </div>`;
+  const sbHide = document.getElementById('searchBar');
+  if(sbHide) sbHide.style.display = 'none';
   document.getElementById('listView').style.display = 'none';
   document.getElementById('detailView').style.display = 'none';
   document.getElementById('playerView').style.display = 'none';
@@ -2668,9 +2872,131 @@ function openNotifView(){
   nv.classList.add('page-in');
   window.scrollTo({ top: 0, behavior: 'auto' });
 }
+/* ── страница правил ─────────────────────────────────────── */
+// правила по умолчанию берутся из I18N, отредактированные — из state.rules[lang]
+function defaultRules(lang){
+  const t = I18N[lang];
+  return {
+    title: t.rulesTitle,
+    sub: t.rulesSub,
+    note: t.rulesNote,
+    blocks: [
+      { icon: '🎬', title: t.rulesSubmitH, items: t.rulesSubmit.slice() },
+      { icon: '🏆', title: t.rulesListH,   items: t.rulesList.slice() },
+      { icon: '✦',  title: t.rulesPtsH,    items: t.rulesPts.slice() },
+    ],
+  };
+}
+function getRules(lang){
+  const custom = state.rules && state.rules[lang];
+  if(custom && Array.isArray(custom.blocks)) return custom;
+  return defaultRules(lang);
+}
+
+// правила редактируются как обычный текст: «# Заголовок» — блок, остальные строки — пункты
+function rulesToText(r){
+  const head = [r.title || '', r.sub || ''].join('\n');
+  const body = (r.blocks || []).map(b =>
+    `# ${b.title}\n` + (b.items || []).join('\n')
+  ).join('\n\n');
+  return `${head}\n\n${body}\n\n> ${r.note || ''}`;
+}
+function textToRules(txt, lang){
+  const lines = String(txt).replace(/\r/g, '').split('\n');
+  const base = defaultRules(lang);
+  const out = { title: '', sub: '', note: '', blocks: [] };
+  let cur = null, headCount = 0;
+  lines.forEach(raw => {
+    const line = raw.trim();
+    if(!line) return;
+    if(line.startsWith('#')){
+      cur = { icon: (base.blocks[out.blocks.length] || {}).icon || '•', title: line.replace(/^#+\s*/, ''), items: [] };
+      out.blocks.push(cur);
+      return;
+    }
+    if(line.startsWith('>')){ out.note = line.replace(/^>\s*/, ''); return; }
+    if(!cur){
+      if(headCount === 0) out.title = line;
+      else if(headCount === 1) out.sub = line;
+      headCount++;
+      return;
+    }
+    cur.items.push(line.replace(/^\d+[.)]\s*/, ''));
+  });
+  if(!out.title) out.title = base.title;
+  if(!out.blocks.length) out.blocks = base.blocks;
+  return out;
+}
+
+function openRulesPage(){
+  const t = I18N[currentLang];
+  const r = getRules(currentLang);
+  const li = (arr) => (arr || []).map(x => `<li>${escapeHtml(x)}</li>`).join('');
+  const blocks = (r.blocks || []).map(b =>
+    `<div class="rules-block"><h3>${escapeHtml(b.icon || '•')} ${escapeHtml(b.title || '')}</h3><ol>${li(b.items)}</ol></div>`
+  ).join('');
+  document.getElementById('rulesContent').innerHTML = `
+    <div class="rules-head">
+      <div class="rules-title">${escapeHtml(r.title || '')}</div>
+      <div class="rules-sub">${escapeHtml(r.sub || '')}</div>
+      ${isAdmin ? `<button class="rules-edit-btn" id="rulesEditBtn">${escapeHtml(t.rulesEdit)}</button>` : ''}
+    </div>
+    ${blocks}
+    ${r.note ? `<div class="rules-note">${escapeHtml(r.note)}</div>` : ''}
+    ${isAdmin ? `<div class="rules-editor" id="rulesEditor" style="display:none;">
+      <textarea id="rulesTextarea" spellcheck="false"></textarea>
+      <div class="rules-editor-hint">${escapeHtml(t.rulesEditHint)}</div>
+      <div class="rules-editor-actions">
+        <button class="primary" id="rulesSaveBtn">${escapeHtml(t.rulesSave)}</button>
+        <button class="ghost" id="rulesResetBtn">${escapeHtml(t.rulesReset)}</button>
+        <button class="ghost" id="rulesCancelBtn">${escapeHtml(t.rulesCancel)}</button>
+      </div>
+    </div>` : ''}`;
+
+  if(isAdmin){
+    const editor = document.getElementById('rulesEditor');
+    const ta = document.getElementById('rulesTextarea');
+    document.getElementById('rulesEditBtn').addEventListener('click', () => {
+      ta.value = rulesToText(getRules(currentLang));
+      editor.style.display = editor.style.display === 'none' ? '' : 'none';
+      if(editor.style.display === '') ta.focus();
+    });
+    document.getElementById('rulesSaveBtn').addEventListener('click', () => {
+      if(!state.rules || typeof state.rules !== 'object') state.rules = {};
+      state.rules[currentLang] = textToRules(ta.value, currentLang);
+      saveLevels();
+      openRulesPage();
+    });
+    document.getElementById('rulesResetBtn').addEventListener('click', () => {
+      if(state.rules) delete state.rules[currentLang];
+      saveLevels();
+      openRulesPage();
+    });
+    document.getElementById('rulesCancelBtn').addEventListener('click', () => { editor.style.display = 'none'; });
+  }
+  const sbHide = document.getElementById('searchBar');
+  if(sbHide) sbHide.style.display = 'none';
+  document.getElementById('listView').style.display = 'none';
+  document.getElementById('detailView').style.display = 'none';
+  document.getElementById('playerView').style.display = 'none';
+  document.getElementById('notifView').style.display = 'none';
+  const rv = document.getElementById('rulesView');
+  rv.style.display = '';
+  rv.classList.remove('page-in');
+  void rv.offsetWidth;
+  rv.classList.add('page-in');
+  window.scrollTo({ top: 0, behavior: 'auto' });
+}
+function closeRulesPage(){
+  document.getElementById('rulesView').style.display = 'none';
+  document.getElementById('listView').style.display = '';
+  const sbShow = document.getElementById('searchBar');
+  if(sbShow) sbShow.style.display = (currentTab === 'players') ? 'none' : '';
+}
+
 /* ── переключатель видимости: элементы управления / галочки пройденных ── */
 const CONTROLS_KEY = 'gll_hide_controls';
-const VIS_MODES = ['none', 'controls', 'beaten', 'both'];
+const VIS_MODES = ['none', 'controls', 'beaten', 'both', 'onlyBeaten'];
 let visMode = 'none';
 try{
   const raw = localStorage.getItem(CONTROLS_KEY);
@@ -2682,6 +3008,7 @@ function applyControlsVisibility(){
   const hideBt  = (visMode === 'beaten'   || visMode === 'both');
   document.body.classList.toggle('hide-row-controls', hideCtl);
   document.body.classList.toggle('hide-beaten', hideBt);
+  document.body.classList.toggle('only-beaten', visMode === 'onlyBeaten');
   const btn = document.getElementById('toggleControlsBtn');
   if(btn){
     btn.classList.toggle('is-off', visMode !== 'none');
@@ -2713,7 +3040,7 @@ document.getElementById('toggleControlsBtn').addEventListener('click', (e) => {
   menu.id = 'visMenu';
   menu.innerHTML = [
     ['none', t.visNone], ['controls', t.visControls],
-    ['beaten', t.visBeaten], ['both', t.visBoth],
+    ['beaten', t.visBeaten], ['both', t.visBoth], ['onlyBeaten', t.visOnlyBeaten],
   ].map(([mode, label]) =>
     `<button data-mode="${mode}" class="${visMode === mode ? 'active' : ''}">${label}</button>`
   ).join('');
@@ -2807,6 +3134,7 @@ function applyTabLabels(){
   if(vf) vf.style.display = '';
   const pf = document.getElementById('pointsField');
   if(pf) pf.style.display = (currentTab === 'players') ? 'none' : '';
+  if(fPoints) fPoints.type = (cfg.metaKind === 'progress') ? 'text' : 'number';
   const titleEl = document.getElementById('currentListTitle');
   const btn = document.getElementById(
     currentTab === 'main' ? 'tabMainBtn' :
@@ -2845,7 +3173,7 @@ function openEditForm(lvl, rowEl){
   deleteFromFormBtn.textContent = deleteThisText(cfg);
   fName.value = lvl.name;
   fVerifier.value = lvl.verifier;
-  fPoints.value = cfg.metaKind === 'progress' ? (lvl.progress ?? '') : lvl.points;
+  fPoints.value = cfg.metaKind === 'progress' ? parseProgress(lvl.progress) : lvl.points;
   fExtra.value = lvl.extra || '';
   fCreator.value = lvl.creator || '';
   fThumb.value = lvl.thumbnail || '';
@@ -2907,7 +3235,7 @@ submitBtn.addEventListener('click', () => {
       lvl.name = fName.value.trim();
       lvl.verifier = fVerifier.value.trim();
       lvl.extra = fExtra.value.trim();
-      if(cfg.metaKind === 'progress') lvl.progress = Math.max(0, Math.min(100, Number(fPoints.value) || 0));
+      if(cfg.metaKind === 'progress') lvl.progress = parseProgress(fPoints.value);
       else lvl.points = Number(fPoints.value) || 0;
       Object.assign(lvl, detailValues);
     }
@@ -2918,7 +3246,7 @@ submitBtn.addEventListener('click', () => {
       verifier: fVerifier.value.trim(),
       extra: fExtra.value.trim(),
       ...(cfg.metaKind === 'progress'
-        ? { points: 0, progress: Math.max(0, Math.min(100, Number(fPoints.value) || 0)) }
+        ? { points: 0, progress: parseProgress(fPoints.value) }
         : { points: Number(fPoints.value) || 0 }),
       ...detailValues,
     });
@@ -2987,6 +3315,15 @@ deleteFromFormBtn.addEventListener('click', () => {
     if(titleEl && btnMap[tab]) titleEl.textContent = btnMap[tab].textContent;
     const dd = document.getElementById('listsMenu');
     if(dd) dd.classList.remove('open');
+    const mm = document.getElementById('moreMenu');
+    if(mm) mm.classList.remove('open');
+    document.getElementById('rulesView').style.display = 'none';
+    document.getElementById('listView').style.display = '';
+  const sbShow = document.getElementById('searchBar');
+  if(sbShow) sbShow.style.display = (currentTab === 'players') ? 'none' : '';
+    searchQuery = '';
+    const sIn = document.getElementById('listSearch');
+    if(sIn){ sIn.value = ''; document.getElementById('listSearchClear').style.display = 'none'; }
     applyTabLabels();
     closeForm();
     render();
@@ -2996,6 +3333,13 @@ deleteFromFormBtn.addEventListener('click', () => {
   tabFutureBtn.addEventListener('click', () => switchTab('future'));
   tabNonListedBtn.addEventListener('click', () => switchTab('nonListed'));
   tabPlayersBtn.addEventListener('click', () => switchTab('players'));
+  const rulesBtn = document.getElementById('rulesBtn');
+  if(rulesBtn) rulesBtn.addEventListener('click', () => {
+    document.getElementById('moreMenu').classList.remove('open');
+    openRulesPage();
+  });
+  const rulesCloseBtn = document.getElementById('rulesCloseBtn');
+  if(rulesCloseBtn) rulesCloseBtn.addEventListener('click', closeRulesPage);
 
   // Lists dropdown behaviour
   const listsMenu = document.getElementById('listsMenu');
@@ -3004,12 +3348,43 @@ deleteFromFormBtn.addEventListener('click', () => {
     listsTrigger.addEventListener('click', (e) => {
       e.stopPropagation();
       listsMenu.classList.toggle('open');
+      const mm2 = document.getElementById('moreMenu');
+      if(mm2) mm2.classList.remove('open');
     });
     document.addEventListener('click', (e) => {
       if(!listsMenu.contains(e.target)) listsMenu.classList.remove('open');
     });
     document.addEventListener('keydown', (e) => { if(e.key === 'Escape') listsMenu.classList.remove('open'); });
   }
+  const listSearch = document.getElementById('listSearch');
+  const listSearchClear = document.getElementById('listSearchClear');
+  if(listSearch){
+    listSearch.addEventListener('input', () => {
+      searchQuery = listSearch.value;
+      listSearchClear.style.display = searchQuery ? '' : 'none';
+      render();
+    });
+    listSearchClear.addEventListener('click', () => {
+      listSearch.value = ''; searchQuery = '';
+      listSearchClear.style.display = 'none';
+      render(); listSearch.focus();
+    });
+  }
+
+  const moreMenu = document.getElementById('moreMenu');
+  const moreTrigger = document.getElementById('moreTrigger');
+  if(moreTrigger){
+    moreTrigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      moreMenu.classList.toggle('open');
+      listsMenu.classList.remove('open');
+    });
+    document.addEventListener('click', (e) => {
+      if(!moreMenu.contains(e.target)) moreMenu.classList.remove('open');
+    });
+    document.addEventListener('keydown', (e) => { if(e.key === 'Escape') moreMenu.classList.remove('open'); });
+  }
+
   // set initial section title
   const initTitle = document.getElementById('currentListTitle');
   if(initTitle) initTitle.textContent = tabMainBtn.textContent;
