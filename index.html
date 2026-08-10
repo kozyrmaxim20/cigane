@@ -821,29 +821,26 @@
   .rules-block ol, .rules-block ul{ margin:0; padding-left:20px; }
   .rules-block li{ margin:7px 0; font-size:13.8px; line-height:1.55; color:#ddd8ef; }
   .rules-head{ position:relative; }
-  .rules-edit-btn{ position:absolute; top:0; right:8px; display:inline-flex; align-items:center; gap:7px;
-    height:36px; padding:0 16px; border-radius:10px; cursor:pointer;
-    background:rgba(255,255,255,0.06); border:1px solid var(--glass-line); color:#e9e6f5;
-    font-family:'Oswald',sans-serif; font-size:12px; letter-spacing:0.08em; text-transform:uppercase;
-    transition:background .2s, border-color .2s; }
-  .rules-edit-btn:hover{ background:rgba(255,255,255,0.11); border-color:var(--glass-line-bright); }
-  .rules-editor-actions button{ height:38px; padding:0 20px; border-radius:10px; cursor:pointer;
-    font-family:'Oswald',sans-serif; font-size:12.5px; letter-spacing:0.07em; text-transform:uppercase;
-    border:1px solid var(--glass-line); transition:filter .2s, background .2s; }
-  .rules-editor-actions .primary{ border:0; color:#1a1330;
-    background:linear-gradient(135deg, var(--lemon), #b9f56b); font-weight:600; }
-  .rules-editor-actions .primary:hover{ filter:brightness(1.07); }
-  .rules-editor-actions .ghost{ background:rgba(255,255,255,0.05); color:#ded9f0; }
-  .rules-editor-actions .ghost:hover{ background:rgba(255,255,255,0.1); }
-  .rules-editor{ margin:16px 22px 24px; }
-  .rules-editor textarea{ width:100%; min-height:340px; padding:14px 16px; border-radius:12px; resize:vertical;
-    background:rgba(10,8,20,0.6); border:1px solid var(--glass-line); color:#e9e6f5;
-    font-family:ui-monospace,Menlo,Consolas,monospace; font-size:13px; line-height:1.6; }
-  .rules-editor-hint{ margin:8px 2px 0; font-size:12px; color:var(--mystic); opacity:0.85; line-height:1.5; }
+  .rules-topbar{ display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding-right:30px; flex-wrap:wrap; }
+  .rules-edit-btn{ margin:18px 0 4px; }
+  .rules-edit-btn:hover{ transform:none; background:rgba(176,108,240,0.22); }
+  .rules-edit-btn .db-arrow{ font-size:13px; }
+  .rules-editor-actions .detail-back{ margin:0; }
+  .rules-editor-actions .detail-back:hover{ transform:none; }
+  .rules-editor-actions .is-primary{ border-color:rgba(214,255,110,0.45); color:var(--lemon);
+    background:rgba(214,255,110,0.12); }
+  .rules-editor-actions .is-primary:hover{ background:rgba(214,255,110,0.2); }
   .rules-editor-actions{ display:flex; align-items:center; gap:10px; margin-top:12px; flex-wrap:wrap; }
   .rules-note{ margin:14px 22px 24px; padding:13px 16px; border-radius:12px; font-size:13px; line-height:1.55;
     color:var(--mystic); background:rgba(160,120,255,0.08); border:1px solid rgba(160,120,255,0.22); }
   body.only-beaten #list .row:not(.beaten){ display:none; }
+  .pr-gear{ margin:18px 0 4px; display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px;
+    border-radius:10px; cursor:pointer; color:var(--mystic);
+    background:rgba(255,255,255,0.05); border:1px solid var(--glass-line);
+    transition:background .2s, color .2s, border-color .2s, transform .3s; }
+  .pr-gear:hover{ background:rgba(255,255,255,0.1); color:var(--lemon);
+    border-color:var(--glass-line-bright); transform:rotate(60deg); }
   .search-bar{ margin:0 0 14px; }
   .search-box{ position:relative; display:flex; align-items:center; gap:11px; height:50px; padding:0 6px 0 17px;
     border-radius:16px; background:linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.02));
@@ -1219,16 +1216,22 @@
   </div>
 
   <div class="card detail-page" id="playerView" style="display:none;">
-    <button class="detail-back" id="playerCloseBtn">
-      <span class="db-arrow">←</span><span id="backToPlayersLabel">К списку</span>
-    </button>
+    <div class="rules-topbar">
+      <button class="detail-back" id="playerCloseBtn">
+        <span class="db-arrow">←</span><span id="backToPlayersLabel">К списку</span>
+      </button>
+      <span id="playerToolsSlot"></span>
+    </div>
     <div id="playerContent"></div>
   </div>
 
   <div class="card detail-page" id="rulesView" style="display:none;">
-    <button class="detail-back" id="rulesCloseBtn">
-      <span class="db-arrow">←</span><span id="backFromRulesLabel">К списку</span>
-    </button>
+    <div class="rules-topbar">
+      <button class="detail-back" id="rulesCloseBtn">
+        <span class="db-arrow">←</span><span id="backFromRulesLabel">К списку</span>
+      </button>
+      <span id="rulesEditSlot"></span>
+    </div>
     <div id="rulesContent"></div>
   </div>
 
@@ -1320,6 +1323,10 @@ const I18N = {
     navMore: "Ещё",
     rulesTab: "Правила",
     backFromRules: "К списку",
+    backupTitle: "Резервная копия",
+    backupSub: "Скачать все листы, игроков и правила одним JSON-файлом",
+    backupBtn: "Сделать бэкап",
+    backupDone: "Бэкап скачан",
     searchPlaceholder: "Поиск по названию",
     searchEmpty: "Ничего не найдено",
     rulesEdit: "Редактировать",
@@ -1431,6 +1438,10 @@ const I18N = {
     navMore: "More",
     rulesTab: "Guidelines",
     backFromRules: "Back to list",
+    backupTitle: "Backup",
+    backupSub: "Download all lists, players and guidelines as a single JSON file",
+    backupBtn: "Create backup",
+    backupDone: "Backup downloaded",
     searchPlaceholder: "Search by name",
     searchEmpty: "Nothing found",
     rulesEdit: "Edit",
@@ -2597,6 +2608,19 @@ function renderPlayerProfile(){
     </div>
   `;
 
+  const toolsSlot = document.getElementById('playerToolsSlot');
+  if(toolsSlot) toolsSlot.innerHTML = isOwner()
+    ? `<button class="pr-gear" id="backupBtn" title="${escapeHtml(t.backupBtn)}" aria-label="${escapeHtml(t.backupBtn)}">
+         <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+           <circle cx="12" cy="12" r="3.2"/>
+           <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1.03 1.56V21a2 2 0 1 1-4 0v-.09A1.7 1.7 0 0 0 8.9 19.3a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.7 15a1.7 1.7 0 0 0-1.56-1.03H3a2 2 0 1 1 0-4h.09A1.7 1.7 0 0 0 4.7 8.9a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.7a1.7 1.7 0 0 0 1.03-1.56V3a2 2 0 1 1 4 0v.09A1.7 1.7 0 0 0 15 4.7a1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.3 9c.2.63.78 1.05 1.44 1.03H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.51 1Z"/>
+         </svg>
+       </button>`
+    : '';
+
+  const bkBtn = document.getElementById('backupBtn');
+  if(bkBtn) bkBtn.addEventListener('click', downloadBackup);
+
   const hdr = document.getElementById('playerRecordsHeader');
   if(hdr) hdr.addEventListener('click', () => toggleSubsection(document.getElementById('playerRecordsSection')));
   bindPager(document.getElementById('playerContent'));
@@ -2928,6 +2952,35 @@ function textToRules(txt, lang){
   return out;
 }
 
+// выгрузка всех данных сайта в JSON-файл
+// служебные действия доступны только владельцу сайта
+const OWNER_NICK = 'muwa1t';
+function isOwner(){
+  return isAdmin && String(currentAdminNick || '').trim().toLowerCase() === OWNER_NICK;
+}
+
+function downloadBackup(){
+  const payload = {
+    exportedAt: new Date().toISOString(),
+    levels: state.levels,
+    futureLevels: state.futureLevels,
+    nonListedLevels: state.nonListedLevels,
+    players: state.players,
+    rules: state.rules,
+  };
+  const stamp = new Date().toISOString().slice(0, 16).replace(/[:T]/g, '-');
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `lemon-list-backup-${stamp}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+  setStatus(I18N[currentLang].backupDone);
+}
+
 function openRulesPage(){
   const t = I18N[currentLang];
   const r = getRules(currentLang);
@@ -2939,7 +2992,7 @@ function openRulesPage(){
     <div class="rules-head">
       <div class="rules-title">${escapeHtml(r.title || '')}</div>
       <div class="rules-sub">${escapeHtml(r.sub || '')}</div>
-      ${isAdmin ? `<button class="rules-edit-btn" id="rulesEditBtn">${escapeHtml(t.rulesEdit)}</button>` : ''}
+
     </div>
     ${blocks}
     ${r.note ? `<div class="rules-note">${escapeHtml(r.note)}</div>` : ''}
@@ -2947,11 +3000,18 @@ function openRulesPage(){
       <textarea id="rulesTextarea" spellcheck="false"></textarea>
       <div class="rules-editor-hint">${escapeHtml(t.rulesEditHint)}</div>
       <div class="rules-editor-actions">
-        <button class="primary" id="rulesSaveBtn">${escapeHtml(t.rulesSave)}</button>
-        <button class="ghost" id="rulesResetBtn">${escapeHtml(t.rulesReset)}</button>
-        <button class="ghost" id="rulesCancelBtn">${escapeHtml(t.rulesCancel)}</button>
+        <button class="detail-back is-primary" id="rulesSaveBtn">${escapeHtml(t.rulesSave)}</button>
+        <button class="detail-back" id="rulesResetBtn">${escapeHtml(t.rulesReset)}</button>
+        <button class="detail-back" id="rulesCancelBtn">${escapeHtml(t.rulesCancel)}</button>
       </div>
     </div>` : ''}`;
+
+  const slot = document.getElementById('rulesEditSlot');
+  if(slot) slot.innerHTML = isAdmin
+    ? `<button class="detail-back rules-edit-btn" id="rulesEditBtn">
+         <span class="db-arrow">✎</span><span>${escapeHtml(t.rulesEdit)}</span>
+       </button>`
+    : '';
 
   if(isAdmin){
     const editor = document.getElementById('rulesEditor');
