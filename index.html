@@ -841,6 +841,15 @@
     transition:background .2s, color .2s, border-color .2s, transform .3s; }
   .pr-gear:hover{ background:rgba(255,255,255,0.1); color:var(--lemon);
     border-color:var(--glass-line-bright); transform:rotate(60deg); }
+  .entry-icon.up{ color:#7bf5a8; background:rgba(88,235,150,0.13); border-color:rgba(88,235,150,0.3); }
+  .entry-icon.down{ color:#ff7b7b; background:rgba(255,95,95,0.13); border-color:rgba(255,95,95,0.3); }
+  .pos-badge{ display:inline-flex; align-items:center; gap:3px; padding:2px 8px; border-radius:999px;
+    font-family:'Oswald',sans-serif; font-size:10.5px; letter-spacing:0.04em; line-height:1.5;
+    border:1px solid transparent; }
+  .pos-badge.is-up{ color:#7bf5a8; background:rgba(88,235,150,0.12); border-color:rgba(88,235,150,0.28); }
+  .pos-badge.is-down{ color:#ff7b7b; background:rgba(255,95,95,0.12); border-color:rgba(255,95,95,0.28); }
+  .pos-badge.is-new{ color:var(--lemon); background:rgba(214,255,110,0.12); border-color:rgba(214,255,110,0.3);
+    font-size:12px; padding:1px 9px; }
   .search-bar{ margin:0 0 14px; }
   .search-box{ position:relative; display:flex; align-items:center; gap:11px; height:50px; padding:0 6px 0 17px;
     border-radius:16px; background:linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.02));
@@ -1051,12 +1060,12 @@
     <div class="topbar-right">
       <div class="nav-item lang-menu" id="langMenu">
         <button class="lang-trigger" id="langTrigger" title="Язык" aria-label="Язык">
-          <span class="lang-code" id="langCurrentCode">RU</span>
+          <span class="lang-code" id="langCurrentCode">EN</span>
           <span class="nav-caret">▾</span>
         </button>
         <div class="nav-dropdown lang-dropdown" id="langDropdown">
-          <button class="lang-btn" id="langRuBtn" data-lang="ru"><span class="lang-flag">RU</span>Русский</button>
           <button class="lang-btn" id="langEnBtn" data-lang="en"><span class="lang-flag">EN</span>English</button>
+          <button class="lang-btn" id="langRuBtn" data-lang="ru"><span class="lang-flag">RU</span>Русский</button>
         </div>
       </div>
       <div class="admin-bar" id="adminBarLoggedOut">
@@ -1105,7 +1114,7 @@
           <circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
         </svg>
       </span>
-      <input type="search" id="listSearch" name="lemon-list-filter" placeholder="Поиск по названию" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" inputmode="search" data-form-type="other" data-lpignore="true" data-1p-ignore data-bwignore aria-autocomplete="none" role="searchbox" />
+      <input type="search" id="listSearch" name="lemon-list-filter" placeholder="Поиск..." autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" inputmode="search" data-form-type="other" data-lpignore="true" data-1p-ignore data-bwignore aria-autocomplete="none" role="searchbox" />
       <button class="search-clear" id="listSearchClear" style="display:none;" aria-label="Очистить">
         <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
           <path d="M6 6l12 12M18 6 6 18"/>
@@ -1193,10 +1202,6 @@
             <label id="lblVersion">Версия</label>
             <input type="text" id="fVersion" placeholder="2.2" />
           </div>
-        </div>
-        <div>
-          <label id="lblAddedDate">Дата добавления в список</label>
-          <input type="date" id="fAddedDate" />
         </div>
         <div>
           <label id="lblHistoryExtra">История позиций (по строке: дата|место|заметка)</label>
@@ -1322,7 +1327,7 @@ const DEFAULT_LEVELS = [
 const POINTS_BASE = 1000;
 const POINTS_STEP = 40;
 
-let currentLang = 'ru';
+let currentLang = 'en';
 
 const I18N = {
   ru: {
@@ -1338,7 +1343,7 @@ const I18N = {
     backupSub: "Скачать все листы, игроков и правила одним JSON-файлом",
     backupBtn: "Сделать бэкап",
     backupDone: "Бэкап скачан",
-    searchPlaceholder: "Поиск по названию",
+    searchPlaceholder: "Поиск...",
     searchEmpty: "Ничего не найдено",
     rulesEdit: "Редактировать",
     rulesSave: "Сохранить",
@@ -1372,6 +1377,14 @@ const I18N = {
     statusRetrying: 'Повторная попытка сохранения…',
     statusSaveError: 'Ошибка сохранения: ',
     cancel: 'Отмена',
+    navLists: "Списки",
+    langTitle: "Язык",
+    myProfileTitle: "Мой профиль",
+    clearSearch: "Очистить",
+    phNick: "Ник",
+    phDesc: "// текст описания //",
+    phHistory: "2026-05-01|3|Обошёл на 2 места",
+    deleteBtnLabel: "Удалить",
     addToList: 'Добавить в список',
     saveChanges: 'Сохранить изменения',
     editingPrefix: 'Редактирование: ',
@@ -1453,7 +1466,7 @@ const I18N = {
     backupSub: "Download all lists, players and guidelines as a single JSON file",
     backupBtn: "Create backup",
     backupDone: "Backup downloaded",
-    searchPlaceholder: "Search by name",
+    searchPlaceholder: "Search...",
     searchEmpty: "Nothing found",
     rulesEdit: "Edit",
     rulesSave: "Save",
@@ -1487,6 +1500,14 @@ const I18N = {
     statusRetrying: 'Retrying save…',
     statusSaveError: 'Save error: ',
     cancel: 'Cancel',
+    navLists: "Lists",
+    langTitle: "Language",
+    myProfileTitle: "My profile",
+    clearSearch: "Clear",
+    phNick: "Nickname",
+    phDesc: "// description text //",
+    phHistory: "2026-05-01|3|Moved up 2 places",
+    deleteBtnLabel: "Delete",
     addToList: 'Add to list',
     saveChanges: 'Save changes',
     editingPrefix: 'Editing: ',
@@ -1941,9 +1962,25 @@ function applyStaticTexts(){
   document.getElementById('lblLength').textContent = t.lblLength;
   document.getElementById('lblObjects').textContent = t.lblObjects;
   document.getElementById('lblVersion').textContent = t.lblVersion;
-  document.getElementById('lblAddedDate').textContent = t.lblAddedDate;
   document.getElementById('lblHistoryExtra').textContent = t.lblHistoryExtra;
   document.getElementById('lblRecords').textContent = t.lblRecords;
+
+  const setTxt = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val; };
+  const setAttrs = (id, attrs) => { const el = document.getElementById(id); if(el) Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v)); };
+  setTxt('navListsLabel', t.navLists);
+  setAttrs('langTrigger', { title: t.langTitle, 'aria-label': t.langTitle });
+  setAttrs('profileBtn', { title: t.myProfileTitle, 'aria-label': t.myProfileTitle });
+  setAttrs('listSearchClear', { 'aria-label': t.clearSearch, title: t.clearSearch });
+  setAttrs('fCreator', { placeholder: t.phNick });
+  setAttrs('fDesc', { placeholder: t.phDesc });
+  setAttrs('fHistoryExtra', { placeholder: t.phHistory });
+  setTxt('deleteFromFormBtn', t.deleteBtnLabel);
+  // форма скрыта, но её заголовок и кнопка должны быть на нужном языке заранее
+  if(!editingId){
+    const cfgNow = TAB_CONFIG[currentTab];
+    setTxt('formTitle', cfgNow.newTitle);
+    setTxt('submitBtn', t.addToList);
+  }
 }
 
 function setLanguage(lang){
@@ -1996,6 +2033,15 @@ async function loadLevels(){
     state.nonListedLevels = (record && Array.isArray(record.nonListedLevels)) ? withIds(record.nonListedLevels) : [];
     state.players = (record && Array.isArray(record.players)) ? withIds(record.players) : [];
     state.rules = (record && record.rules && typeof record.rules === 'object') ? record.rules : null;
+
+    // даты добавления больше не используются — чистим остатки из хранилища
+    let hadAdded = false;
+    ['levels', 'futureLevels', 'nonListedLevels'].forEach(k => {
+      (state[k] || []).forEach(l => {
+        if(l.addedDate !== undefined){ delete l.addedDate; hadAdded = true; }
+      });
+    });
+    if(hadAdded) saveLevels();
     setStatus(I18N[currentLang].statusLoaded);
   }catch(e){
     console.warn('JSONBin load failed, falling back to defaults:', e);
@@ -2105,6 +2151,20 @@ function recalcPoints(arr){
   arr.forEach((l, i) => { l.points = Math.max(POINTS_BASE - i * POINTS_STEP, 0); });
 }
 
+// значок изменения позиции: ↑ поднялся, ↓ опустился, + только что добавлен
+function positionBadge(lvl, idx, cfg){
+  if(!cfg.showRanking) return '';
+  if(lvl.isNew) return `<span class="pos-badge is-new" title="new">+</span>`;
+  const prev = Number(lvl.prevPos);
+  if(!prev) return '';
+  const now = idx + 1;
+  if(prev === now) return '';
+  const diff = Math.abs(prev - now);
+  return (now < prev)
+    ? `<span class="pos-badge is-up" title="+${diff}">▲<span>${diff}</span></span>`
+    : `<span class="pos-badge is-down" title="-${diff}">▼<span>${diff}</span></span>`;
+}
+
 function moveItem(id, dir){
   const cfg = TAB_CONFIG[currentTab];
   const arr = getArr();
@@ -2112,7 +2172,16 @@ function moveItem(id, dir){
   if(idx < 0) return;
   const newIdx = idx + dir;
   if(newIdx < 0 || newIdx >= arr.length) return;
+  // запоминаем, откуда уровень пришёл — для стрелки в строке
+  if(arr[idx].prevPos === undefined) arr[idx].prevPos = idx + 1;
+  if(arr[newIdx].prevPos === undefined) arr[newIdx].prevPos = newIdx + 1;
+  delete arr[idx].isNew;
+  delete arr[newIdx].isNew;
   [arr[idx], arr[newIdx]] = [arr[newIdx], arr[idx]];
+  [arr[idx], arr[newIdx]].forEach((l, k) => {
+    const pos = (k === 0 ? idx : newIdx) + 1;
+    if(l.prevPos === pos) delete l.prevPos;   // вернулся на своё место — значка нет
+  });
   if(cfg.autoRecalc) recalcPoints(arr);
   render();
   saveLevels();
@@ -2169,6 +2238,7 @@ function render(){
         <div class="title-line">
           ${cfg.showRanking ? `<span class="rank-badge">#${i + 1}</span>` : ''}
           <span class="level-name">${escapeHtml(lvl.name)}</span>
+          ${positionBadge(lvl, i, cfg)}
         </div>
         ${cfg.showMeta ? `<div class="meta-line">
           ${cfg.hideVerifierLine ? '' : `<span class="verifier">${verifierLine}</span><span class="meta-sep">·</span>`}
@@ -2317,14 +2387,6 @@ function countryFlag(code){
 
 function buildHistoryEntries(lvl, idx, t){
   const entries = [];
-  if(lvl.addedDate){
-    entries.push({
-      date: lvl.addedDate,
-      position: idx >= 0 ? (idx + 1) : null,
-      note: t.addedToList,
-      isAdd: true,
-    });
-  }
   if(lvl.historyExtra){
     String(lvl.historyExtra).split('\n').forEach(line => {
       const parts = line.split('|').map(p => p.trim());
@@ -2332,7 +2394,23 @@ function buildHistoryEntries(lvl, idx, t){
       entries.push({ date: parts[0], position: parts[1] || null, note: parts[2] || '', isAdd: false });
     });
   }
-  entries.sort((a, b) => String(b.date).localeCompare(String(a.date)));
+
+  // от старых к новым — так видно, куда уровень двигался
+  entries.sort((a, b) => String(a.date).localeCompare(String(b.date)));
+  let prevPos = null;
+  entries.forEach((e, i) => {
+    const pos = (e.position === null || e.position === '') ? null : Number(e.position);
+    // плюс — у самой первой записи: до неё позиции не было
+    e.isAdd = (prevPos === null);
+    e.dir = 0;
+    if(!e.isAdd && pos !== null && prevPos !== null){
+      if(pos < prevPos) e.dir = 1;        // номер меньше — уровень поднялся
+      else if(pos > prevPos) e.dir = -1;  // номер больше — уровень упал ниже
+    }
+    if(pos !== null) prevPos = pos;
+  });
+
+  entries.reverse();
   return entries;
 }
 
@@ -2659,7 +2737,7 @@ function renderHistorySection(lvl, idx){
     return `
       <div class="entry-card">
         <div class="entry-top">
-          <span class="entry-icon ${e.isAdd ? 'add' : 'move'}">${e.isAdd ? '+' : '↑'}</span>
+          <span class="entry-icon ${e.isAdd ? 'add' : (e.dir > 0 ? 'up' : (e.dir < 0 ? 'down' : 'move'))}">${e.isAdd ? '+' : (e.dir > 0 ? '▲' : (e.dir < 0 ? '▼' : '•'))}</span>
           <span class="entry-date">${escapeHtml(e.date)}</span>
           ${rankHtml}
         </div>
@@ -3181,10 +3259,10 @@ const fPassword = document.getElementById('fPassword');
 const fLength = document.getElementById('fLength');
 const fObjects = document.getElementById('fObjects');
 const fVersion = document.getElementById('fVersion');
-const fAddedDate = document.getElementById('fAddedDate');
+// поля даты нет: история позиций заполняется вручную
 const fHistoryExtra = document.getElementById('fHistoryExtra');
 const fRecords = document.getElementById('fRecords');
-const detailFields = [fCreator, fThumb, fVideo, fDesc, fLevelId, fPassword, fLength, fObjects, fVersion, fAddedDate, fHistoryExtra, fRecords];
+const detailFields = [fCreator, fThumb, fVideo, fDesc, fLevelId, fPassword, fLength, fObjects, fVersion, fHistoryExtra, fRecords];
 
 let editingId = null;
 
@@ -3230,7 +3308,6 @@ openFormBtn.addEventListener('click', () => {
   fName.value = ''; fVerifier.value = ''; fExtra.value = '';
   fPoints.value = cfg.metaKind === 'progress' ? '' : suggested;
   detailFields.forEach(f => f.value = '');
-  fAddedDate.value = new Date().toISOString().slice(0, 10);
   fName.focus();
 });
 
@@ -3255,7 +3332,6 @@ function openEditForm(lvl, rowEl){
   fLength.value = lvl.length || '';
   fObjects.value = lvl.objects || '';
   fVersion.value = lvl.version || '';
-  fAddedDate.value = lvl.addedDate || '';
   fHistoryExtra.value = lvl.historyExtra || '';
   fRecords.value = lvl.records || '';
   if(rowEl && rowEl.parentNode){
@@ -3296,7 +3372,6 @@ submitBtn.addEventListener('click', () => {
     length: fLength.value.trim(),
     objects: fObjects.value.trim(),
     version: fVersion.value.trim(),
-    addedDate: fAddedDate.value.trim(),
     historyExtra: fHistoryExtra.value.trim(),
     records: fRecords.value.trim(),
   };
@@ -3313,6 +3388,7 @@ submitBtn.addEventListener('click', () => {
   } else {
     arr.push({
       id: uid(),
+      isNew: true,
       name: fName.value.trim(),
       verifier: fVerifier.value.trim(),
       extra: fExtra.value.trim(),
@@ -3349,9 +3425,9 @@ deleteFromFormBtn.addEventListener('click', () => {
 });
 
 (async function init(){
-  let savedLang = 'ru';
-  try{ savedLang = localStorage.getItem('gll_lang') || 'ru'; }catch(e){}
-  currentLang = (savedLang === 'en') ? 'en' : 'ru';
+  let savedLang = 'en';
+  try{ savedLang = localStorage.getItem('gll_lang') || 'en'; }catch(e){}
+  currentLang = (savedLang === 'ru') ? 'ru' : 'en';
   document.documentElement.lang = currentLang;
   document.title = I18N[currentLang].docTitle;
   applyStaticTexts();
@@ -3430,6 +3506,16 @@ deleteFromFormBtn.addEventListener('click', () => {
   const listSearch = document.getElementById('listSearch');
   const listSearchClear = document.getElementById('listSearchClear');
   if(listSearch){
+    // поле readonly, пока в него не кликнули — так менеджер паролей не считает его логином
+    listSearch.setAttribute('readonly', 'readonly');
+    const unlock = () => listSearch.removeAttribute('readonly');
+    listSearch.addEventListener('focus', unlock);
+    listSearch.addEventListener('mousedown', unlock);
+    listSearch.addEventListener('touchstart', unlock, { passive: true });
+    listSearch.addEventListener('blur', () => {
+      if(!listSearch.value) listSearch.setAttribute('readonly', 'readonly');
+    });
+
     listSearch.addEventListener('input', () => {
       searchQuery = listSearch.value;
       listSearchClear.style.display = searchQuery ? '' : 'none';
