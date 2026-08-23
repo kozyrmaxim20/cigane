@@ -297,7 +297,8 @@
 
   .rank-badge{
     flex:0 0 auto;
-    font-family:'Oswald',sans-serif; font-weight:700; font-size:20px; line-height:1;
+    font-family:'Oswald',sans-serif; font-weight:700; font-size:20px; line-height:1.25;
+    display:inline-flex; align-items:center; flex:0 0 auto;
     color:var(--lemon); position:relative; z-index:4;
   }
   .row-body{
@@ -305,7 +306,7 @@
     display:flex; flex-direction:column; justify-content:center; gap:7px;
     position:relative; z-index:2;
   }
-  .title-line{ display:flex; align-items:baseline; gap:11px; min-width:0; }
+  .title-line{ display:flex; align-items:center; gap:11px; min-width:0; line-height:1.25; }
   .meta-line{
     display:flex; align-items:center; gap:8px; flex-wrap:wrap;
     font-size:13.5px; line-height:1.35;
@@ -328,7 +329,7 @@
 
   .level-name{
     font-family:'Oswald',sans-serif; font-weight:600; font-size:21px; letter-spacing:.01em;
-    color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0;
+    line-height:1.25; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-width:0;
   }
   .add-form.inline-edit{ margin:8px 0 14px; }
   .verifier{ font-size:13.5px; color:var(--muted); }
@@ -543,6 +544,13 @@
     content:"✓"; position:absolute; inset:0;
     display:flex; align-items:center; justify-content:center;
     font-size:12px; font-weight:800; color:#0c0818;
+  }
+  .add-form .remember-row{ margin-top:2px; }
+  .add-form label.remember-row{ display:flex; align-items:center; gap:10px; margin-bottom:0;
+    font-size:12px; font-weight:600; letter-spacing:.05em; text-transform:uppercase; color:var(--muted); }
+  .add-form label.remember-row:hover{ color:var(--ink); }
+  .add-form .remember-row input[type="checkbox"]{
+    width:18px; height:18px; min-height:0; padding:0; flex:0 0 18px; border-radius:5px;
   }
   .modal-actions{ display:flex; gap:10px; justify-content:flex-end; }
 
@@ -843,13 +851,32 @@
     border-color:var(--glass-line-bright); transform:rotate(60deg); }
   .entry-icon.up{ color:#7bf5a8; background:rgba(88,235,150,0.13); border-color:rgba(88,235,150,0.3); }
   .entry-icon.down{ color:#ff7b7b; background:rgba(255,95,95,0.13); border-color:rgba(255,95,95,0.3); }
-  .pos-badge{ display:inline-flex; align-items:center; gap:3px; padding:2px 8px; border-radius:999px;
-    font-family:'Oswald',sans-serif; font-size:10.5px; letter-spacing:0.04em; line-height:1.5;
-    border:1px solid transparent; }
+  .drag-handle{ display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px;
+    border-radius:9px; cursor:grab; color:var(--mystic);
+    background:rgba(255,255,255,0.05); border:1px solid var(--glass-line);
+    transition:background .2s, color .2s; }
+  .drag-handle:hover{ background:rgba(255,255,255,0.11); color:#fff; }
+  .drag-handle:active{ cursor:grabbing; }
+  .row.dragging{ position:relative; z-index:30; cursor:grabbing;
+    box-shadow:0 18px 40px -14px rgba(0,0,0,0.85), 0 0 0 1px var(--glass-line-bright);
+    filter:brightness(1.06); }
+  body.is-dragging{ user-select:none; cursor:grabbing; }
+  body.is-dragging .row:not(.dragging){ pointer-events:none; }
+  .row.just-moved{ animation:rowLanded 700ms ease-out; }
+  @keyframes rowLanded{
+    0%{ box-shadow:0 0 0 2px rgba(214,255,110,0.55), 0 0 26px -6px var(--lemon); }
+    100%{ box-shadow:0 0 0 0 rgba(214,255,110,0); }
+  }
+  body.is-dragging .row:hover{ transform:none; }
+  .pos-badge{ display:inline-flex; align-items:center; justify-content:center; border-radius:6px;
+    font-family:'Oswald',sans-serif; line-height:1; border:1px solid transparent; }
   .pos-badge.is-up{ color:#7bf5a8; background:rgba(88,235,150,0.12); border-color:rgba(88,235,150,0.28); }
   .pos-badge.is-down{ color:#ff7b7b; background:rgba(255,95,95,0.12); border-color:rgba(255,95,95,0.28); }
-  .pos-badge.is-new{ color:var(--lemon); background:rgba(214,255,110,0.12); border-color:rgba(214,255,110,0.3);
-    font-size:12px; padding:1px 9px; }
+  .pos-badge.is-new{ color:#0f1220; background:linear-gradient(135deg, var(--lemon), #b9f56b);
+    font-weight:700; font-size:11.5px; letter-spacing:0.1em; height:22px; padding:0 9px;
+    flex:0 0 auto; align-self:center; position:relative; top:1px;
+    border-radius:6px; box-shadow:0 0 16px -6px var(--lemon); cursor:pointer; }
+  .pos-badge.is-new:hover{ filter:brightness(1.06); }
   .search-bar{ margin:0 0 14px; }
   .search-box{ position:relative; display:flex; align-items:center; gap:11px; height:50px; padding:0 6px 0 17px;
     border-radius:16px; background:linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.02));
@@ -1154,6 +1181,10 @@
           <label id="lblExtra">Доп. инфо (необязательно)</label>
           <input type="text" id="fExtra" placeholder="First Victor: ..." />
         </div>
+        <label class="remember-row" for="fIsNew" id="newFlagRow">
+          <input type="checkbox" id="fIsNew" />
+          <span id="lblIsNew">Пометка NEW</span>
+        </label>
 
         <div class="form-title" id="formSectionDetails" style="font-family:'Oswald',sans-serif;font-weight:600;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-top:4px;">Детальная страница (необязательно)</div>
 
@@ -1377,6 +1408,9 @@ const I18N = {
     statusRetrying: 'Повторная попытка сохранения…',
     statusSaveError: 'Ошибка сохранения: ',
     cancel: 'Отмена',
+    lblIsNew: "Пометка NEW",
+    dragTitle: "Перетащить",
+    newBadgeHint: "Новый уровень — нажмите, чтобы убрать значок",
     navLists: "Списки",
     langTitle: "Язык",
     myProfileTitle: "Мой профиль",
@@ -1500,6 +1534,9 @@ const I18N = {
     statusRetrying: 'Retrying save…',
     statusSaveError: 'Save error: ',
     cancel: 'Cancel',
+    lblIsNew: "NEW badge",
+    dragTitle: "Drag to reorder",
+    newBadgeHint: "New level — click to remove the badge",
     navLists: "Lists",
     langTitle: "Language",
     myProfileTitle: "My profile",
@@ -1964,6 +2001,8 @@ function applyStaticTexts(){
   document.getElementById('lblVersion').textContent = t.lblVersion;
   document.getElementById('lblHistoryExtra').textContent = t.lblHistoryExtra;
   document.getElementById('lblRecords').textContent = t.lblRecords;
+  const lin = document.getElementById('lblIsNew');
+  if(lin) lin.textContent = t.lblIsNew;
 
   const setTxt = (id, val) => { const el = document.getElementById(id); if(el) el.textContent = val; };
   const setAttrs = (id, attrs) => { const el = document.getElementById(id); if(el) Object.entries(attrs).forEach(([k, v]) => el.setAttribute(k, v)); };
@@ -2152,17 +2191,184 @@ function recalcPoints(arr){
 }
 
 // значок изменения позиции: ↑ поднялся, ↓ опустился, + только что добавлен
-function positionBadge(lvl, idx, cfg){
-  if(!cfg.showRanking) return '';
-  if(lvl.isNew) return `<span class="pos-badge is-new" title="new">+</span>`;
-  const prev = Number(lvl.prevPos);
-  if(!prev) return '';
-  const now = idx + 1;
-  if(prev === now) return '';
-  const diff = Math.abs(prev - now);
-  return (now < prev)
-    ? `<span class="pos-badge is-up" title="+${diff}">▲<span>${diff}</span></span>`
-    : `<span class="pos-badge is-down" title="-${diff}">▼<span>${diff}</span></span>`;
+// значок NEW держится две недели с момента добавления; админ может снять его кликом
+const NEW_BADGE_DAYS = 14;
+function isNewLevel(lvl){
+  if(!lvl.isNew) return false;
+  if(!lvl.newAt) return true;
+  return (Date.now() - Number(lvl.newAt)) < NEW_BADGE_DAYS * 864e5;
+}
+function positionBadge(lvl){
+  return isNewLevel(lvl)
+    ? `<span class="pos-badge is-new" title="${escapeHtml(I18N[currentLang].newBadgeHint)}">NEW</span>`
+    : '';
+}
+
+/* ── живое перетаскивание строк ────────────────────────────
+   строка едет за курсором, соседние сами расступаются */
+let dragState = null;
+
+function captureRowPositions(){
+  const map = new Map();
+  document.querySelectorAll('#list .row').forEach(r => {
+    if(r.dataset.id) map.set(r.dataset.id, r.getBoundingClientRect().top);
+  });
+  return map;
+}
+
+function playRowShift(before){
+  document.querySelectorAll('#list .row').forEach(r => {
+    const prevTop = before.get(r.dataset.id);
+    if(prevTop === undefined) return;
+    const delta = prevTop - r.getBoundingClientRect().top;
+    if(!delta) return;
+    r.style.transition = 'none';
+    r.style.transform = `translateY(${delta}px)`;
+    requestAnimationFrame(() => {
+      r.style.transition = 'transform 300ms cubic-bezier(.22,.9,.28,1)';
+      r.style.transform = '';
+      setTimeout(() => { r.style.transition = ''; }, 340);
+    });
+  });
+}
+
+function attachRowDrag(row, id){
+  row.addEventListener('pointerdown', (e) => {
+    if(e.button !== 0) return;
+    // клики по кнопкам и ссылкам не должны начинать перетаскивание
+    if(e.target.closest('button:not(.drag-handle), a, input, textarea')) return;
+    startRowDrag(e, row, id);
+  });
+}
+
+function startRowDrag(e, row, id){
+  const list = document.getElementById('list');
+  const rect = row.getBoundingClientRect();
+
+  dragState = {
+    id, row, list,
+    pointerId: e.pointerId,
+    startY: e.clientY,
+    baseTop: rect.top,
+    height: rect.height,
+    moved: false,
+  };
+
+  row.setPointerCapture(e.pointerId);
+  document.addEventListener('pointermove', onRowDragMove);
+  document.addEventListener('pointerup', onRowDragEnd);
+  document.addEventListener('pointercancel', onRowDragEnd);
+}
+
+function onRowDragMove(e){
+  if(!dragState) return;
+  const st = dragState;
+  const dy = e.clientY - st.startY;
+
+  // небольшой порог, чтобы обычный клик по строке не превращался в перетаскивание
+  if(!st.moved){
+    if(Math.abs(dy) < 5) return;
+    st.moved = true;
+    st.row.classList.add('dragging');
+    document.body.classList.add('is-dragging');
+  }
+  e.preventDefault();
+
+  st.row.style.transform = `translateY(${dy}px)`;
+
+  const centerY = st.baseTop + dy + st.height / 2;
+  const siblings = [...st.list.querySelectorAll('.row')].filter(r => r !== st.row);
+
+  for(const sib of siblings){
+    const sr = sib.getBoundingClientRect();
+    const sibCenter = sr.top + sr.height / 2;
+    const isBefore = sib.compareDocumentPosition(st.row) & Node.DOCUMENT_POSITION_FOLLOWING;
+
+    // курсор перешёл середину соседа — меняемся с ним местами прямо на лету
+    if(isBefore && centerY < sibCenter){
+      swapWithSibling(sib, 'before');
+      break;
+    }
+    if(!isBefore && centerY > sibCenter){
+      swapWithSibling(sib, 'after');
+      break;
+    }
+  }
+}
+
+function swapWithSibling(sib, where){
+  const st = dragState;
+  const sibBefore = sib.getBoundingClientRect().top;
+  const selfBefore = st.row.getBoundingClientRect().top;
+
+  if(where === 'before') st.list.insertBefore(st.row, sib);
+  else st.list.insertBefore(st.row, sib.nextSibling);
+
+  // сосед плавно уезжает на освободившееся место
+  const sibDelta = sibBefore - sib.getBoundingClientRect().top;
+  if(sibDelta){
+    sib.style.transition = 'none';
+    sib.style.transform = `translateY(${sibDelta}px)`;
+    requestAnimationFrame(() => {
+      sib.style.transition = 'transform 200ms cubic-bezier(.22,.9,.28,1)';
+      sib.style.transform = '';
+    });
+  }
+
+  // строка под курсором визуально не должна дёргаться
+  st.row.style.transform = '';
+  const selfAfter = st.row.getBoundingClientRect().top;
+  st.baseTop = selfAfter;
+  st.startY += (selfAfter - selfBefore);
+  st.row.style.transform = `translateY(${(selfBefore - selfAfter)}px)`;
+}
+
+function onRowDragEnd(e){
+  document.removeEventListener('pointermove', onRowDragMove);
+  document.removeEventListener('pointerup', onRowDragEnd);
+  document.removeEventListener('pointercancel', onRowDragEnd);
+  if(!dragState) return;
+
+  const st = dragState;
+  dragState = null;
+  try{ st.row.releasePointerCapture(st.pointerId); }catch(err){}
+  document.body.classList.remove('is-dragging');
+
+  if(!st.moved){ st.row.style.transform = ''; st.row.classList.remove('dragging'); return; }
+
+  // строка мягко опускается в свой новый слот
+  st.row.style.transition = 'transform 180ms cubic-bezier(.22,.9,.28,1)';
+  st.row.style.transform = '';
+
+  setTimeout(() => {
+    st.row.style.transition = '';
+    st.row.classList.remove('dragging');
+    commitRowOrder(st.id);
+  }, 190);
+}
+
+// порядок в DOM после перетаскивания переносим в данные
+function commitRowOrder(movedId){
+  const cfg = TAB_CONFIG[currentTab];
+  const arr = getArr();
+  const order = [...document.querySelectorAll('#list .row')].map(r => r.dataset.id);
+  const byId = new Map(arr.map(l => [String(l.id), l]));
+  const next = order.map(oid => byId.get(String(oid))).filter(Boolean);
+  if(next.length !== arr.length) return;
+
+  const same = next.every((l, i) => l.id === arr[i].id);
+  if(same) return;
+
+  if(cfg.autoRecalc) recalcPoints(next);
+  setArr(next);
+  render();
+
+  const landed = document.querySelector(`#list .row[data-id="${movedId}"]`);
+  if(landed){
+    landed.classList.add('just-moved');
+    setTimeout(() => landed.classList.remove('just-moved'), 700);
+  }
+  saveLevels();
 }
 
 function moveItem(id, dir){
@@ -2172,18 +2378,11 @@ function moveItem(id, dir){
   if(idx < 0) return;
   const newIdx = idx + dir;
   if(newIdx < 0 || newIdx >= arr.length) return;
-  // запоминаем, откуда уровень пришёл — для стрелки в строке
-  if(arr[idx].prevPos === undefined) arr[idx].prevPos = idx + 1;
-  if(arr[newIdx].prevPos === undefined) arr[newIdx].prevPos = newIdx + 1;
-  delete arr[idx].isNew;
-  delete arr[newIdx].isNew;
+  const beforeMove = captureRowPositions();
   [arr[idx], arr[newIdx]] = [arr[newIdx], arr[idx]];
-  [arr[idx], arr[newIdx]].forEach((l, k) => {
-    const pos = (k === 0 ? idx : newIdx) + 1;
-    if(l.prevPos === pos) delete l.prevPos;   // вернулся на своё место — значка нет
-  });
   if(cfg.autoRecalc) recalcPoints(arr);
   render();
+  playRowShift(beforeMove);
   saveLevels();
 }
 
@@ -2202,6 +2401,8 @@ function render(){
 
   // поиск не меняет данные — прячется только то, что не совпало
   const q = searchQuery.trim().toLowerCase();
+  // перетаскивать можно только полный, неотфильтрованный список
+  const canDrag = isAdmin && !q;
   let shown = 0;
 
   arr.forEach((lvl, i) => {
@@ -2211,6 +2412,8 @@ function render(){
     const isTop = cfg.showRanking && i < 3;
     const beaten = cfg.showLevelInfo && isLevelBeatenByMe(lvl);
     row.className = `row ${isTop ? 'top ' : ''}${cfg.showRanking ? rankClass(i) : ''}${beaten ? ' beaten' : ''}`.trim();
+    row.dataset.id = lvl.id;
+    if(canDrag) row.dataset.draggable = '1';
 
     const t = I18N[currentLang];
 
@@ -2238,7 +2441,7 @@ function render(){
         <div class="title-line">
           ${cfg.showRanking ? `<span class="rank-badge">#${i + 1}</span>` : ''}
           <span class="level-name">${escapeHtml(lvl.name)}</span>
-          ${positionBadge(lvl, i, cfg)}
+          ${positionBadge(lvl)}
         </div>
         ${cfg.showMeta ? `<div class="meta-line">
           ${cfg.hideVerifierLine ? '' : `<span class="verifier">${verifierLine}</span><span class="meta-sep">·</span>`}
@@ -2246,10 +2449,13 @@ function render(){
         </div>` : ''}
       </div>
       ${isAdmin ? `<div class="admin-col">
-        <div class="move-col">
-          <button class="move-up" title="${t.moveUpTitle}" ${i === 0 ? 'disabled' : ''}>▲</button>
-          <button class="move-down" title="${t.moveDownTitle}" ${i === arr.length - 1 ? 'disabled' : ''}>▼</button>
-        </div>
+        ${canDrag ? `<button class="drag-handle" title="${t.dragTitle}" aria-label="${t.dragTitle}">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor">
+            <circle cx="9" cy="6" r="1.7"/><circle cx="15" cy="6" r="1.7"/>
+            <circle cx="9" cy="12" r="1.7"/><circle cx="15" cy="12" r="1.7"/>
+            <circle cx="9" cy="18" r="1.7"/><circle cx="15" cy="18" r="1.7"/>
+          </svg>
+        </button>` : ''}
         <div class="row-actions">
           <button class="edit" title="${t.editTitle}">✎</button>
           <button class="del" title="${t.deleteTitle}">✕</button>
@@ -2266,8 +2472,14 @@ function render(){
     }
 
     if(isAdmin){
-      row.querySelector('.move-up').addEventListener('click', (e) => { e.stopPropagation(); moveItem(lvl.id, -1); });
-      row.querySelector('.move-down').addEventListener('click', (e) => { e.stopPropagation(); moveItem(lvl.id, 1); });
+      const nb = row.querySelector('.pos-badge.is-new');
+      if(nb) nb.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const target = getArr().find(l => l.id === lvl.id);
+        if(!target) return;
+        delete target.isNew; delete target.newAt;
+        render(); saveLevels();
+      });
 
       row.querySelector('.del').addEventListener('click', (e) => {
         e.stopPropagation();
@@ -2284,6 +2496,8 @@ function render(){
         openEditForm(lvl, row);
       });
     }
+
+    if(canDrag) attachRowDrag(row, lvl.id);
 
     list.appendChild(row);
 
@@ -3248,6 +3462,7 @@ const fPoints = document.getElementById('fPoints');
 const fExtra = document.getElementById('fExtra');
 const lblName = document.getElementById('lblName');
 const lblVerifier = document.getElementById('lblVerifier');
+const fIsNew = document.getElementById('fIsNew');
 const lblPoints = document.getElementById('lblPoints');
 const lblExtra = document.getElementById('lblExtra');
 const fCreator = document.getElementById('fCreator');
@@ -3306,6 +3521,7 @@ openFormBtn.addEventListener('click', () => {
     ? Math.max(POINTS_BASE - arr.length * POINTS_STEP, 0)
     : (arr.length ? Math.max(arr[arr.length - 1].points - 40, 0) : 1000);
   fName.value = ''; fVerifier.value = ''; fExtra.value = '';
+  fIsNew.checked = true;
   fPoints.value = cfg.metaKind === 'progress' ? '' : suggested;
   detailFields.forEach(f => f.value = '');
   fName.focus();
@@ -3322,6 +3538,7 @@ function openEditForm(lvl, rowEl){
   fName.value = lvl.name;
   fVerifier.value = lvl.verifier;
   fPoints.value = cfg.metaKind === 'progress' ? parseProgress(lvl.progress) : lvl.points;
+  fIsNew.checked = !!lvl.isNew;
   fExtra.value = lvl.extra || '';
   fCreator.value = lvl.creator || '';
   fThumb.value = lvl.thumbnail || '';
@@ -3381,6 +3598,12 @@ submitBtn.addEventListener('click', () => {
       lvl.name = fName.value.trim();
       lvl.verifier = fVerifier.value.trim();
       lvl.extra = fExtra.value.trim();
+      if(fIsNew.checked){
+        if(!lvl.isNew) lvl.newAt = Date.now();   // отсчёт двух недель с момента включения
+        lvl.isNew = true;
+      } else {
+        delete lvl.isNew; delete lvl.newAt;
+      }
       if(cfg.metaKind === 'progress') lvl.progress = parseProgress(fPoints.value);
       else lvl.points = Number(fPoints.value) || 0;
       Object.assign(lvl, detailValues);
@@ -3388,7 +3611,7 @@ submitBtn.addEventListener('click', () => {
   } else {
     arr.push({
       id: uid(),
-      isNew: true,
+      ...(fIsNew.checked ? { isNew: true, newAt: Date.now() } : {}),
       name: fName.value.trim(),
       verifier: fVerifier.value.trim(),
       extra: fExtra.value.trim(),
