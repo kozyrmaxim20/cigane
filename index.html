@@ -319,8 +319,21 @@
     position:relative; z-index:3; box-shadow:0 8px 22px -10px rgba(0,0,0,0.8);
   }
   .thumb img, .thumb-fallback{ border-radius:11px; }
-  .thumb img{ width:100%; height:100%; object-fit:cover; display:block; transition:transform .5s cubic-bezier(.16,1,.3,1); }
-  .row:hover .thumb img{ transform:scale(1.08); }
+  .thumb.has-video{ cursor:pointer; }
+  .thumb-play{
+    position:absolute; inset:0; z-index:2; display:flex; align-items:center; justify-content:center;
+    opacity:0; transition:opacity .22s ease; border-radius:11px;
+    background:linear-gradient(135deg, rgba(28,16,54,0.62), rgba(12,10,26,0.62));
+  }
+  .thumb-play svg{
+    width:46px; height:46px; padding:12px 11px 12px 14px; border-radius:50%; color:#17130a;
+    background:linear-gradient(135deg, var(--lemon), #b9f56b);
+    box-shadow:0 0 26px -6px var(--lemon);
+    transform:scale(0.88); transition:transform .22s ease, box-shadow .22s ease;
+  }
+  .thumb.has-video:hover .thumb-play{ opacity:1; }
+  .thumb.has-video:hover .thumb-play svg{ transform:scale(1); box-shadow:0 0 34px -4px var(--lemon); }
+  .thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
   .thumb-fallback{
     width:100%; height:100%; display:flex; align-items:center; justify-content:center;
     background:linear-gradient(135deg, rgba(176,108,240,0.2), rgba(92,240,228,0.14));
@@ -437,7 +450,12 @@
   @keyframes borderFlow{ to{ background-position:200% 0; } }
   .row.rank-1 .rank-badge{ color:var(--gold); font-size:25px; text-shadow:0 0 22px rgba(255,214,107,0.6); }
   .row.rank-1 .level-name{ color:#fff5da; }
-  .row.rank-1:hover{ box-shadow:0 30px 70px -22px rgba(255,200,80,0.6); }
+  .row.rank-1:hover{ border-color:var(--gold);
+    box-shadow:0 30px 70px -22px rgba(255,200,80,0.6), 0 0 0 2px rgba(255,214,107,0.55); }
+  .row.rank-2:hover{ border-color:var(--silver);
+    box-shadow:0 24px 58px -22px rgba(200,205,230,0.45), 0 0 0 2px rgba(216,219,232,0.5); }
+  .row.rank-3:hover{ border-color:var(--bronze);
+    box-shadow:0 24px 58px -22px rgba(255,157,92,0.45), 0 0 0 2px rgba(255,157,92,0.5); }
 
   /* RANK 2 — SILVER */
   .row.rank-2{
@@ -834,12 +852,15 @@
   .rules-edit-btn{ margin:18px 0 4px; }
   .rules-edit-btn:hover{ transform:none; background:rgba(176,108,240,0.22); }
   .rules-edit-btn .db-arrow{ font-size:13px; }
-  .rules-editor-actions .detail-back{ margin:0; }
-  .rules-editor-actions .detail-back:hover{ transform:none; }
-  .rules-editor-actions .is-primary{ border-color:rgba(214,255,110,0.45); color:var(--lemon);
-    background:rgba(214,255,110,0.12); }
-  .rules-editor-actions .is-primary:hover{ background:rgba(214,255,110,0.2); }
-  .rules-editor-actions{ display:flex; align-items:center; gap:10px; margin-top:12px; flex-wrap:wrap; }
+  .rules-editor{ margin:0 30px 26px; padding:20px; border-radius:16px;
+    background:rgba(255,255,255,0.03); border:1px solid var(--glass-line); }
+  .rules-editor .form-title{ margin-bottom:14px; }
+  .rules-editor textarea{ min-height:320px; resize:vertical; line-height:1.65;
+    font-family:ui-monospace,Menlo,Consolas,monospace; font-size:13px; }
+  .rules-editor-hint{ margin:9px 2px 0; font-size:12px; color:var(--muted); line-height:1.5; }
+  .rules-editor .actions{ margin-top:16px; }
+  .rules-editor .rules-reset{ color:#ff9b9b; border-color:rgba(255,120,120,0.3); }
+  .rules-editor .rules-reset:hover{ background:rgba(255,90,90,0.12); border-color:rgba(255,120,120,0.55); }
   .rules-note{ margin:14px 22px 24px; padding:13px 16px; border-radius:12px; font-size:13px; line-height:1.55;
     color:var(--mystic); background:rgba(160,120,255,0.08); border:1px solid rgba(160,120,255,0.22); }
   body.only-beaten #list .row:not(.beaten){ display:none; }
@@ -872,11 +893,11 @@
     font-family:'Oswald',sans-serif; line-height:1; border:1px solid transparent; }
   .pos-badge.is-up{ color:#7bf5a8; background:rgba(88,235,150,0.12); border-color:rgba(88,235,150,0.28); }
   .pos-badge.is-down{ color:#ff7b7b; background:rgba(255,95,95,0.12); border-color:rgba(255,95,95,0.28); }
-  .pos-badge.is-new{ color:#0f1220; background:linear-gradient(135deg, var(--lemon), #b9f56b);
-    font-weight:700; font-size:11.5px; letter-spacing:0.1em; height:22px; padding:0 9px;
-    flex:0 0 auto; align-self:center; position:relative; top:1px;
-    border-radius:6px; box-shadow:0 0 16px -6px var(--lemon); cursor:pointer; }
-  .pos-badge.is-new:hover{ filter:brightness(1.06); }
+  .pos-badge.is-new{ color:var(--lemon); background:rgba(214,255,110,0.1);
+    border:1px solid rgba(214,255,110,0.5); font-weight:700; font-size:11.5px; letter-spacing:0.1em;
+    height:26px; padding:0 10px; flex:0 0 auto; align-self:center; position:relative; top:2px;
+    border-radius:6px; cursor:pointer; transition:background .2s, border-color .2s; }
+  .pos-badge.is-new:hover{ background:rgba(214,255,110,0.18); border-color:rgba(214,255,110,0.75); }
   .search-bar{ margin:0 0 14px; }
   .search-box{ position:relative; display:flex; align-items:center; gap:11px; height:50px; padding:0 6px 0 17px;
     border-radius:16px; background:linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.02));
@@ -891,9 +912,12 @@
   .search-box:focus-within::after{ opacity:1; }
   .search-ico{ display:flex; color:var(--mystic); opacity:0.7; transition:color .25s, opacity .25s; }
   .search-box:focus-within .search-ico{ color:var(--lemon); opacity:1; }
-  .search-box input{ flex:1; height:100%; background:transparent; border:0; outline:none; color:#f0edfa;
-    font-size:14.5px; letter-spacing:0.01em; }
-  .search-box input::placeholder{ color:var(--mystic); opacity:0.6; }
+  .search-box .search-input{ flex:1; min-width:0; outline:none; color:#f0edfa;
+    font-size:14.5px; letter-spacing:0.01em; line-height:50px; height:50px;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis; cursor:text; }
+  .search-box .search-input:empty::before{
+    content:attr(data-placeholder); color:var(--mystic); opacity:0.6; pointer-events:none; }
+  .search-box .search-input br{ display:none; }
   /* менеджеры паролей перекрашивают поле — держим свой фон */
   .search-box input:-webkit-autofill,
   .search-box input:-webkit-autofill:hover,
@@ -922,16 +946,74 @@
   .lvl-group-count{ min-width:26px; padding:2px 8px; border-radius:999px; text-align:center;
     background:rgba(255,255,255,0.07); border:1px solid var(--glass-line);
     font-family:'Oswald',sans-serif; font-size:11.5px; color:var(--mystic); }
-  .lvl-chips{ display:flex; flex-wrap:wrap; gap:7px; }
-  .lvl-chip{ display:inline-flex; align-items:center; gap:6px; padding:6px 11px; border-radius:999px;
+  .lvl-chips{ display:grid; grid-template-columns:repeat(auto-fill, 186px); gap:8px; justify-content:start; }
+  @media (max-width: 640px){ .lvl-chips{ grid-template-columns:repeat(auto-fill, minmax(0, 1fr)); } }
+  .pl-split{ display:grid; grid-template-columns:300px minmax(0,1fr); gap:16px; padding:6px 20px 20px; align-items:start; }
+  @media (max-width: 860px){ .pl-split{ grid-template-columns:1fr; } }
+  .pl-side{ border:1px solid var(--glass-line); border-radius:16px; background:rgba(255,255,255,0.025); overflow:hidden; }
+  .pl-side-head{ display:flex; align-items:center; gap:9px; padding:14px 16px; border-bottom:1px solid var(--glass-line);
+    font-family:'Oswald',sans-serif; font-size:12.5px; letter-spacing:0.1em; text-transform:uppercase; color:#efeaff; }
+  .pl-side-head .lvl-group-count{ margin-left:auto; }
+  .pl-list{ max-height:620px; overflow-y:auto; padding:8px; display:flex; flex-direction:column; gap:5px; }
+  .pl-item{ display:flex; align-items:center; gap:7px; width:100%; padding:0 12px; height:44px; cursor:pointer;
+    border:1px solid transparent; border-radius:11px; background:transparent; color:#e9e6f5; text-align:left;
+    transition:background .18s, border-color .18s; }
+  .pl-item:hover{ background:rgba(255,255,255,0.06); }
+  .pl-item.active{ background:rgba(176,108,240,0.16); border-color:var(--glass-line-bright); }
+  .pl-rank{ font-family:'Oswald',sans-serif; font-weight:600; font-size:13px; color:var(--mystic);
+    flex:0 0 auto; min-width:26px; }
+  .pl-medal{ flex:0 0 16px; font-size:12.5px; line-height:1; text-align:center; margin-right:4px; }
+  .pl-medal.is-empty{ visibility:hidden; }
+  .pl-item.pl-top1 .pl-rank{ color:var(--gold); }
+  .pl-item.pl-top2 .pl-rank{ color:var(--silver); }
+  .pl-item.pl-top3 .pl-rank{ color:var(--bronze); }
+  .pl-name{ flex:1 1 auto; min-width:0; font-family:'Oswald',sans-serif; font-weight:600; font-size:15px;
+    letter-spacing:.01em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .pl-pts{ font-family:'Oswald',sans-serif; font-weight:600; font-size:13.5px; color:var(--lemon); flex:0 0 auto; }
+  .pl-pane{ border:1px solid var(--glass-line); border-radius:16px; background:rgba(255,255,255,0.02); padding:20px 0 4px; }
+  .pl-pane .pr-stats, .pl-pane .pr-hardest, .pl-pane .detail-subsection{ margin-left:20px; margin-right:20px; }
+  .pl-pane .pr-stats{ display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:14px; padding:0; margin-bottom:22px; }
+  .pl-pane .pr-stat{ margin:0; width:auto; min-width:0; }
+  .pl-pane .pr-stat-value{ font-family:'Oswald',sans-serif; font-weight:600; }
+  .pl-pane-head{ display:flex; flex-direction:column; align-items:center; gap:12px; padding:10px 20px 20px; }
+  .pl-pane-head .pr-avatar{ width:64px; height:64px; font-size:27px; border-radius:16px; }
+  .pl-open-name{ display:inline-flex; align-items:center; gap:8px; padding:5px 12px; border-radius:11px; cursor:pointer;
+    background:transparent; border:1px solid transparent; color:#fff;
+    font-family:'Oswald',sans-serif; font-weight:600; font-size:25px; letter-spacing:.01em;
+    transition:background .18s, border-color .18s; }
+  .pl-open-name:hover{ background:rgba(255,255,255,0.07); border-color:var(--glass-line-bright); }
+  .pl-open-name svg{ color:var(--mystic); }
+  .pl-empty{ padding:60px 20px; text-align:center; color:var(--mystic); opacity:0.8; font-size:14px; }
+  .pl-empty.sm{ padding:26px 10px; }
+  .pr-hardest{ margin:0 30px 22px; padding:16px 20px 17px; border-radius:16px; cursor:pointer;
+    background:linear-gradient(135deg, rgba(255,120,60,0.12), rgba(255,120,60,0.04));
+    border:1px solid rgba(255,140,80,0.28); transition:border-color .2s, background .2s; }
+  .pr-hardest:hover{ border-color:rgba(255,160,90,0.5); background:linear-gradient(135deg, rgba(255,120,60,0.18), rgba(255,120,60,0.06)); }
+  .pr-hardest-head{ display:flex; align-items:center; gap:8px; font-family:'Oswald',sans-serif;
+    font-size:12.5px; letter-spacing:0.09em; text-transform:uppercase; color:#ffa970; }
+  .pr-hardest-body{ display:flex; align-items:center; gap:11px; margin-top:9px; }
+  .ph-rank{ font-family:'Oswald',sans-serif; font-weight:700; font-size:17px; color:#ffb37a; }
+  .ph-name{ font-family:'Oswald',sans-serif; font-weight:600; font-size:19px; color:#fff;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .ph-go{ margin-left:auto; font-size:20px; color:#ffa970; opacity:0.75; }
+  .pr-hardest:hover .ph-go{ opacity:1; }
+  .pr-verified .sh-icon{ filter:none; }
+  .pr-verified .lvl-group-count{ margin-left:auto; margin-right:10px; }
+  .lvl-chips.is-verified .lvl-chip{ border-color:rgba(88,235,150,0.4); color:#d6ffe9; }
+  .lvl-chips.is-verified .lvl-chip:hover{ border-color:rgba(88,235,150,0.75); background:rgba(88,235,150,0.1); }
+  .lvl-chip{ cursor:pointer; display:flex; align-items:center; gap:6px; height:38px; padding:0 12px;
+    border-radius:999px; min-width:0; overflow:hidden;
     background:rgba(255,255,255,0.045); border:1px solid var(--glass-line);
-    font-size:13px; color:#e9e6f5; transition:border-color .2s, background .2s; }
-  .lvl-chip:hover{ background:rgba(255,255,255,0.08); border-color:var(--glass-line-bright); }
+    font-size:13px; color:#e9e6f5; transition:border-color .2s, background .2s, transform .2s; }
+  .lvl-chip:hover{ background:rgba(255,255,255,0.08); border-color:var(--glass-line-bright); transform:translateY(-1px); }
   .lvl-chip.partial{ border-style:dashed; opacity:0.82; }
   .lvl-chip.pending{ opacity:0.45; background:transparent; border-style:dashed; }
   .lvl-chip.pending:hover{ opacity:0.7; background:rgba(255,255,255,0.04); }
-  .chip-rank{ font-family:'Oswald',sans-serif; font-size:11px; color:var(--lemon); }
-  .chip-pct{ font-family:'Oswald',sans-serif; font-size:11px; color:var(--mystic); }
+  .chip-rank{ font-family:'Oswald',sans-serif; font-size:11px; color:var(--lemon); flex:0 0 auto; }
+  .chip-pct{ font-family:'Oswald',sans-serif; font-size:11px; color:var(--mystic); flex:0 0 auto; margin-left:auto; }
+  .chip-name{ flex:1 1 auto; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .chip-ver{ flex:0 0 auto; margin-left:auto; }
+  .chip-name + .chip-ver + .chip-pct{ margin-left:6px; }
   .chip-ver{ font-size:10.5px; color:var(--cyan); }
   .chip-play{ text-decoration:none; font-size:10px; color:var(--cyan); }
   .rec-group{ display:flex; align-items:baseline; justify-content:space-between; gap:10px; margin:12px 0 6px; font-family:'Oswald',sans-serif; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--mystic); opacity:0.85; }
@@ -1027,7 +1109,7 @@
     .level-name{ font-size:16px; }
     .grid2{ grid-template-columns:1fr; }
     .detail-media, .detail-desc, .detail-stats{ padding-left:18px; padding-right:18px; }
-    .detail-subsection{ margin:0 18px 18px; }
+    .detail-subsection, .pr-hardest{ margin:0 18px 18px; }
     .pr-head{ margin:0 18px; padding:12px 10px 18px; }
     .pr-stats{ padding:18px 18px 22px; grid-template-columns:1fr; }
     .subsection-header{ padding:15px 16px; }
@@ -1141,7 +1223,7 @@
           <circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
         </svg>
       </span>
-      <input type="search" id="listSearch" name="lemon-list-filter" placeholder="Поиск..." autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" inputmode="search" data-form-type="other" data-lpignore="true" data-1p-ignore data-bwignore aria-autocomplete="none" role="searchbox" />
+      <div id="listSearch" class="search-input" contenteditable="plaintext-only" role="textbox" aria-label="Search" spellcheck="false" data-placeholder="Поиск..."></div>
       <button class="search-clear" id="listSearchClear" style="display:none;" aria-label="Очистить">
         <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
           <path d="M6 6l12 12M18 6 6 18"/>
@@ -1408,6 +1490,11 @@ const I18N = {
     statusRetrying: 'Повторная попытка сохранения…',
     statusSaveError: 'Ошибка сохранения: ',
     cancel: 'Отмена',
+    playersSideTitle: "Все игроки",
+    pickPlayer: "Выберите игрока из списка",
+    openFullProfile: "Открыть полный профиль",
+    hardestTitle: "Сложнейший уровень",
+    verifiedTitle: "Из которых проверены",
     lblIsNew: "Пометка NEW",
     dragTitle: "Перетащить",
     newBadgeHint: "Новый уровень — нажмите, чтобы убрать значок",
@@ -1534,6 +1621,11 @@ const I18N = {
     statusRetrying: 'Retrying save…',
     statusSaveError: 'Save error: ',
     cancel: 'Cancel',
+    playersSideTitle: "All players",
+    pickPlayer: "Pick a player from the list",
+    openFullProfile: "Open full profile",
+    hardestTitle: "Hardest level",
+    verifiedTitle: "Which are verified",
     lblIsNew: "NEW badge",
     dragTitle: "Drag to reorder",
     newBadgeHint: "New level — click to remove the badge",
@@ -1951,7 +2043,7 @@ function applyStaticTexts(){
   document.getElementById('tabNonListedBtn').textContent = t.tabNonListed;
   document.getElementById('tabPlayersBtn').textContent = t.tabPlayers;
   const si = document.getElementById('listSearch');
-  if(si) si.placeholder = t.searchPlaceholder;
+  if(si) si.setAttribute('data-placeholder', t.searchPlaceholder);
   const nml = document.getElementById('navMoreLabel');
   if(nml) nml.textContent = t.navMore;
   const rb = document.getElementById('rulesBtn');
@@ -2236,7 +2328,7 @@ function attachRowDrag(row, id){
   row.addEventListener('pointerdown', (e) => {
     if(e.button !== 0) return;
     // клики по кнопкам и ссылкам не должны начинать перетаскивание
-    if(e.target.closest('button:not(.drag-handle), a, input, textarea')) return;
+    if(e.target.closest('button:not(.drag-handle), a, input, textarea, .thumb.has-video')) return;
     startRowDrag(e, row, id);
   });
 }
@@ -2386,10 +2478,129 @@ function moveItem(id, dir){
   saveLevels();
 }
 
+// на вкладке игроков — список слева и мини-профиль справа
+let selectedPlayerId = null;
+
+function renderPlayerPane(){
+  const pane = document.getElementById('plPane');
+  if(!pane) return;
+  const t = I18N[currentLang];
+  const arr = getArr();
+  const idx = arr.findIndex(p => String(p.id) === String(selectedPlayerId));
+  const player = arr[idx];
+  if(!player){
+    pane.innerHTML = `<div class="pl-empty">${escapeHtml(t.pickPlayer)}</div>`;
+    return;
+  }
+  const initial = (player.name || '?').trim().charAt(0).toUpperCase() || '?';
+  const isAdminNick = ADMINS.some(a => a.nick.toLowerCase() === String(player.name || '').trim().toLowerCase());
+  const { hardestHtml, recordsBody, verifiedHtml } = buildPlayerSections(player);
+
+  pane.innerHTML = `
+    <div class="pl-pane-head">
+      <div class="pr-avatar${isAdminNick ? ' is-admin' : ''}">${escapeHtml(initial)}</div>
+      <button class="pl-open-name" id="plOpenProfile" title="${escapeHtml(t.openFullProfile)}">
+        ${escapeHtml(player.name)}
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 4h6v6"/><path d="M20 4 11 13"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>
+        </svg>
+      </button>
+    </div>
+    <div class="pr-stats">
+      <div class="pr-stat">
+        <span class="pr-stat-ico rank">🏆</span>
+        <div class="pr-stat-text">
+          <div class="pr-stat-value">#${idx + 1}</div>
+          <div class="pr-stat-label">${escapeHtml(t.profileRank)}</div>
+        </div>
+      </div>
+      <div class="pr-stat">
+        <span class="pr-stat-ico score">✦</span>
+        <div class="pr-stat-text">
+          <div class="pr-stat-value">${escapeHtml(String(computePlayerPoints(player)))}</div>
+          <div class="pr-stat-label">${escapeHtml(t.profileScore)}</div>
+        </div>
+      </div>
+    </div>
+    ${hardestHtml}
+    <div class="detail-subsection">
+      <div class="subsection-header">
+        <span class="sh-icon">🏆</span>
+        <span class="sh-title">${escapeHtml(t.recordsTitle)}</span>
+      </div>
+      <div class="subsection-body">${recordsBody}</div>
+    </div>
+    ${verifiedHtml}
+  `;
+
+  const openBtn = document.getElementById('plOpenProfile');
+  if(openBtn) openBtn.addEventListener('click', () => openPlayerProfile(player, idx));
+
+  bindLevelChipNav(pane);
+}
+
+// переход со плиток уровня на его страницу
+function bindLevelChipNav(root){
+  const openFromEl = (el) => {
+    const key = el.getAttribute('data-list');
+    const idxAttr = el.getAttribute('data-idx');
+    if(!key || idxAttr === '' || idxAttr === null) return;
+    const lvl = state[key] && state[key][Number(idxAttr)];
+    if(!lvl) return;
+    const tabByKey = { levels: 'main', futureLevels: 'future', nonListedLevels: 'nonListed' };
+    const pv = document.getElementById('playerView');
+    if(pv && pv.style.display !== 'none') closePlayerProfile();
+    if(typeof window.switchTab === 'function') window.switchTab(tabByKey[key] || 'main');
+    openDetailModal(lvl);
+  };
+  root.querySelectorAll('.lvl-chip, .pr-hardest').forEach(el => {
+    el.addEventListener('click', () => openFromEl(el));
+    el.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); openFromEl(el); }
+    });
+  });
+}
+
+function renderPlayersSplit(list, arr, q){
+  const t = I18N[currentLang];
+  const shown = arr.filter(p => !q || String(p.name || '').toLowerCase().includes(q));
+  if(!shown.some(p => String(p.id) === String(selectedPlayerId))){
+    selectedPlayerId = shown.length ? shown[0].id : null;
+  }
+
+  const items = shown.map((p) => {
+    const realIdx = arr.indexOf(p);
+    const medal = realIdx === 0 ? '👑' : realIdx === 1 ? '🥈' : realIdx === 2 ? '🥉' : '';
+    return `<button class="pl-item${String(p.id) === String(selectedPlayerId) ? ' active' : ''}${realIdx < 3 ? ' pl-top' + (realIdx + 1) : ''}" data-id="${escapeHtml(String(p.id))}">
+      <span class="pl-rank">#${realIdx + 1}</span>
+      ${medal ? `<span class="pl-medal">${medal}</span>` : '<span class="pl-medal is-empty"></span>'}
+      <span class="pl-name">${escapeHtml(p.name)}</span>
+      <span class="pl-pts">${computePlayerPoints(p)}</span>
+    </button>`;
+  }).join('');
+
+  list.innerHTML = `<div class="pl-split">
+    <div class="pl-side">
+      <div class="pl-side-head">${escapeHtml(t.playersSideTitle)}<span class="lvl-group-count">${shown.length}</span></div>
+      <div class="pl-list">${items || `<div class="pl-empty sm">${escapeHtml(t.searchEmpty)}</div>`}</div>
+    </div>
+    <div class="pl-pane" id="plPane"></div>
+  </div>`;
+
+  list.querySelectorAll('.pl-item').forEach(btn => {
+    btn.addEventListener('click', () => {
+      selectedPlayerId = btn.getAttribute('data-id');
+      list.querySelectorAll('.pl-item').forEach(b => b.classList.toggle('active', b === btn));
+      renderPlayerPane();
+    });
+  });
+  renderPlayerPane();
+}
+
 function render(){
   const cfg = TAB_CONFIG[currentTab];
   const sb = document.getElementById('searchBar');
-  if(sb) sb.style.display = (currentTab === 'players') ? 'none' : '';
+  if(sb) sb.style.display = '';
   const list = document.getElementById('list');
   restoreFormHome();
   list.innerHTML = '';
@@ -2401,6 +2612,7 @@ function render(){
 
   // поиск не меняет данные — прячется только то, что не совпало
   const q = searchQuery.trim().toLowerCase();
+  if(currentTab === 'players'){ renderPlayersSplit(list, arr, q); return; }
   // перетаскивать можно только полный, неотфильтрованный список
   const canDrag = isAdmin && !q;
   let shown = 0;
@@ -2432,11 +2644,16 @@ function render(){
 
     const thumbSrc = cfg.showLevelInfo ? rowThumbSrc(lvl) : '';
     const thumbInner = thumbSrc
-      ? `<img src="${escapeHtml(thumbSrc)}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<span class=&quot;thumb-fallback&quot;>◆</span>'" />`
+      ? `<img src="${escapeHtml(thumbSrc)}" alt="" loading="lazy" onerror="this.outerHTML='<span class=&quot;thumb-fallback&quot;>◆</span>'" />`
       : `<span class="thumb-fallback">◆</span>`;
 
     row.innerHTML = `
-      ${cfg.showLevelInfo ? `<div class="thumb">${thumbInner}</div>` : ''}
+      ${cfg.showLevelInfo ? `<div class="thumb${lvl.videoUrl ? ' has-video' : ''}"${lvl.videoUrl ? ` data-video="${escapeHtml(lvl.videoUrl)}"` : ''}>
+        ${thumbInner}
+        ${lvl.videoUrl ? `<span class="thumb-play" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.5v13l11-6.5-11-6.5Z"/></svg>
+        </span>` : ''}
+      </div>` : ''}
       <div class="row-body">
         <div class="title-line">
           ${cfg.showRanking ? `<span class="rank-badge">#${i + 1}</span>` : ''}
@@ -2496,6 +2713,13 @@ function render(){
         openEditForm(lvl, row);
       });
     }
+
+    const th = row.querySelector('.thumb.has-video');
+    if(th) th.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const url = th.getAttribute('data-video');
+      if(url) window.open(url, '_blank', 'noopener,noreferrer');
+    });
 
     if(canDrag) attachRowDrag(row, lvl.id);
 
@@ -2760,6 +2984,18 @@ function collectPlayerRecords(player){
     });
   }
 
+  // уровень мог попасть в список раньше (из «Прохождений» или рекордов) —
+  // флаг верификатора проставляем отдельным проходом, иначе дедуп по имени его терял
+  if(nickKey){
+    out.forEach(r => {
+      const arr = state[r.listKey];
+      const lvl = (Array.isArray(arr) && r.lvlIdx !== null) ? arr[r.lvlIdx] : null;
+      if(!lvl) return;
+      const vs = String(lvl.verifier || '').split(/[,\n]/).map(x => x.trim().toLowerCase());
+      if(vs.includes(nickKey)) r.isVerifier = true;
+    });
+  }
+
   const ORDER = { levels: 0, nonListedLevels: 1, futureLevels: 2, other: 3 };
   out.sort((a, b) =>
     (ORDER[a.listKey] - ORDER[b.listKey]) || ((a.position || 9999) - (b.position || 9999))
@@ -2820,13 +3056,10 @@ function closePlayerProfile(){
   window.scrollTo({ top: 0, behavior: 'auto' });
 }
 
-function renderPlayerProfile(){
-  if(!playerCtx) return;
+// секции профиля собираются один раз и используются и в полном профиле, и в мини-панели
+function buildPlayerSections(player){
   const t = I18N[currentLang];
-  const { player, idx } = playerCtx;
   const recs = collectPlayerRecords(player);
-  const initial = (player.name || '?').trim().charAt(0).toUpperCase() || '?';
-  const isAdminNick = ADMINS.some(a => a.nick.toLowerCase() === String(player.name || '').trim().toLowerCase());
 
   const groupLabel = (k) => k === 'levels' ? t.tabMain
     : k === 'futureLevels' ? t.tabFuture
@@ -2842,18 +3075,20 @@ function renderPlayerProfile(){
     g.items.push(r);
   });
 
+  const chipHtml = (r) => {
+    const isFull = String(r.percent).trim() === '100';
+    const pending = (r.listKey === 'futureLevels');
+    return `<span class="lvl-chip${isFull && !pending ? '' : ' partial'}${pending ? ' pending' : ''}"
+        data-list="${escapeHtml(r.listKey)}" data-idx="${r.lvlIdx === null ? '' : r.lvlIdx}" role="button" tabindex="0">
+      ${r.position ? `<b class="chip-rank">#${r.position}</b>` : ''}
+      <span class="chip-name">${escapeHtml(r.levelName)}</span>
+      ${(isFull && !pending) ? '<span class="chip-ver" title="100%">✔</span>' : ''}
+      ${isFull ? '' : `<span class="chip-pct">${escapeHtml(r.percent)}%</span>`}
+    </span>`;
+  };
+
   const recItems = groups.map(g => {
-    const chips = g.items.map(r => {
-      const isFull = String(r.percent).trim() === '100';
-      const pending = (r.listKey === 'futureLevels');
-      return `<span class="lvl-chip${isFull && !pending ? '' : ' partial'}${pending ? ' pending' : ''}">
-        ${r.position ? `<b class="chip-rank">#${r.position}</b>` : ''}
-        <span class="chip-name">${escapeHtml(r.levelName)}</span>
-        ${(isFull && r.listKey !== 'futureLevels') ? '<span class="chip-ver" title="100%">✔</span>' : ''}
-        ${isFull ? '' : `<span class="chip-pct">${escapeHtml(r.percent)}%</span>`}
-        ${r.videoUrl ? `<a class="chip-play" href="${escapeHtml(r.videoUrl)}" target="_blank" rel="noopener noreferrer">▶</a>` : ''}
-      </span>`;
-    }).join('');
+    const chips = g.items.map(chipHtml).join('');
     return `<div class="lvl-group">
       <div class="lvl-group-head">
         <span class="lvl-group-title"><i class="g-dot ${GROUP_DOT[g.key] || 'g-other'}"></i>${escapeHtml(groupLabel(g.key))}</span>
@@ -2862,6 +3097,43 @@ function renderPlayerProfile(){
       <div class="lvl-chips">${chips}</div>
     </div>`;
   }).join('');
+
+  // самый сложный — пройденный уровень классического листа с наименьшим номером
+  const hardest = recs
+    .filter(r => r.listKey === 'levels' && r.position && String(r.percent).trim() === '100')
+    .sort((a, b) => a.position - b.position)[0];
+
+  const hardestHtml = hardest
+    ? `<div class="pr-hardest" data-list="levels" data-idx="${hardest.lvlIdx}" role="button" tabindex="0">
+         <div class="pr-hardest-head"><span class="ph-ico">🔥</span>${escapeHtml(t.hardestTitle)}</div>
+         <div class="pr-hardest-body">
+           <span class="ph-rank">#${hardest.position}</span>
+           <span class="ph-name">${escapeHtml(hardest.levelName)}</span>
+           <span class="ph-go">›</span>
+         </div>
+       </div>`
+    : '';
+
+  // уровни, где игрок значится верификатором
+  // засчитываем верификации только по классическому листу
+  const verified = recs.filter(r => r.isVerifier && r.listKey === 'levels');
+  const verifiedHtml = verified.length
+    ? `<div class="detail-subsection pr-verified" id="playerVerifiedSection">
+         <div class="subsection-header" id="playerVerifiedHeader">
+           <span class="sh-icon">✅</span>
+           <span class="sh-title">${escapeHtml(t.verifiedTitle)}</span>
+           <span class="lvl-group-count">${verified.length}</span>
+           <span class="sh-chevron">▲</span>
+         </div>
+         <div class="subsection-body">
+           <div class="subsection-inner">
+             <div class="subsection-list">
+               <div class="lvl-chips is-verified">${verified.map(chipHtml).join('')}</div>
+             </div>
+           </div>
+         </div>
+       </div>`
+    : '';
 
   const recordsBody = recs.length
     ? `<div class="subsection-inner">
@@ -2873,6 +3145,17 @@ function renderPlayerProfile(){
            <div>${escapeHtml(t.noRecordsYet)}</div>
          </div>
        </div>`;
+
+  return { hardestHtml, recordsBody, verifiedHtml };
+}
+
+function renderPlayerProfile(){
+  if(!playerCtx) return;
+  const t = I18N[currentLang];
+  const { player, idx } = playerCtx;
+  const initial = (player.name || '?').trim().charAt(0).toUpperCase() || '?';
+  const isAdminNick = ADMINS.some(a => a.nick.toLowerCase() === String(player.name || '').trim().toLowerCase());
+  const { hardestHtml, recordsBody, verifiedHtml } = buildPlayerSections(player);
 
   document.getElementById('playerContent').innerHTML = `
     <div class="pr-head">
@@ -2901,6 +3184,7 @@ function renderPlayerProfile(){
         </div>
       </div>
     </div>
+    ${hardestHtml}
     <div class="detail-subsection" id="playerRecordsSection">
       <div class="subsection-header" id="playerRecordsHeader">
         <span class="sh-icon">🏆</span>
@@ -2909,6 +3193,7 @@ function renderPlayerProfile(){
       </div>
       <div class="subsection-body" id="playerRecordsBody">${recordsBody}</div>
     </div>
+    ${verifiedHtml}
   `;
 
   const toolsSlot = document.getElementById('playerToolsSlot');
@@ -2923,6 +3208,11 @@ function renderPlayerProfile(){
 
   const bkBtn = document.getElementById('backupBtn');
   if(bkBtn) bkBtn.addEventListener('click', downloadBackup);
+
+  bindLevelChipNav(document.getElementById('playerContent'));
+
+  const vHdr = document.getElementById('playerVerifiedHeader');
+  if(vHdr) vHdr.addEventListener('click', () => toggleSubsection(document.getElementById('playerVerifiedSection')));
 
   const hdr = document.getElementById('playerRecordsHeader');
   if(hdr) hdr.addEventListener('click', () => toggleSubsection(document.getElementById('playerRecordsSection')));
@@ -3299,13 +3589,15 @@ function openRulesPage(){
     </div>
     ${blocks}
     ${r.note ? `<div class="rules-note">${escapeHtml(r.note)}</div>` : ''}
-    ${isAdmin ? `<div class="rules-editor" id="rulesEditor" style="display:none;">
-      <textarea id="rulesTextarea" spellcheck="false"></textarea>
+    ${isAdmin ? `<div class="rules-editor add-form open" id="rulesEditor" style="display:none;">
+      <div class="form-title">${escapeHtml(t.rulesEdit)}</div>
+      <label for="rulesTextarea">${escapeHtml(t.rulesTitle)}</label>
+      <textarea id="rulesTextarea" spellcheck="false" rows="16"></textarea>
       <div class="rules-editor-hint">${escapeHtml(t.rulesEditHint)}</div>
-      <div class="rules-editor-actions">
-        <button class="detail-back is-primary" id="rulesSaveBtn">${escapeHtml(t.rulesSave)}</button>
-        <button class="detail-back" id="rulesResetBtn">${escapeHtml(t.rulesReset)}</button>
-        <button class="detail-back" id="rulesCancelBtn">${escapeHtml(t.rulesCancel)}</button>
+      <div class="actions">
+        <button class="primary" id="rulesSaveBtn">${escapeHtml(t.rulesSave)}</button>
+        <button class="ghost" id="rulesCancelBtn">${escapeHtml(t.rulesCancel)}</button>
+        <button class="ghost rules-reset" id="rulesResetBtn">${escapeHtml(t.rulesReset)}</button>
       </div>
     </div>` : ''}`;
 
@@ -3668,6 +3960,7 @@ deleteFromFormBtn.addEventListener('click', () => {
   const tabNonListedBtn = document.getElementById('tabNonListedBtn');
   const tabPlayersBtn = document.getElementById('tabPlayersBtn');
 
+  window.switchTab = switchTab;
   function switchTab(tab){
     const dv = document.getElementById('detailView');
     if(dv && dv.style.display !== 'none') closeDetailModal();
@@ -3693,7 +3986,7 @@ deleteFromFormBtn.addEventListener('click', () => {
   if(sbShow) sbShow.style.display = (currentTab === 'players') ? 'none' : '';
     searchQuery = '';
     const sIn = document.getElementById('listSearch');
-    if(sIn){ sIn.value = ''; document.getElementById('listSearchClear').style.display = 'none'; }
+    if(sIn){ sIn.textContent = ''; document.getElementById('listSearchClear').style.display = 'none'; }
     applyTabLabels();
     closeForm();
     render();
@@ -3729,23 +4022,23 @@ deleteFromFormBtn.addEventListener('click', () => {
   const listSearch = document.getElementById('listSearch');
   const listSearchClear = document.getElementById('listSearchClear');
   if(listSearch){
-    // поле readonly, пока в него не кликнули — так менеджер паролей не считает его логином
-    listSearch.setAttribute('readonly', 'readonly');
-    const unlock = () => listSearch.removeAttribute('readonly');
-    listSearch.addEventListener('focus', unlock);
-    listSearch.addEventListener('mousedown', unlock);
-    listSearch.addEventListener('touchstart', unlock, { passive: true });
-    listSearch.addEventListener('blur', () => {
-      if(!listSearch.value) listSearch.setAttribute('readonly', 'readonly');
-    });
-
     listSearch.addEventListener('input', () => {
-      searchQuery = listSearch.value;
+      searchQuery = listSearch.textContent.replace(/\s+/g, ' ');
       listSearchClear.style.display = searchQuery ? '' : 'none';
       render();
     });
+    // перевод строки и вставка форматированного текста полю не нужны
+    listSearch.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter') e.preventDefault();
+      if(e.key === 'Escape'){ e.preventDefault(); listSearchClear.click(); }
+    });
+    listSearch.addEventListener('paste', (e) => {
+      e.preventDefault();
+      const txt = (e.clipboardData || window.clipboardData).getData('text').replace(/\s+/g, ' ');
+      document.execCommand('insertText', false, txt);
+    });
     listSearchClear.addEventListener('click', () => {
-      listSearch.value = ''; searchQuery = '';
+      listSearch.textContent = ''; searchQuery = '';
       listSearchClear.style.display = 'none';
       render(); listSearch.focus();
     });
