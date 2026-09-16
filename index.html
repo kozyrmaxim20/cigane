@@ -1473,20 +1473,25 @@
 
 <script>
 /* =========================================================
-   JSONBIN.IO CONFIG — ЗАПОЛНИ ЭТИ ДВЕ СТРОКИ
-   1. Зарегистрируйся на https://jsonbin.io (бесплатно)
-   2. В личном кабинете открой "API Keys" и скопируй свой
-      X-Master-Key -> вставь в JSONBIN_API_KEY
-   3. Создай новый Bin с содержимым {"levels": []} и скопируй
-      его Bin ID (виден в URL / в списке бинов) -> JSONBIN_BIN_ID
+   SUPABASE CONFIG
+   Settings -> API: Project URL и anon public key.
+   Таблица site_state: одна строка id = 1, поле data (jsonb).
+   service_role ключ сюда не вставлять — файл публичный.
    ========================================================= */
-const JSONBIN_API_KEY = '$2a$10$9k0bberZM02/WyIMp.D7yu3uWuXKDc3/kKlSRnm7UG5DpDOSYQiQi';
-const JSONBIN_BIN_ID  = '6a47fb0ff5f4af5e295b9887';
+const SUPABASE_URL = 'https://udraltpcixskkrspmnnr.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVkcmFsdHBjaXhza2tyc3Btbm5yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk1NjcyNTcsImV4cCI6MjEwNTE0MzI1N30.1XMJ_OLSMggc-H06n44vlbnCcwFMhA47w7-l3ebKW0w';
 
-const JSONBIN_BASE = 'https://api.jsonbin.io/v3/b';
+// одна строка с JSON — прямой аналог бина
+const SB_TABLE = 'site_state';
+const SB_ROW_ID = 1;
+const SB_REST = `${SUPABASE_URL}/rest/v1/${SB_TABLE}`;
+const SB_HEADERS = {
+  'apikey': SUPABASE_ANON_KEY,
+  'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+  'Content-Type': 'application/json',
+};
 const isConfigured = () =>
-  JSONBIN_API_KEY && JSONBIN_API_KEY.indexOf('ВСТАВЬ_') === -1 &&
-  JSONBIN_BIN_ID && JSONBIN_BIN_ID.indexOf('ВСТАВЬ_') === -1;
+  SUPABASE_URL.indexOf('ВСТАВЬ_') === -1 && SUPABASE_ANON_KEY.indexOf('ВСТАВЬ_') === -1;
 
 const DEFAULT_LEVELS = [
   { name: 'Penumbra', verifier: 'muwa1t', extra: '', points: 1000, creator: 'muwa1t', description: 'Тестовый уровень с полным описанием — нажми на строку, чтобы увидеть детальную страницу.' },
@@ -1512,7 +1517,7 @@ const I18N = {
     docTitle: 'Цыганский Лемон Лист',
     titleLine1: 'ЦЫГАНСКИЙ',
     titleLine2: 'ЛЕМОН ЛИСТ',
-    configWarning: '⚠ JSONBin не настроен. Открой файл, найди JSONBIN_API_KEY и JSONBIN_BIN_ID в <script> и вставь свои значения с jsonbin.io.',
+    configWarning: '⚠ Supabase не настроен. Открой файл, найди SUPABASE_URL и SUPABASE_ANON_KEY в <script> и вставь значения из настроек проекта.',
     recGroupOther: 'Прочее',
     navMore: "Ещё",
     rulesTab: "Правила",
@@ -1546,11 +1551,11 @@ const I18N = {
     logout: 'Выйти',
     footer: 'Цыганский Лемон Лист · общий список сообщества',
     statusLoading: 'Загрузка…',
-    statusDefaultNoConfig: 'Исходный список (JSONBin не настроен)',
-    statusLoaded: 'Загружено из JSONBin',
+    statusDefaultNoConfig: 'Исходный список (Supabase не настроен)',
+    statusLoaded: 'Загружено из Supabase',
     statusLoadError: 'Ошибка загрузки: ',
     statusSaving: 'Сохранение…',
-    statusSaveNoConfig: 'JSONBin не настроен (не сохранено)',
+    statusSaveNoConfig: 'Supabase не настроен (не сохранено)',
     statusSaved: 'Сохранено · видно всем',
     statusRetrying: 'Повторная попытка сохранения…',
     statusSaveError: 'Ошибка сохранения: ',
@@ -1643,7 +1648,7 @@ const I18N = {
     docTitle: 'Gypsy Lemon List',
     titleLine1: 'GYPSY',
     titleLine2: 'LEMON LIST',
-    configWarning: '⚠ JSONBin is not configured. Open the file, find JSONBIN_API_KEY and JSONBIN_BIN_ID in <script> and paste your values from jsonbin.io.',
+    configWarning: '⚠ Supabase is not configured. Open the file, find SUPABASE_URL and SUPABASE_ANON_KEY in <script> and paste the values from your project settings.',
     recGroupOther: 'Other',
     navMore: "More",
     rulesTab: "Guidelines",
@@ -1677,11 +1682,11 @@ const I18N = {
     logout: 'Log out',
     footer: 'Gypsy Lemon List · shared community list',
     statusLoading: 'Loading…',
-    statusDefaultNoConfig: 'Default list (JSONBin not configured)',
-    statusLoaded: 'Loaded from JSONBin',
+    statusDefaultNoConfig: 'Default list (Supabase not configured)',
+    statusLoaded: 'Loaded from Supabase',
     statusLoadError: 'Load error: ',
     statusSaving: 'Saving…',
-    statusSaveNoConfig: 'JSONBin not configured (not saved)',
+    statusSaveNoConfig: 'Supabase not configured (not saved)',
     statusSaved: 'Saved · visible to everyone',
     statusRetrying: 'Retrying save…',
     statusSaveError: 'Save error: ',
@@ -2213,16 +2218,16 @@ async function loadLevels(){
     return;
   }
   try{
-    const res = await fetch(`${JSONBIN_BASE}/${JSONBIN_BIN_ID}/latest`, {
+    const res = await fetch(`${SB_REST}?id=eq.${SB_ROW_ID}&select=data`, {
       method: 'GET',
-      headers: { 'X-Master-Key': JSONBIN_API_KEY }
+      headers: SB_HEADERS,
     });
     if(!res.ok){
       const errBody = await res.text().catch(() => '');
       throw new Error(`HTTP ${res.status} — ${errBody}`);
     }
-    const data = await res.json();
-    const record = data && data.record;
+    const rows = await res.json();
+    const record = (Array.isArray(rows) && rows[0]) ? rows[0].data : null;
     state.levels = (record && Array.isArray(record.levels) && record.levels.length)
       ? withIds(record.levels) : withIds(DEFAULT_LEVELS);
     state.futureLevels = (record && Array.isArray(record.futureLevels)) ? withIds(record.futureLevels) : [];
@@ -2240,7 +2245,7 @@ async function loadLevels(){
     if(hadAdded) saveLevels();
     setStatus(I18N[currentLang].statusLoaded);
   }catch(e){
-    console.warn('JSONBin load failed, falling back to defaults:', e);
+    console.warn('Supabase load failed, falling back to defaults:', e);
     state.levels = withIds(DEFAULT_LEVELS);
     state.futureLevels = [];
     state.nonListedLevels = [];
@@ -2266,13 +2271,10 @@ async function doSave(){
   }
   const payload = { levels: state.levels, futureLevels: state.futureLevels, nonListedLevels: state.nonListedLevels, players: state.players, rules: state.rules };
   try{
-    const res = await fetch(`${JSONBIN_BASE}/${JSONBIN_BIN_ID}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Master-Key': JSONBIN_API_KEY
-      },
-      body: JSON.stringify(payload)
+    const res = await fetch(`${SB_REST}?id=eq.${SB_ROW_ID}`, {
+      method: 'PATCH',
+      headers: { ...SB_HEADERS, 'Prefer': 'return=minimal' },
+      body: JSON.stringify({ data: payload, updated_at: new Date().toISOString() }),
     });
     if(!res.ok){
       const errBody = await res.text().catch(() => '');
@@ -2281,7 +2283,7 @@ async function doSave(){
     saveAttempt = 0;
     setStatus(I18N[currentLang].statusSaved);
   }catch(e){
-    console.error('JSONBin save error:', e);
+    console.error('Supabase save error:', e);
     saveAttempt += 1;
     if(saveAttempt <= 2){
       setStatus(I18N[currentLang].statusRetrying);
