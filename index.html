@@ -284,7 +284,7 @@
     border:1px solid var(--glass-line); border-radius:20px; overflow:hidden;
     cursor:pointer;
     transition:transform .35s cubic-bezier(.16,1,.3,1), box-shadow .35s, border-color .35s;
-    animation:rowIn .55s cubic-bezier(.16,1,.3,1) both;
+    animation:rowIn .55s cubic-bezier(.16,1,.3,1) backwards;
   }
   @keyframes rowIn{ from{ opacity:0; transform:translateX(-16px); } to{ opacity:1; transform:none; } }
   .row:hover{
@@ -877,6 +877,25 @@
   .rules-editor .actions{ margin-top:16px; }
   .rules-editor .rules-reset{ color:#ff9b9b; border-color:rgba(255,120,120,0.3); }
   .rules-editor .rules-reset:hover{ background:rgba(255,90,90,0.12); border-color:rgba(255,120,120,0.55); }
+  .upd-timeline{ position:relative; margin:18px 30px 26px; padding-left:132px; }
+  .upd-timeline::before{ content:''; position:absolute; left:114px; top:6px; bottom:6px; width:1px;
+    background:linear-gradient(180deg, transparent, var(--glass-line-bright) 12%, var(--glass-line-bright) 88%, transparent); }
+  .upd-entry{ position:relative; padding-bottom:26px; }
+  .upd-entry:last-child{ padding-bottom:4px; }
+  .upd-entry::before{ content:''; position:absolute; left:-22px; top:6px; width:9px; height:9px; border-radius:50%;
+    background:var(--lemon); box-shadow:0 0 12px -2px var(--lemon); }
+  .upd-date{ position:absolute; left:-132px; top:3px; width:96px; text-align:right;
+    font-family:'Oswald',sans-serif; font-size:12.5px; letter-spacing:0.04em; color:var(--mystic); opacity:0.85; }
+  .upd-title{ font-family:'Oswald',sans-serif; font-weight:600; font-size:16px; color:#fff; }
+  .upd-items{ margin:9px 0 0; padding-left:18px; list-style:none; }
+  .upd-items li{ position:relative; margin:6px 0; font-size:13.5px; line-height:1.5; color:#ddd8ef; }
+  .upd-items li::before{ content:'·'; position:absolute; left:-13px; color:var(--mystic); }
+  @media (max-width: 720px){
+    .upd-timeline{ padding-left:26px; margin-left:18px; margin-right:18px; }
+    .upd-timeline::before{ left:4px; }
+    .upd-entry::before{ left:-26px; }
+    .upd-date{ position:static; width:auto; text-align:left; margin-bottom:5px; display:block; }
+  }
   .rules-note{ margin:14px 22px 24px; padding:13px 16px; border-radius:12px; font-size:13px; line-height:1.55;
     color:var(--mystic); background:rgba(160,120,255,0.08); border:1px solid rgba(160,120,255,0.22); }
   body.only-beaten #list .row:not(.beaten){ display:none; }
@@ -894,9 +913,15 @@
     transition:background .2s, color .2s; }
   .drag-handle:hover{ background:rgba(255,255,255,0.11); color:#fff; }
   .drag-handle:active{ cursor:grabbing; }
-  .row.dragging{ position:relative; z-index:30; cursor:grabbing;
-    box-shadow:0 18px 40px -14px rgba(0,0,0,0.85), 0 0 0 1px var(--glass-line-bright);
-    filter:brightness(1.06); }
+  .row.dragging, body.is-dragging .row{ animation:none; }
+  .row.dragging{ position:relative; z-index:30 !important; cursor:grabbing;
+    background:#1c1531 !important; backdrop-filter:none !important; -webkit-backdrop-filter:none !important;
+    border-color:var(--lemon) !important; box-shadow:none !important; }
+  .row.dragging > *{ position:relative; z-index:1; }
+  .row.dragging .rank-particles, .row.dragging .rank-ripple, .row.dragging .rank-glow{ display:none; }
+  body.is-dragging .row:not(.dragging){ background:#17122a; backdrop-filter:none; -webkit-backdrop-filter:none; }
+  .row.dragging::after{ opacity:0; }
+  .row.dragging .rank-medal, .row.dragging .rank-glow, .row.dragging .rank-ripple{ opacity:0.35; }
   body.is-dragging{ user-select:none; cursor:grabbing; }
   body.is-dragging .row:not(.dragging){ pointer-events:none; }
   .row.just-moved{ animation:rowLanded 700ms ease-out; }
@@ -1178,6 +1203,7 @@
         <div class="nav-dropdown" id="moreDropdown">
           <button class="tab-btn" id="tabPlayersBtn">Рейтинг игроков</button>
           <button class="tab-btn" id="rulesBtn">Правила</button>
+          <button class="tab-btn" id="updatesBtn">Обновления</button>
         </div>
       </div>
     </nav>
@@ -1370,6 +1396,16 @@
     <div id="playerContent"></div>
   </div>
 
+  <div class="card detail-page" id="updatesView" style="display:none;">
+    <div class="rules-topbar">
+      <button class="detail-back" id="updatesCloseBtn">
+        <span class="db-arrow">←</span><span id="backFromUpdatesLabel">К списку</span>
+      </button>
+      <span id="updatesEditSlot"></span>
+    </div>
+    <div id="updatesContent"></div>
+  </div>
+
   <div class="card detail-page" id="rulesView" style="display:none;">
     <div class="rules-topbar">
       <button class="detail-back" id="rulesCloseBtn">
@@ -1521,6 +1557,11 @@ const I18N = {
     recGroupOther: 'Прочее',
     navMore: "Ещё",
     rulesTab: "Правила",
+    updatesTab: "Обновления",
+    updatesTitle: "Обновления сайта",
+    updatesSub: "Что менялось на сайте и когда",
+    updatesEmpty: "Записей пока нет.",
+    updatesEditHint: "Одна запись — строка «ГГГГ-ММ-ДД | Заголовок», ниже пункты со знаком «-». Между записями пустая строка. Порядок по дате выставляется сам.",
     backFromRules: "К списку",
     backupTitle: "Резервная копия",
     backupSub: "Скачать все листы, игроков и правила одним JSON-файлом",
@@ -1556,6 +1597,7 @@ const I18N = {
     statusLoadError: 'Ошибка загрузки: ',
     statusSaving: 'Сохранение…',
     statusSaveNoConfig: 'Supabase не настроен (не сохранено)',
+    statusSaveDenied: 'Не сохранено: база запретила запись (проверь политику UPDATE)',
     statusSaved: 'Сохранено · видно всем',
     statusRetrying: 'Повторная попытка сохранения…',
     statusSaveError: 'Ошибка сохранения: ',
@@ -1652,6 +1694,11 @@ const I18N = {
     recGroupOther: 'Other',
     navMore: "More",
     rulesTab: "Guidelines",
+    updatesTab: "Updates",
+    updatesTitle: "Site updates",
+    updatesSub: "What changed on the site and when",
+    updatesEmpty: "No entries yet.",
+    updatesEditHint: "One entry is a line \"YYYY-MM-DD | Title\", with items below starting with \"-\". Separate entries with a blank line. Sorting by date is automatic.",
     backFromRules: "Back to list",
     backupTitle: "Backup",
     backupSub: "Download all lists, players and guidelines as a single JSON file",
@@ -1687,6 +1734,7 @@ const I18N = {
     statusLoadError: 'Load error: ',
     statusSaving: 'Saving…',
     statusSaveNoConfig: 'Supabase not configured (not saved)',
+    statusSaveDenied: 'Not saved: the database rejected the write (check the UPDATE policy)',
     statusSaved: 'Saved · visible to everyone',
     statusRetrying: 'Retrying save…',
     statusSaveError: 'Save error: ',
@@ -1960,7 +2008,7 @@ const TAB_CONFIG = new Proxy({}, {
   get(_, tab){ return TAB_CONFIG_I18N[currentLang][tab]; }
 });
 
-const state = { levels: [], futureLevels: [], nonListedLevels: [], players: [], rules: null };
+const state = { levels: [], futureLevels: [], nonListedLevels: [], players: [], rules: null, updates: null };
 let searchQuery = '';
 let currentTab = 'main'; // 'main' | 'future' | 'nonListed' | 'players'
 
@@ -2121,6 +2169,11 @@ function applyStaticTexts(){
   const bfr = document.getElementById('backFromRulesLabel');
   if(bfr) bfr.textContent = t.backFromRules;
   if(document.getElementById('rulesView').style.display !== 'none') openRulesPage();
+  const ub = document.getElementById('updatesBtn');
+  if(ub) ub.textContent = t.updatesTab;
+  const bfu = document.getElementById('backFromUpdatesLabel');
+  if(bfu) bfu.textContent = t.backFromRules;
+  if(document.getElementById('updatesView').style.display !== 'none') openUpdatesPage();
   document.getElementById('adminLoginOpenBtn').textContent = t.adminLoginBtn;
   document.getElementById('loggedInPrefix').textContent = t.loggedInPrefix;
   const logoutBtn = document.getElementById('adminLogoutBtn');
@@ -2234,6 +2287,7 @@ async function loadLevels(){
     state.nonListedLevels = (record && Array.isArray(record.nonListedLevels)) ? withIds(record.nonListedLevels) : [];
     state.players = (record && Array.isArray(record.players)) ? withIds(record.players) : [];
     state.rules = (record && record.rules && typeof record.rules === 'object') ? record.rules : null;
+    state.updates = (record && record.updates && typeof record.updates === 'object') ? record.updates : null;
 
     // даты добавления больше не используются — чистим остатки из хранилища
     let hadAdded = false;
@@ -2269,16 +2323,26 @@ async function doSave(){
     setStatus(I18N[currentLang].statusSaveNoConfig);
     return;
   }
-  const payload = { levels: state.levels, futureLevels: state.futureLevels, nonListedLevels: state.nonListedLevels, players: state.players, rules: state.rules };
+  const payload = { levels: state.levels, futureLevels: state.futureLevels, nonListedLevels: state.nonListedLevels, players: state.players, rules: state.rules, updates: state.updates };
   try{
     const res = await fetch(`${SB_REST}?id=eq.${SB_ROW_ID}`, {
       method: 'PATCH',
-      headers: { ...SB_HEADERS, 'Prefer': 'return=minimal' },
+      // просим вернуть обновлённую строку: при запрете RLS ответ будет 2xx,
+      // но пустой — без этой проверки запись «успешно» уходила в никуда
+      headers: { ...SB_HEADERS, 'Prefer': 'return=representation' },
       body: JSON.stringify({ data: payload, updated_at: new Date().toISOString() }),
     });
     if(!res.ok){
       const errBody = await res.text().catch(() => '');
       throw new Error(`HTTP ${res.status} — ${errBody}`);
+    }
+    const rows = await res.json().catch(() => []);
+    if(!Array.isArray(rows) || rows.length === 0){
+      // повторять бессмысленно — это права, а не сеть
+      saveAttempt = 0;
+      setStatus(I18N[currentLang].statusSaveDenied);
+      console.error('Supabase: UPDATE затронул 0 строк — нет политики на запись или нет строки id=1');
+      return;
     }
     saveAttempt = 0;
     setStatus(I18N[currentLang].statusSaved);
@@ -2408,110 +2472,142 @@ function attachRowDrag(row, id){
   });
 }
 
+/* ── перенос строк (как в dnd-kit) ────────────────────────
+   DOM во время переноса не меняется: строка едет только по Y,
+   соседи плавно сдвигаются трансформом, порядок пишется при отпускании */
+const SLIDE = 'transform 200ms cubic-bezier(.25,1,.5,1)';
+
 function startRowDrag(e, row, id){
   const list = document.getElementById('list');
-  const rect = row.getBoundingClientRect();
-
+  const rows = [...list.querySelectorAll('.row')];
+  const sy = window.scrollY;
+  // геометрия снимается один раз, в координатах страницы
+  const rects = rows.map(r => {
+    const b = r.getBoundingClientRect();
+    return { top: b.top + sy, height: b.height };
+  });
   dragState = {
-    id, row, list,
+    id, row, list, rows, rects,
+    from: rows.indexOf(row),
+    to: rows.indexOf(row),
     pointerId: e.pointerId,
-    startY: e.clientY,
-    baseTop: rect.top,
-    height: rect.height,
+    startPageY: e.clientY + sy,
+    lastClientY: e.clientY,
     moved: false,
   };
-
   row.setPointerCapture(e.pointerId);
   document.addEventListener('pointermove', onRowDragMove);
   document.addEventListener('pointerup', onRowDragEnd);
   document.addEventListener('pointercancel', onRowDragEnd);
+  window.addEventListener('scroll', onRowDragScroll, { passive: true });
+}
+
+function onRowDragScroll(){
+  if(dragState && dragState.moved) applyRowDrag();
+}
+
+function autoScrollWhileDrag(clientY){
+  const EDGE = 100, MAX = 16;
+  let d = 0;
+  if(clientY < EDGE) d = -Math.round((EDGE - clientY) / EDGE * MAX);
+  else if(clientY > window.innerHeight - EDGE) d = Math.round((clientY - (window.innerHeight - EDGE)) / EDGE * MAX);
+  if(d) window.scrollBy(0, d);
+}
+
+// сдвиг соседа при переносе строки с позиции from на to
+function shiftFor(st, i){
+  const { from, to, rects } = st;
+  const h = rects[from].height;
+  if(from < to && i > from && i <= to){
+    const gap = rects[from + 1].top - (rects[from].top + h);
+    return -(h + gap);
+  }
+  if(from > to && i >= to && i < from){
+    const gap = rects[from].top - (rects[from - 1].top + rects[from - 1].height);
+    return h + gap;
+  }
+  return 0;
+}
+
+function applyRowDrag(){
+  const st = dragState;
+  if(!st) return;
+  const pageY = st.lastClientY + window.scrollY;
+  const dy = pageY - st.startPageY;
+  st.row.style.transform = `translateY(${dy}px)`;
+
+  // куда встанет строка: по центру относительно исходных центров соседей
+  const center = st.rects[st.from].top + dy + st.rects[st.from].height / 2;
+  let to = st.from;
+  for(let i = 0; i < st.rects.length; i++){
+    if(i === st.from) continue;
+    const c = st.rects[i].top + st.rects[i].height / 2;
+    if(i > st.from && center > c) to = i;
+    if(i < st.from && center < c && to === st.from) to = i;
+  }
+  if(to !== st.to){
+    st.to = to;
+    st.rows.forEach((r, i) => {
+      if(i === st.from) return;
+      r.style.transition = SLIDE;
+      const s = shiftFor(st, i);
+      r.style.transform = s ? `translateY(${s}px)` : '';
+    });
+  }
 }
 
 function onRowDragMove(e){
   if(!dragState) return;
   const st = dragState;
-  const dy = e.clientY - st.startY;
-
-  // небольшой порог, чтобы обычный клик по строке не превращался в перетаскивание
+  st.lastClientY = e.clientY;
   if(!st.moved){
-    if(Math.abs(dy) < 5) return;
+    if(Math.abs((e.clientY + window.scrollY) - st.startPageY) < 4) return;
     st.moved = true;
+    sortDragging = true;
     st.row.classList.add('dragging');
     document.body.classList.add('is-dragging');
+    st.row.style.transition = 'none';
   }
   e.preventDefault();
-
-  st.row.style.transform = `translateY(${dy}px)`;
-
-  const centerY = st.baseTop + dy + st.height / 2;
-  const siblings = [...st.list.querySelectorAll('.row')].filter(r => r !== st.row);
-
-  for(const sib of siblings){
-    const sr = sib.getBoundingClientRect();
-    const sibCenter = sr.top + sr.height / 2;
-    const isBefore = sib.compareDocumentPosition(st.row) & Node.DOCUMENT_POSITION_FOLLOWING;
-
-    // курсор перешёл середину соседа — меняемся с ним местами прямо на лету
-    if(isBefore && centerY < sibCenter){
-      swapWithSibling(sib, 'before');
-      break;
-    }
-    if(!isBefore && centerY > sibCenter){
-      swapWithSibling(sib, 'after');
-      break;
-    }
-  }
+  autoScrollWhileDrag(e.clientY);
+  applyRowDrag();
 }
 
-function swapWithSibling(sib, where){
-  const st = dragState;
-  const sibBefore = sib.getBoundingClientRect().top;
-  const selfBefore = st.row.getBoundingClientRect().top;
-
-  if(where === 'before') st.list.insertBefore(st.row, sib);
-  else st.list.insertBefore(st.row, sib.nextSibling);
-
-  // сосед плавно уезжает на освободившееся место
-  const sibDelta = sibBefore - sib.getBoundingClientRect().top;
-  if(sibDelta){
-    sib.style.transition = 'none';
-    sib.style.transform = `translateY(${sibDelta}px)`;
-    requestAnimationFrame(() => {
-      sib.style.transition = 'transform 200ms cubic-bezier(.22,.9,.28,1)';
-      sib.style.transform = '';
-    });
-  }
-
-  // строка под курсором визуально не должна дёргаться
-  st.row.style.transform = '';
-  const selfAfter = st.row.getBoundingClientRect().top;
-  st.baseTop = selfAfter;
-  st.startY += (selfAfter - selfBefore);
-  st.row.style.transform = `translateY(${(selfBefore - selfAfter)}px)`;
-}
-
-function onRowDragEnd(e){
+function onRowDragEnd(){
   document.removeEventListener('pointermove', onRowDragMove);
   document.removeEventListener('pointerup', onRowDragEnd);
   document.removeEventListener('pointercancel', onRowDragEnd);
+  window.removeEventListener('scroll', onRowDragScroll);
   if(!dragState) return;
-
   const st = dragState;
   dragState = null;
   try{ st.row.releasePointerCapture(st.pointerId); }catch(err){}
-  document.body.classList.remove('is-dragging');
 
-  if(!st.moved){ st.row.style.transform = ''; st.row.classList.remove('dragging'); return; }
+  if(!st.moved){ return; }
+  justSorted = true;
+  setTimeout(() => { justSorted = false; }, 60);
 
-  // строка мягко опускается в свой новый слот
-  st.row.style.transition = 'transform 180ms cubic-bezier(.22,.9,.28,1)';
-  st.row.style.transform = '';
+  // строка доезжает в свой слот
+  const { from, to, rects } = st;
+  let target = 0;
+  if(to > from) target = (rects[to].top + rects[to].height) - (rects[from].top + rects[from].height);
+  else if(to < from) target = rects[to].top - rects[from].top;
+  st.row.style.transition = SLIDE;
+  st.row.style.transform = `translateY(${target}px)`;
 
   setTimeout(() => {
-    st.row.style.transition = '';
+    sortDragging = false;
+    document.body.classList.remove('is-dragging');
     st.row.classList.remove('dragging');
-    commitRowOrder(st.id);
-  }, 190);
+    st.rows.forEach(r => { r.style.transition = ''; r.style.transform = ''; });
+    if(from !== to){
+      // переставляем узел в DOM без анимации, дальше данные и перерисовка
+      const ref = st.rows[to];
+      if(to > from) st.list.insertBefore(st.row, ref.nextSibling);
+      else st.list.insertBefore(st.row, ref);
+      commitRowOrder(st.id);
+    }
+  }, 210);
 }
 
 // порядок в DOM после перетаскивания переносим в данные
@@ -2672,6 +2768,9 @@ function renderPlayersSplit(list, arr, q){
   renderPlayerPane();
 }
 
+let justSorted = false;
+let sortDragging = false;
+
 function render(){
   const cfg = TAB_CONFIG[currentTab];
   const sb = document.getElementById('searchBar');
@@ -2756,7 +2855,7 @@ function render(){
     `;
 
     if(cfg.showLevelInfo){
-      row.addEventListener('click', () => openDetailModal(lvl));
+      row.addEventListener('click', () => { if(!justSorted) openDetailModal(lvl); });
     } else if(currentTab === 'players'){
       row.addEventListener('click', () => openPlayerProfile(lvl, i));
     } else {
@@ -2789,6 +2888,8 @@ function render(){
       });
     }
 
+    if(canDrag) attachRowDrag(row, lvl.id);
+
     const th = row.querySelector('.thumb.has-video');
     if(th) th.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -2796,7 +2897,6 @@ function render(){
       if(url) window.open(url, '_blank', 'noopener,noreferrer');
     });
 
-    if(canDrag) attachRowDrag(row, lvl.id);
 
     list.appendChild(row);
 
@@ -3635,6 +3735,7 @@ function downloadBackup(){
     nonListedLevels: state.nonListedLevels,
     players: state.players,
     rules: state.rules,
+    updates: state.updates,
   };
   const stamp = new Date().toISOString().slice(0, 16).replace(/[:T]/g, '-');
   const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
@@ -3647,6 +3748,121 @@ function downloadBackup(){
   a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 2000);
   setStatus(I18N[currentLang].backupDone);
+}
+
+/* ── страница обновлений ──────────────────────────────────
+   формат записи: «2026-02-18 | Заголовок» и строки-пункты ниже */
+function getUpdates(lang){
+  const u = state.updates && state.updates[lang];
+  return Array.isArray(u) ? u : [];
+}
+
+function updatesToText(list){
+  return list.map(e =>
+    `${e.date || ''} | ${e.title || ''}\n` + (e.items || []).map(x => `- ${x}`).join('\n')
+  ).join('\n\n');
+}
+
+function textToUpdates(txt){
+  const out = [];
+  let cur = null;
+  String(txt).replace(/\r/g, '').split('\n').forEach(raw => {
+    const line = raw.trim();
+    if(!line) return;
+    if(line.startsWith('-') || line.startsWith('•')){
+      if(cur) cur.items.push(line.replace(/^[-•]\s*/, ''));
+      return;
+    }
+    const m = line.split('|');
+    cur = { date: (m[0] || '').trim(), title: (m.slice(1).join('|') || '').trim(), items: [] };
+    out.push(cur);
+  });
+  // свежие сверху
+  out.sort((a, b) => String(b.date).localeCompare(String(a.date)));
+  return out;
+}
+
+function openUpdatesPage(){
+  const t = I18N[currentLang];
+  const list = getUpdates(currentLang);
+
+  const entries = list.map(e => `
+    <div class="upd-entry">
+      <div class="upd-date">${escapeHtml(e.date || '')}</div>
+      <div class="upd-body">
+        <div class="upd-title">${escapeHtml(e.title || '')}</div>
+        ${(e.items || []).length ? `<ul class="upd-items">${
+          e.items.map(x => `<li>${escapeHtml(x)}</li>`).join('')
+        }</ul>` : ''}
+      </div>
+    </div>`).join('');
+
+  document.getElementById('updatesContent').innerHTML = `
+    <div class="rules-head">
+      <div class="rules-title">${escapeHtml(t.updatesTitle)}</div>
+      <div class="rules-sub">${escapeHtml(t.updatesSub)}</div>
+    </div>
+    ${list.length ? `<div class="upd-timeline">${entries}</div>`
+                  : `<div class="rules-note">${escapeHtml(t.updatesEmpty)}</div>`}
+    ${isAdmin ? `<div class="rules-editor add-form open" id="updatesEditor" style="display:none;">
+      <div class="form-title">${escapeHtml(t.rulesEdit)}</div>
+      <label for="updatesTextarea">${escapeHtml(t.updatesTitle)}</label>
+      <textarea id="updatesTextarea" spellcheck="false" rows="16"></textarea>
+      <div class="rules-editor-hint">${escapeHtml(t.updatesEditHint)}</div>
+      <div class="actions">
+        <button class="primary" id="updatesSaveBtn">${escapeHtml(t.rulesSave)}</button>
+        <button class="ghost" id="updatesCancelBtn">${escapeHtml(t.rulesCancel)}</button>
+      </div>
+    </div>` : ''}`;
+
+  const slot = document.getElementById('updatesEditSlot');
+  if(slot) slot.innerHTML = isAdmin
+    ? `<button class="detail-back rules-edit-btn" id="updatesEditBtn">
+         <span class="db-arrow">✎</span><span>${escapeHtml(t.rulesEdit)}</span>
+       </button>`
+    : '';
+
+  if(isAdmin){
+    const editor = document.getElementById('updatesEditor');
+    const ta = document.getElementById('updatesTextarea');
+    document.getElementById('updatesEditBtn').addEventListener('click', () => {
+      ta.value = updatesToText(getUpdates(currentLang));
+      editor.style.display = editor.style.display === 'none' ? '' : 'none';
+      if(editor.style.display === ''){
+        ta.focus();
+        // подсказка с сегодняшней датой, если поле пустое
+        if(!ta.value.trim()) ta.value = `${new Date().toISOString().slice(0, 10)} | \n- `;
+      }
+    });
+    document.getElementById('updatesSaveBtn').addEventListener('click', () => {
+      if(!state.updates || typeof state.updates !== 'object') state.updates = {};
+      state.updates[currentLang] = textToUpdates(ta.value);
+      saveLevels();
+      openUpdatesPage();
+    });
+    document.getElementById('updatesCancelBtn').addEventListener('click', () => { editor.style.display = 'none'; });
+  }
+
+  const sbHide = document.getElementById('searchBar');
+  if(sbHide) sbHide.style.display = 'none';
+  document.getElementById('listView').style.display = 'none';
+  document.getElementById('detailView').style.display = 'none';
+  document.getElementById('playerView').style.display = 'none';
+  document.getElementById('notifView').style.display = 'none';
+  document.getElementById('rulesView').style.display = 'none';
+  const uv = document.getElementById('updatesView');
+  uv.style.display = '';
+  uv.classList.remove('page-in');
+  void uv.offsetWidth;
+  uv.classList.add('page-in');
+  window.scrollTo({ top: 0, behavior: 'auto' });
+}
+
+function closeUpdatesPage(){
+  document.getElementById('updatesView').style.display = 'none';
+  document.getElementById('listView').style.display = '';
+  const sbShow = document.getElementById('searchBar');
+  if(sbShow) sbShow.style.display = '';
 }
 
 function openRulesPage(){
@@ -3710,6 +3926,7 @@ function openRulesPage(){
   document.getElementById('detailView').style.display = 'none';
   document.getElementById('playerView').style.display = 'none';
   document.getElementById('notifView').style.display = 'none';
+  document.getElementById('updatesView').style.display = 'none';
   const rv = document.getElementById('rulesView');
   rv.style.display = '';
   rv.classList.remove('page-in');
@@ -4056,6 +4273,7 @@ deleteFromFormBtn.addEventListener('click', () => {
     const mm = document.getElementById('moreMenu');
     if(mm) mm.classList.remove('open');
     document.getElementById('rulesView').style.display = 'none';
+    document.getElementById('updatesView').style.display = 'none';
     document.getElementById('listView').style.display = '';
   const sbShow = document.getElementById('searchBar');
   if(sbShow) sbShow.style.display = (currentTab === 'players') ? 'none' : '';
@@ -4071,6 +4289,14 @@ deleteFromFormBtn.addEventListener('click', () => {
   tabFutureBtn.addEventListener('click', () => switchTab('future'));
   tabNonListedBtn.addEventListener('click', () => switchTab('nonListed'));
   tabPlayersBtn.addEventListener('click', () => switchTab('players'));
+  const updatesBtn = document.getElementById('updatesBtn');
+  if(updatesBtn) updatesBtn.addEventListener('click', () => {
+    document.getElementById('moreMenu').classList.remove('open');
+    openUpdatesPage();
+  });
+  const updatesCloseBtn = document.getElementById('updatesCloseBtn');
+  if(updatesCloseBtn) updatesCloseBtn.addEventListener('click', closeUpdatesPage);
+
   const rulesBtn = document.getElementById('rulesBtn');
   if(rulesBtn) rulesBtn.addEventListener('click', () => {
     document.getElementById('moreMenu').classList.remove('open');
@@ -4338,6 +4564,8 @@ function attachRankInteraction(row, rippleLayer, rankIdx){
   document.addEventListener('pointermove', (e)=>{
     const row = e.target.closest && e.target.closest(SEL);
     if(!row) return;
+    // во время перетаскивания transform занят — наклон не вмешивается
+    if((typeof dragState !== 'undefined' && dragState) || sortDragging) return;
     const r = row.getBoundingClientRect();
     const px = (e.clientX - r.left)/r.width - 0.5;
     const py = (e.clientY - r.top)/r.height - 0.5;
@@ -4346,6 +4574,7 @@ function attachRankInteraction(row, rippleLayer, rankIdx){
   });
   document.addEventListener('pointerout', (e)=>{
     const row = e.target.closest && e.target.closest(SEL);
+    if((typeof dragState !== 'undefined' && dragState) || sortDragging) return;
     if(row && (!e.relatedTarget || !row.contains(e.relatedTarget))){
       row.style.transition = 'transform .5s cubic-bezier(.16,1,.3,1)';
       row.style.transform = '';
