@@ -2033,13 +2033,23 @@
     font-family:'Oswald',sans-serif; font-size:11.5px; letter-spacing:.13em; text-transform:uppercase; color:var(--mystic); }
   .lv-lab2{ margin:16px 0 8px; }
   .lv-up{ color:#7bf5a8; } .lv-down{ color:#ff8f8f; }
-  .lv-svg{ display:block; width:100%; height:120px; overflow:visible; }
-  .lv-grid line{ stroke:rgba(255,255,255,0.06); stroke-width:1; }
-  .lv-line{ stroke-dasharray:1; stroke-dashoffset:1; animation:lvDraw 1.4s cubic-bezier(.4,0,.2,1) forwards 1s; filter:drop-shadow(0 0 6px rgba(228,255,92,0.35)); }
-  .lv-area{ opacity:0; animation:lvFade .8s ease forwards 2s; }
-  .lv-pt{ fill:#1a1430; stroke:#c9a8ff; stroke-width:2; transform-box:fill-box; transform-origin:center; transform:scale(0);
-    animation:lvDot .4s cubic-bezier(.34,1.56,.64,1) forwards; animation-delay:calc(1.1s + var(--i) * .18s); }
+  .lv-plot{ position:relative; height:150px; }
+  .lv-svg{ display:block; overflow:visible; }
+  .lv-grid line{ stroke:rgba(255,255,255,0.06); stroke-width:1; stroke-dasharray:3 5; }
+  .lv-grid text{ font-family:'Oswald',sans-serif; font-size:11px; fill:var(--muted); }
+  .lv-line{ filter:drop-shadow(0 0 5px rgba(228,255,92,0.3)); }
+  .lv-svg.anim .lv-line{ stroke-dasharray:1; stroke-dashoffset:1; animation:lvDraw 1.4s cubic-bezier(.4,0,.2,1) forwards 1s; }
+  .lv-svg.anim .lv-area{ opacity:0; animation:lvFade .8s ease forwards 2s; }
+  .lv-pt{ fill:#1a1430; stroke:#c9a8ff; stroke-width:2; transform-box:fill-box; transform-origin:center; transition:transform .2s cubic-bezier(.34,1.56,.64,1); }
+  .lv-svg.anim .lv-pt{ transform:scale(0); animation:lvDot .4s cubic-bezier(.34,1.56,.64,1) forwards; animation-delay:calc(1.1s + var(--i) * .1s); }
   .lv-pt.last{ fill:var(--lemon); stroke:var(--lemon); }
+  .lv-hit{ fill:transparent; cursor:pointer; }
+  .lv-pt{ pointer-events:none; }
+  .lv-tip{ opacity:0; pointer-events:none; transition:opacity .18s; }
+  .lv-tip rect{ fill:#0f0b1d; stroke:rgba(228,255,92,0.45); }
+  .lv-tip text{ font-family:'Oswald',sans-serif; font-size:11.5px; fill:#fff; }
+  .lv-pt-g:hover .lv-tip{ opacity:1; }
+  .lv-pt-g:hover .lv-pt{ stroke:var(--lemon); stroke-width:2.5; }
   .lv-axis{ display:flex; justify-content:space-between; margin-top:6px; font-size:11.5px; color:var(--muted); }
   .lv-now{ color:var(--lemon); }
 
@@ -2090,7 +2100,7 @@
   @media (prefers-reduced-motion:reduce){
     .lv-aura i, .lv-rank, .lv-title, .lv-chip, .lv-card, .lv-line, .lv-area, .lv-pt, .lv-ava, .lv-nav-btn,
     #detailContent > *, #detailContent > .detail-stats .stat-box, #detailView.lv-swap-prev #detailContent, #detailView.lv-swap-next #detailContent{ animation:none !important; opacity:1; }
-    .lv-line{ stroke-dashoffset:0; } .lv-pt{ transform:none; }
+    .lv-svg.anim .lv-line{ stroke-dashoffset:0; } .lv-svg.anim .lv-pt{ transform:none; }
   }
 
 
@@ -2132,6 +2142,9 @@
   /* прочитать всё / прочитать одно */
   @keyframes readOut{ 0%{ box-shadow:inset 3px 0 0 var(--lemon); } 100%{ box-shadow:inset 0 0 0 transparent; background:transparent; } }
   @keyframes readCheck{ 0%{ transform:scale(1); } 40%{ transform:scale(1.3) rotate(-10deg); background:var(--lemon); color:#14101f; } 100%{ transform:scale(0); opacity:0; } }
+  @keyframes readFlip{ 0%{ transform:scale(1); } 45%{ transform:scale(1.25) rotate(-12deg); background:var(--lemon); color:#14101f; } 100%{ transform:scale(1); } }
+  @keyframes reUnread{ from{ background:rgba(228,255,92,0.14); } to{ background:rgba(214,255,110,0.045); } }
+  .notif-item.reunread{ animation:reUnread .6s ease; }
   .notif-readall{ margin-left:auto; margin-right:10px; display:inline-flex; align-items:center; gap:7px; height:32px; padding:0 12px;
     border-radius:10px; cursor:pointer; font-family:'Sora',sans-serif; font-weight:600; font-size:12px; color:var(--muted);
     background:rgba(255,255,255,0.04); border:1px solid var(--glass-line);
@@ -2151,7 +2164,7 @@
   .notif-item:hover .notif-read-btn{ opacity:1; }
   .notif-read-btn:hover{ background:rgba(228,255,92,0.18); transform:scale(1.1); }
   .notif-item.reading{ animation:readOut .45s ease forwards; animation-delay:calc(var(--ri, 0) * 60ms); }
-  .notif-item.reading .notif-read-btn{ animation:readCheck .45s ease forwards; animation-delay:calc(var(--ri, 0) * 60ms); }
+
   .notif-item.reading .notif-new{ opacity:0; transform:scale(.6); transition:opacity .3s, transform .3s; }
   @media (max-width:640px){ .notif-readall span{ display:none; } .notif-readall{ padding:0 9px; } }
 
@@ -2162,7 +2175,6 @@
   @keyframes auShake{ 0%,100%{ transform:translateX(0); } 20%,60%{ transform:translateX(-7px); } 40%,80%{ transform:translateX(7px); } }
   @keyframes auSpin{ to{ transform:rotate(360deg); } }
   @keyframes auOk{ 0%{ transform:scale(0); } 65%{ transform:scale(1.15); } 100%{ transform:scale(1); } }
-  @keyframes auRing{ 0%{ box-shadow:0 0 0 0 rgba(228,255,92,0.5); } 100%{ box-shadow:0 0 0 22px rgba(228,255,92,0); } }
   @keyframes auLemon{ 0%,100%{ transform:rotate(0) scale(1); } 50%{ transform:rotate(20deg) scale(1.05); } }
   .auth-stage{ position:relative; isolation:isolate; display:flex; justify-content:center; padding:10px 20px 40px; }
   .auth-stage .lv-aura{ top:-120px; bottom:-40px; }
@@ -2231,9 +2243,24 @@
   .auth-ok{ display:none; text-align:center; padding:18px 0 6px; }
   .auth-card.done .auth-form{ display:none; }
   .auth-card.done .auth-ok{ display:block; }
-  .auth-ok-ring{ width:72px; height:72px; margin:0 auto 16px; border-radius:50%; display:flex; align-items:center; justify-content:center;
-    color:var(--lemon); background:rgba(228,255,92,0.12); border:2px solid var(--lemon);
-    animation:auOk .55s cubic-bezier(.34,1.56,.64,1) both, auRing 1.4s ease-out .3s 2; }
+  /* значок успеха: круг прорисовывается, внутри заливка, затем галочка; вокруг вспыхивают лучи и искры.
+     Всё на SVG-обводках — без теней, колец и размытия, поэтому без полос */
+  @keyframes okDraw{ to{ stroke-dashoffset:0; } }
+  @keyframes okFill{ from{ opacity:0; transform:scale(.6); } to{ opacity:1; transform:none; } }
+  @keyframes okRay{ 0%{ stroke-dashoffset:1; opacity:0; } 30%{ opacity:1; } 60%{ stroke-dashoffset:0; opacity:1; } 100%{ stroke-dashoffset:-1; opacity:0; } }
+  @keyframes okDot{ 0%{ transform:translateY(14px) scale(0); opacity:0; } 40%{ opacity:1; transform:translateY(4px) scale(1); } 100%{ transform:translateY(-6px) scale(.4); opacity:0; } }
+  @keyframes okBadge{ 0%{ transform:scale(.85); } 60%{ transform:scale(1.04); } 100%{ transform:scale(1); } }
+  .auth-ok-badge{ width:120px; height:120px; margin:-14px auto 4px; animation:okBadge .7s cubic-bezier(.34,1.56,.64,1) both; }
+  .auth-ok-badge svg{ display:block; overflow:visible; }
+  .ok-fill{ fill:#262b16; transform-origin:60px 60px; transform-box:view-box; animation:okFill .45s cubic-bezier(.16,1,.3,1) both .1s; }
+  .ok-circle{ fill:none; stroke:var(--lemon); stroke-width:3; stroke-linecap:round; stroke-dasharray:1; stroke-dashoffset:1;
+    transform:rotate(-90deg); transform-origin:60px 60px; transform-box:view-box; animation:okDraw .6s cubic-bezier(.65,0,.35,1) forwards .1s; }
+  .ok-check{ fill:none; stroke:var(--lemon); stroke-width:4.5; stroke-linecap:round; stroke-linejoin:round; stroke-dasharray:1; stroke-dashoffset:1;
+    animation:okDraw .38s cubic-bezier(.65,0,.35,1) forwards .62s; }
+  .ok-ray{ stroke:var(--lemon); stroke-width:3; stroke-linecap:round; stroke-dasharray:1; stroke-dashoffset:1; opacity:0;
+    animation:okRay .7s ease-out forwards; animation-delay:calc(.75s + var(--i) * .02s); }
+  .ok-dot{ fill:#c9a8ff; opacity:0; transform-box:fill-box; transform-origin:center; animation:okDot .8s ease-out forwards; animation-delay:calc(.82s + var(--i) * .05s); }
+  .auth-card.done{ backdrop-filter:none; -webkit-backdrop-filter:none; background:linear-gradient(160deg, #241a40, #140f24); }
   .auth-ok .auth-h{ font-size:22px; }
   #adminLoginOpenBtn{ display:inline-flex; align-items:center; gap:8px; }
   @media (max-width:640px){
@@ -2242,8 +2269,41 @@
     .auth-h{ font-size:21px; }
   }
   @media (prefers-reduced-motion:reduce){
-    .auth-card, .auth-card.shake, .auth-f, .auth-h, .auth-sub, .auth-btn, .auth-alt, .auth-lemon, .auth-ok-ring, .auth-card label.auth-remember{ animation:none !important; }
+    .auth-card, .auth-card.shake, .auth-f, .auth-h, .auth-sub, .auth-btn, .auth-alt, .auth-lemon, .auth-ok-badge, .auth-card label.auth-remember{ animation:none !important; }
+    .ok-circle, .ok-check{ animation:none !important; stroke-dashoffset:0; } .ok-fill{ animation:none !important; } .ok-ray, .ok-dot{ display:none; }
   }
+
+
+  /* сложность: выбор в форме и показ в панели */
+  @keyframes diffPick{ 0%{ transform:scale(1); } 45%{ transform:scale(1.06); } 100%{ transform:scale(1); } }
+  .lf-diff{ display:grid; grid-template-columns:70px minmax(0,1fr) minmax(0,1fr); gap:8px; }
+  .add-form .lf-diff .lf-diff-opt{ display:flex; align-items:center; justify-content:center; gap:8px; height:46px; padding:0 10px; border-radius:12px; cursor:pointer;
+    font-family:'Oswald',sans-serif; font-weight:600; font-size:14px; letter-spacing:.03em; color:var(--muted); margin:0;
+    background:rgba(8,6,18,0.55) !important; border:1px solid var(--glass-line) !important;
+    transition:color .2s, background .25s, border-color .25s, box-shadow .25s, transform .2s; }
+  .lf-diff-opt span{ font-size:18px; filter:grayscale(1); opacity:.55; transition:filter .25s, opacity .25s, transform .3s cubic-bezier(.34,1.56,.64,1); }
+  .add-form .lf-diff .lf-diff-opt:hover{ color:#fff; border-color:var(--glass-line-bright) !important; }
+  .lf-diff-opt:hover span{ transform:scale(1.15) rotate(-8deg); }
+  .lf-diff-opt.on{ color:#fff; }
+  .lf-diff-opt.on span{ filter:none; opacity:1; }
+  .add-form .lf-diff .lf-diff-opt.on[data-v=""]{ border-color:var(--glass-line-bright) !important; background:rgba(255,255,255,0.08) !important; }
+  .add-form .lf-diff .lf-diff-opt.d-insane.on{ border-color:rgba(255,140,90,0.7) !important; background:rgba(255,120,60,0.14) !important; box-shadow:0 0 0 3px rgba(255,140,90,0.12); color:#ffc29c; }
+  .add-form .lf-diff .lf-diff-opt.d-extreme.on{ border-color:rgba(255,80,110,0.75) !important; background:rgba(255,60,90,0.14) !important; box-shadow:0 0 0 3px rgba(255,80,110,0.12); color:#ff9db0; }
+  .lf-diff-opt.pick{ animation:diffPick .35s ease; }
+  .lv-info-item.diff-insane .lv-info-v{ color:#ffb088; }
+  .lv-info-item.diff-extreme .lv-info-v{ color:#ff7a95; }
+  .lv-info-item.diff-insane .lv-info-v i, .lv-info-item.diff-extreme .lv-info-v i{ opacity:1; font-size:14px; }
+  @media (max-width:640px){
+    .lf-diff{ grid-template-columns:minmax(0,1fr) minmax(0,1fr); }
+    .lf-diff-opt[data-v=""]{ grid-column:1 / -1; height:38px; }
+  }
+
+
+  /* убрать уведомление */
+  .notif-item.leaving{ animation:none !important; overflow:hidden; opacity:0; transform:translateX(40px);
+    padding-top:0; padding-bottom:0; border-top-color:transparent;
+    transition:opacity .28s ease, transform .35s cubic-bezier(.4,0,.2,1), height .4s cubic-bezier(.4,0,.2,1) .12s, padding .4s cubic-bezier(.4,0,.2,1) .12s; }
+  .notif-item.leaving .notif-read-btn{ background:var(--lemon); color:#14101f; transform:scale(1.15); }
 
   /* ══ MOBILE LAYOUT ══ */
   @media (max-width:640px){
@@ -2448,6 +2508,14 @@
             <div class="lf-field" id="pointsField">
               <label id="lblPoints" for="fPoints">Очки</label>
               <input type="number" id="fPoints" placeholder="1000" />
+            </div>
+          </div>
+          <div class="lf-field" id="difficultyField">
+            <label id="lblDifficulty">Сложность</label>
+            <div class="lf-diff" role="radiogroup" id="fDifficulty">
+              <button type="button" class="lf-diff-opt" data-v="" role="radio">—</button>
+              <button type="button" class="lf-diff-opt d-insane" data-v="insane" role="radio"><span>👹</span>Insane Demon</button>
+              <button type="button" class="lf-diff-opt d-extreme" data-v="extreme" role="radio"><span>😈</span>Extreme Demon</button>
             </div>
           </div>
           <div class="lf-field">
@@ -2789,6 +2857,7 @@ const I18N = {
     profSaveDenied: "Не удалось сохранить: нет прав или нет связи",
     lvSinceAdded: "с момента добавления",
     lvPlace: "Место",
+    lvDifficulty: "Сложность",
     lvTopShort: "Топ {p}%",
     lvCopied: "Скопировано",
     lvBeatenBy: "Прошли уровень",
@@ -2807,7 +2876,7 @@ const I18N = {
     auNickPh: "Твой ник",
     auPass: "Пароль",
     auPass2: "Повтори пароль",
-    auPassPhUp: "не меньше 6 символов",
+    auPassPhUp: "любой",
     auShowPass: "Показать пароль",
     auRemember: "Запомнить меня",
     auSignInBtn: "Войти",
@@ -2818,11 +2887,15 @@ const I18N = {
     auNickTaken: "Этот ник уже занят",
     auNickLinked: "✓ Ник есть в рейтинге — профиль привяжется к аккаунту",
     auNickFree: "✓ Ник свободен",
-    auPassShort: "Пароль — минимум 6 символов",
+    auPassShort: "Введи пароль",
     auPassMismatch: "Пароли не совпадают",
     auBadCreds: "Неверный ник или пароль",
     auConfirmOn: "В Supabase включено подтверждение почты — его нужно выключить",
     auTooMany: "Слишком много попыток, подожди немного",
+    auSignupOff: "В Supabase выключена регистрация новых пользователей",
+    auEmailRejected: "Supabase отклонил служебный адрес аккаунта — напиши, разберёмся",
+    auWeakServer: "Supabase отклонил пароль своей политикой — напиши, разберёмся",
+    auServerSaid: "Сервер ответил:",
     auNetErr: "Не удалось связаться с сервером",
     auNoServer: "Сервер не настроен",
     auWelcome: "Привет, {n}!",
@@ -2920,6 +2993,7 @@ const I18N = {
     nNew: 'новое',
     nReadAll: 'Прочитать всё',
     nMarkRead: 'Отметить прочитанным',
+    nDismiss: 'Прочитать и убрать',
     nRecordTitle: 'Рекорд принят',
     nRecordBodyFull: 'Ваш рекорд {lvl} {pc}% засчитан!',
     nRecordBodyPart: 'Ваш прогресс {lvl} {pc}% засчитан',
@@ -3042,6 +3116,7 @@ const I18N = {
     profSaveDenied: "Couldn't save: no permission or no connection",
     lvSinceAdded: "since added",
     lvPlace: "Place",
+    lvDifficulty: "Difficulty",
     lvTopShort: "Top {p}%",
     lvCopied: "Copied",
     lvBeatenBy: "Beaten by",
@@ -3060,7 +3135,7 @@ const I18N = {
     auNickPh: "Your nickname",
     auPass: "Password",
     auPass2: "Repeat password",
-    auPassPhUp: "at least 6 characters",
+    auPassPhUp: "anything you like",
     auShowPass: "Show password",
     auRemember: "Remember me",
     auSignInBtn: "Sign in",
@@ -3071,11 +3146,15 @@ const I18N = {
     auNickTaken: "This nickname is taken",
     auNickLinked: "✓ Found in the rankings — your profile will be linked",
     auNickFree: "✓ Nickname is free",
-    auPassShort: "Password must be at least 6 characters",
+    auPassShort: "Enter a password",
     auPassMismatch: "Passwords don't match",
     auBadCreds: "Wrong nickname or password",
     auConfirmOn: "Email confirmation is on in Supabase — it needs to be turned off",
     auTooMany: "Too many attempts, wait a bit",
+    auSignupOff: "New sign-ups are disabled in Supabase",
+    auEmailRejected: "Supabase rejected the account's service address",
+    auWeakServer: "Supabase rejected the password by its policy",
+    auServerSaid: "Server said:",
     auNetErr: "Couldn't reach the server",
     auNoServer: "Server is not configured",
     auWelcome: "Hi, {n}!",
@@ -3173,6 +3252,7 @@ const I18N = {
     nNew: 'new',
     nReadAll: 'Mark all as read',
     nMarkRead: 'Mark as read',
+    nDismiss: 'Read and remove',
     nRecordTitle: 'Accepted your record',
     nRecordBodyFull: 'Your {lvl} {pc}% record was accepted!',
     nRecordBodyPart: 'Your {lvl} {pc}% progress was accepted',
@@ -3453,7 +3533,7 @@ async function authPost(path, body){
     body: JSON.stringify(body),
   });
   const data = await res.json().catch(() => ({}));
-  if(!res.ok) throw Object.assign(new Error(data.msg || data.error_description || data.message || ('HTTP ' + res.status)), { status: res.status, data });
+  if(!res.ok) throw Object.assign(new Error(data.msg || data.error_description || data.message || ('HTTP ' + res.status)), { status: res.status, data, code: data.error_code || data.code });
   return data;
 }
 
@@ -3526,9 +3606,14 @@ function applySession(sess, profile){
   isAdmin = currentUser.role === 'admin';
 }
 
+// Supabase требует минимум 6 символов и может требовать буквы/цифры/символы.
+// Пользователю это не нужно — к его паролю добавляется постоянная приставка,
+// которая закрывает любые требования. Пароль «a» уходит как «Cll#1:a».
+function serverPassword(pass){ return 'Cll#1:' + String(pass); }
+
 async function signIn(nick, pass, remember){
   const email = await nickToEmail(nick);
-  const sess = await authPost('/token?grant_type=password', { email, password: pass });
+  const sess = await authPost('/token?grant_type=password', { email, password: serverPassword(pass) });
   const profile = await fetchProfileById(sess.user.id, sess.access_token);
   applySession(sess, profile || { nick: (sess.user.user_metadata || {}).nick || nick, role: 'player' });
   saveAuth(remember);
@@ -3540,7 +3625,7 @@ async function signUp(nick, pass, remember){
   // ник уже занят?
   if(profilesByNick.has(clean.toLowerCase())) throw Object.assign(new Error('taken'), { code: 'taken' });
   const email = await nickToEmail(clean);
-  const sess = await authPost('/signup', { email, password: pass, data: { nick: clean } });
+  const sess = await authPost('/signup', { email, password: serverPassword(pass), data: { nick: clean } });
   if(!sess.access_token){
     // в Supabase включено подтверждение почты — без него войти нельзя
     throw Object.assign(new Error('confirm'), { code: 'confirm' });
@@ -3682,6 +3767,8 @@ function applyStaticTexts(){
   document.getElementById('lblVersion').textContent = t.lblVersion;
   document.getElementById('lblHistoryExtra').textContent = t.lblHistoryExtra;
   document.getElementById('lblRecords').textContent = t.lblRecords;
+  const ldf = document.getElementById('lblDifficulty');
+  if(ldf) ldf.textContent = t.lvDifficulty;
   const lin = document.getElementById('lblIsNew');
   if(lin) lin.textContent = t.lblIsNew;
 
@@ -5699,36 +5786,94 @@ function toggleSubsection(el){
 }
 
 /* ── страница уровня: график позиций, прошедшие, навигация ── */
+const DIFFICULTIES = { insane: 'Insane Demon', extreme: 'Extreme Demon' };
+const DIFF_ICON = { insane: '👹', extreme: '😈' };
+
 function positionChartHtml(lvl, idx, t){
   const pts = buildHistoryEntries(lvl, idx, t)
     .map(e => ({ date: e.date, pos: Number(e.position) }))
     .filter(e => e.pos > 0 && e.date)
     .sort((a, b) => String(a.date).localeCompare(String(b.date)));
   if(pts.length < 2) return '';
-  const W = 320, H = 120, P = 14;
-  const minP = Math.min(...pts.map(p => p.pos)), maxP = Math.max(...pts.map(p => p.pos));
-  const span = Math.max(1, maxP - minP);
-  // выше на графике — лучше место (меньший номер)
-  const xy = pts.map((p, i) => ({ x: P + (W - 2 * P) * (i / (pts.length - 1)), y: P + (H - 2 * P - 12) * ((p.pos - minP) / span), ...p }));
-  const line = xy.map((p, i) => `${i ? 'L' : 'M'}${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' ');
-  const area = `${line} L${xy[xy.length - 1].x.toFixed(1)} ${H} L${xy[0].x.toFixed(1)} ${H} Z`;
   const diff = pts[0].pos - pts[pts.length - 1].pos;
   const trend = diff > 0 ? `<span class="lv-up">▲ ${diff}</span>` : diff < 0 ? `<span class="lv-down">▼ ${-diff}</span>` : '<span>•</span>';
-  const last = xy[xy.length - 1], first = xy[0];
+  const first = pts[0], last = pts[pts.length - 1];
   return `<div class="lv-card lv-chart" style="--d:.45s">
     <div class="lv-lab"><span>${escapeHtml(t.positionHistoryTitle)}</span><span>${trend} ${escapeHtml(t.lvSinceAdded)}</span></div>
-    <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" class="lv-svg" aria-hidden="true">
-      <defs>
-        <linearGradient id="lvLine" x1="0" x2="1"><stop offset="0" stop-color="#b06cf0"/><stop offset="1" stop-color="#e4ff5c"/></linearGradient>
-        <linearGradient id="lvFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e4ff5c" stop-opacity=".22"/><stop offset="1" stop-color="#e4ff5c" stop-opacity="0"/></linearGradient>
-      </defs>
-      <g class="lv-grid">${[0.15, 0.5, 0.85].map(k => `<line x1="0" x2="${W}" y1="${(H * k).toFixed(0)}" y2="${(H * k).toFixed(0)}"/>`).join('')}</g>
-      <path class="lv-area" d="${area}" fill="url(#lvFill)"/>
-      <path class="lv-line" d="${line}" fill="none" stroke="url(#lvLine)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" pathLength="1"/>
-      ${xy.map((p, i) => `<circle class="lv-pt${i === xy.length - 1 ? ' last' : ''}" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${i === xy.length - 1 ? 5 : 3.2}" style="--i:${i}"><title>${escapeHtml(p.date)} · #${p.pos}</title></circle>`).join('')}
-    </svg>
-    <div class="lv-axis"><span>#${first.pos} · ${escapeHtml(first.date)}</span><span class="lv-now">#${last.pos} · ${escapeHtml(last.date)}</span></div>
+    <div class="lv-plot" data-pts='${escapeHtml(JSON.stringify(pts))}'></div>
+    <div class="lv-axis"><span>${escapeHtml(fmtEuDate(first.date))}</span><span class="lv-now">${escapeHtml(fmtEuDate(last.date))}</span></div>
   </div>`;
+}
+
+function fmtEuDate(d){
+  const m = String(d).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  return m ? `${m[3]}.${m[2]}.${m[1]}` : String(d);
+}
+
+// график строится в реальных пикселях — без растяжения точки остаются кругами
+function drawPositionChart(plot, animate){
+  let pts; try{ pts = JSON.parse(plot.getAttribute('data-pts')); }catch(e){ return; }
+  const W = Math.max(200, plot.clientWidth), H = 150;
+  const L = 34, R = 14, T = 16, B = 14;
+  const minP = Math.min(...pts.map(p => p.pos)), maxP = Math.max(...pts.map(p => p.pos));
+  const span = Math.max(1, maxP - minP);
+  // выше — лучше: меньший номер места наверху
+  const X = (i) => L + (W - L - R) * (i / (pts.length - 1));
+  const Y = (pos) => T + (H - T - B) * ((pos - minP) / span);
+  const xy = pts.map((p, i) => ({ x: X(i), y: Y(p.pos), ...p }));
+
+  // плавная кривая без «перелётов» за точки (монотонная интерполяция)
+  const n = xy.length, dx = [], dy = [], m = [], tan = [];
+  for(let i = 0; i < n - 1; i++){ dx[i] = xy[i + 1].x - xy[i].x; dy[i] = xy[i + 1].y - xy[i].y; m[i] = dy[i] / dx[i]; }
+  tan[0] = m[0]; tan[n - 1] = m[n - 2];
+  for(let i = 1; i < n - 1; i++) tan[i] = (m[i - 1] * m[i] <= 0) ? 0 : (m[i - 1] + m[i]) / 2;
+  let d = `M${xy[0].x.toFixed(1)} ${xy[0].y.toFixed(1)}`;
+  for(let i = 0; i < n - 1; i++){
+    const c1x = xy[i].x + dx[i] / 3, c1y = xy[i].y + tan[i] * dx[i] / 3;
+    const c2x = xy[i + 1].x - dx[i] / 3, c2y = xy[i + 1].y - tan[i + 1] * dx[i] / 3;
+    d += ` C${c1x.toFixed(1)} ${c1y.toFixed(1)} ${c2x.toFixed(1)} ${c2y.toFixed(1)} ${xy[i + 1].x.toFixed(1)} ${xy[i + 1].y.toFixed(1)}`;
+  }
+  const area = `${d} L${xy[n - 1].x.toFixed(1)} ${H} L${xy[0].x.toFixed(1)} ${H} Z`;
+
+  // подписи мест слева: лучшее, худшее и середина
+  const ticks = [...new Set([minP, Math.round((minP + maxP) / 2), maxP])];
+  const many = n > 7;
+  const ptR = many ? 3 : 3.8;
+
+  plot.innerHTML = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" class="lv-svg${animate ? ' anim' : ''}" aria-hidden="true">
+    <defs>
+      <linearGradient id="lvLine" x1="0" x2="1"><stop offset="0" stop-color="#b06cf0"/><stop offset="1" stop-color="#e4ff5c"/></linearGradient>
+      <linearGradient id="lvFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b06cf0" stop-opacity=".22"/><stop offset="1" stop-color="#b06cf0" stop-opacity="0"/></linearGradient>
+    </defs>
+    <g class="lv-grid">${ticks.map(p => `<line x1="${L}" x2="${W - R}" y1="${Y(p).toFixed(1)}" y2="${Y(p).toFixed(1)}"/><text x="${L - 8}" y="${(Y(p) + 4).toFixed(1)}" text-anchor="end">#${p}</text>`).join('')}</g>
+    <path class="lv-area" d="${area}" fill="url(#lvFill)"/>
+    <path class="lv-line" d="${d}" fill="none" stroke="url(#lvLine)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" pathLength="1"/>
+    ${xy.map((p, i) => {
+      const lastPt = i === n - 1;
+      return `<g class="lv-pt-g" style="--i:${i}">
+        <circle class="lv-hit" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="12"/>
+        <circle class="lv-pt${lastPt ? ' last' : ''}" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${lastPt ? 5 : ptR}"/>
+        <g class="lv-tip" transform="translate(${Math.min(Math.max(p.x, L + 40), W - R - 40).toFixed(1)} ${(p.y < 40 ? p.y + 26 : p.y - 16).toFixed(1)})">
+          <rect x="-40" y="-14" width="80" height="22" rx="7"/>
+          <text y="1" text-anchor="middle">#${p.pos} · ${escapeHtml(fmtEuDate(p.date).slice(0, 5))}</text>
+        </g>
+      </g>`;
+    }).join('')}
+  </svg>`;
+}
+
+function initPositionCharts(root){
+  root.querySelectorAll('.lv-plot').forEach(plot => {
+    drawPositionChart(plot, true);
+    let w = plot.clientWidth;
+    const ro = new ResizeObserver(() => {
+      if(!plot.isConnected){ ro.disconnect(); return; }
+      if(Math.abs(plot.clientWidth - w) < 2) return;
+      w = plot.clientWidth;
+      drawPositionChart(plot, false);
+    });
+    ro.observe(plot);
+  });
 }
 
 function beatenByHtml(lvl, cfg, t){
@@ -5819,9 +5964,10 @@ function openDetailModal(lvl){
       ? { k: t.statBestProgress, v: formatProgress(lvl.progress), ico: '◔', hi: true }
       : { k: t.statTotalScore, v: String(lvl.points), ico: '✦', hi: true }) : null,
     (cfg.showRanking && idx >= 0 && arrAll.length > 1)
-      ? { k: t.lvPlace, v: t.lvTopShort.replace('{p}', Math.max(1, Math.round((idx + 1) / arrAll.length * 100))), ico: '▲', hi: true } : null,
+      ? null : null,
+    lvl.difficulty ? { k: t.lvDifficulty, v: DIFFICULTIES[lvl.difficulty] || lvl.difficulty, ico: DIFF_ICON[lvl.difficulty] || '😈', diff: lvl.difficulty } : null,
   ].filter(Boolean);
-  const chips = infoItems.map((it, i) => `<div class="lv-info-item${it.copy ? ' copyable' : ''}${it.hi ? ' hi' : ''}" style="--i:${i}"
+  const chips = infoItems.map((it, i) => `<div class="lv-info-item${it.copy ? ' copyable' : ''}${it.hi ? ' hi' : ''}${it.diff ? ' diff-' + it.diff : ''}" style="--i:${i}"
       ${it.copy ? `data-copy="${escapeHtml(String(it.v))}" role="button" tabindex="0" title="${escapeHtml(t.clickToCopy)}"` : ''}>
       <span class="lv-info-k">${escapeHtml(it.k)}</span>
       <span class="lv-info-v"><i aria-hidden="true">${it.ico}</i>${escapeHtml(String(it.v))}${it.copy ? '<em class="lv-copy" aria-hidden="true">⧉</em>' : ''}</span>
@@ -5931,6 +6077,7 @@ function openDetailModal(lvl){
     closeDetailModal();
     openPlayerProfile(players[pi], pi);
   }));
+  initPositionCharts(root);
   requestAnimationFrame(() => setTimeout(() => {
     root.querySelectorAll('.lv-split i').forEach(i => { i.style.width = i.dataset.w + '%'; });
   }, 1000));
@@ -6021,7 +6168,7 @@ function emitLevelNotifications(before, lvl, listKey){
 function myNotifications(){
   const me = nickKey(currentAdminNick);
   if(!me || !Array.isArray(state.notifications)) return [];
-  return state.notifications.filter(n => n.to === me);
+  return state.notifications.filter(n => n.to === me && !isNotifHidden(n));
 }
 
 function updateNotifBadge(){
@@ -6065,13 +6212,37 @@ function notifText(n, t){
 }
 
 function isNotifRead(n){
-  return !!(n.read || (currentUser && currentUser.readNotifs && currentUser.readNotifs.has(n.id)));
+  if(currentUser && currentUser.readNotifs) return currentUser.readNotifs.has(n.id) || currentUser.readNotifs.has('x:' + n.id);
+  return !!n.read;
+}
+function isNotifHidden(n){
+  return !!(currentUser && currentUser.readNotifs && currentUser.readNotifs.has('x:' + n.id));
+}
+
+// кнопка на уведомлении: прочитать и убрать из списка
+function dismissNotif(id, el){
+  if(!currentUser) return;
+  currentUser.readNotifs.delete(id);
+  currentUser.readNotifs.add('x:' + id);
+  updateNotifBadge();
+  syncReadAllBtn();
+  saveReadNotifs();
+  if(!el) return;
+  // уезжает вправо и схлопывается по высоте, соседи плавно подтягиваются
+  el.style.height = el.offsetHeight + 'px';
+  el.classList.add('leaving');
+  requestAnimationFrame(() => requestAnimationFrame(() => { el.style.height = '0px'; }));
+  setTimeout(() => {
+    el.remove();
+    const list = document.querySelector('#notifBody .notif-list');
+    if(list && !list.children.length) renderNotifBody();
+  }, 520);
 }
 
 // список прочитанных хранится в профиле пользователя — писать в общий лист обычный игрок не может
 async function saveReadNotifs(){
   if(!currentUser) return;
-  const ids = [...currentUser.readNotifs].slice(-400);
+  const ids = [...currentUser.readNotifs].slice(-600);
   try{
     await refreshSessionIfNeeded();
     await fetch(`${PROFILES_REST}?id=eq.${encodeURIComponent(currentUser.id)}`, {
@@ -6094,11 +6265,11 @@ function markNotifRead(ids, animateEls){
   setTimeout(() => {
     (animateEls || []).forEach(el => {
       el.classList.remove('unread', 'reading');
-      const b = el.querySelector('.notif-read-btn'); if(b) b.remove();
       const nw = el.querySelector('.notif-new'); if(nw) nw.remove();
     });
   }, 450);
 }
+
 
 function syncReadAllBtn(){
   const btn = document.getElementById('notifReadAll');
@@ -6140,7 +6311,7 @@ function renderNotifBody(){
       ? '<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/><path d="m9 12 2 2 4-4"/></svg>'
       : '<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>';
     const nRead = isNotifRead(n);
-    const readBtn = nRead ? '' : `<button class="notif-read-btn" type="button" data-id="${escapeHtml(n.id)}" title="${escapeHtml(t.nMarkRead)}" aria-label="${escapeHtml(t.nMarkRead)}">
+    const readBtn = `<button class="notif-read-btn" type="button" data-id="${escapeHtml(n.id)}" title="${escapeHtml(t.nDismiss)}" aria-label="${escapeHtml(t.nDismiss)}">
         <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></button>`;
     return `<div class="notif-item${nRead ? '' : ' unread'}" style="--i:${Math.min(ni, 12)}" data-id="${escapeHtml(n.id)}" data-level="${escapeHtml(n.level || '')}" data-list="${escapeHtml(n.list || '')}">
       <span class="notif-badge ${n.type === 'verify' ? 'is-verify' : 'is-record'}">${ico}</span>
@@ -6162,7 +6333,7 @@ function renderNotifBody(){
   body.querySelectorAll('.notif-read-btn').forEach(b => b.addEventListener('click', (e) => {
     e.stopPropagation();
     const item = b.closest('.notif-item');
-    markNotifRead([b.dataset.id], [item]);
+    dismissNotif(b.dataset.id, item);
   }));
 
   // клик по уведомлению ведёт на страницу уровня и помечает его прочитанным
@@ -6407,7 +6578,6 @@ function renderAuthPage(){
           <input id="auPass" type="password" name="password" autocomplete="${up ? 'new-password' : 'current-password'}" placeholder="${escapeHtml(up ? t.auPassPhUp : '••••••••')}" required />
           <button type="button" class="auth-eye" id="auEye" aria-label="${escapeHtml(t.auShowPass)}">${EYE_SVG}</button>
         </div>
-        ${up ? `<div class="auth-str" id="auStr" aria-hidden="true"><i></i><i></i><i></i><i></i></div>` : ''}
       </div>
       ${up ? `<div class="auth-f" style="--i:2">
         <label for="auPass2">${escapeHtml(t.auPass2)}</label>
@@ -6425,7 +6595,15 @@ function renderAuthPage(){
       <div class="auth-alt">${escapeHtml(up ? t.auHaveAcc : t.auNoAcc)} <button type="button" class="auth-link" data-mode="${up ? 'in' : 'up'}">${escapeHtml(up ? t.auSignIn : t.auCreate)}</button></div>
     </form>
     <div class="auth-ok" id="authOk">
-      <div class="auth-ok-ring"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></div>
+      <div class="auth-ok-badge" aria-hidden="true">
+        <svg viewBox="0 0 120 120" width="120" height="120">
+          <circle class="ok-fill" cx="60" cy="60" r="34"/>
+          <circle class="ok-circle" cx="60" cy="60" r="34" pathLength="1"/>
+          <path class="ok-check" d="M45 61 L55.5 71 L76 50" pathLength="1"/>
+          ${[0,45,90,135,180,225,270,315].map((a, i) => `<g transform="rotate(${a} 60 60)"><line class="ok-ray" style="--i:${i}" x1="60" y1="16" x2="60" y2="8"/></g>`).join('')}
+          ${[20,110,200,290].map((a, i) => `<g transform="rotate(${a} 60 60)"><circle class="ok-dot" style="--i:${i}" cx="60" cy="10" r="2.2"/></g>`).join('')}
+        </svg>
+      </div>
       <div class="auth-h" id="authOkTitle"></div>
       <div class="auth-sub" id="authOkSub"></div>
     </div>`;
@@ -6446,12 +6624,6 @@ function renderAuthPage(){
     e.currentTarget.innerHTML = show ? EYE_OFF_SVG : EYE_SVG;
   });
   if(up){
-    pass.addEventListener('input', () => {
-      const v = pass.value;
-      const score = (v.length >= 6) + (v.length >= 10) + (/[A-ZА-Я]/.test(v) && /[a-zа-я]/.test(v)) + (/\d/.test(v) && /[^\p{L}\p{N}]/u.test(v) || /\d/.test(v) && v.length >= 12);
-      const COLORS = ['#ff8f8f', '#ffb37a', '#e4ff5c', '#7bf5a8'];
-      document.querySelectorAll('#auStr i').forEach((el, i) => { el.style.background = (v && i < Math.max(1, score)) ? COLORS[Math.max(0, score - 1)] : ''; });
-    });
     const nickEl = document.getElementById('auNick');
     nickEl.addEventListener('input', () => {
       const hint = document.getElementById('auNickHint');
@@ -6485,7 +6657,7 @@ async function onAuthSubmit(e){
   const up = authMode === 'up';
   document.getElementById('authErr').classList.remove('show');
   if(!NICK_RE.test(nick)) return authFail(t.auNickBad);
-  if(pass.length < 6) return authFail(t.auPassShort);
+  if(!pass.length) return authFail(t.auPassShort);
   if(up && pass !== document.getElementById('auPass2').value) return authFail(t.auPassMismatch);
   if(!isConfigured()) return authFail(t.auNoServer);
 
@@ -6501,12 +6673,18 @@ async function onAuthSubmit(e){
     setTimeout(() => { closeAuthPage(); }, 1500);
   }catch(ex){
     btn.classList.remove('loading'); btn.disabled = false;
-    const m = String(ex && (ex.code || ex.message) || '');
-    if(ex.code === 'taken' || /already registered|already exists/i.test(m)) authFail(t.auNickTaken);
-    else if(ex.code === 'confirm') authFail(t.auConfirmOn);
-    else if(ex.status === 400 || /invalid login|invalid_grant/i.test(m)) authFail(t.auBadCreds);
-    else if(ex.status === 429) authFail(t.auTooMany);
+    const code = String(ex && ex.code || '');
+    const m = String(ex && ex.message || '');
+    if(code === 'taken' || code === 'user_already_exists' || /already registered|already exists/i.test(m)) authFail(t.auNickTaken);
+    else if(code === 'confirm' || code === 'email_not_confirmed') authFail(t.auConfirmOn);
+    else if(code === 'signup_disabled' || /signups not allowed/i.test(m)) authFail(t.auSignupOff);
+    else if(code === 'email_address_invalid' || /email address .* invalid/i.test(m)) authFail(t.auEmailRejected);
+    else if(code === 'weak_password') authFail(t.auWeakServer);
+    else if(!up && (code === 'invalid_credentials' || ex.status === 400 || /invalid login|invalid_grant/i.test(m))) authFail(t.auBadCreds);
+    else if(ex.status === 429 || code === 'over_request_rate_limit') authFail(t.auTooMany);
+    else if(ex.status) authFail(`${t.auServerSaid} ${m || ('HTTP ' + ex.status)}`);
     else authFail(t.auNetErr);
+    console.warn('auth error', ex.status, code, m, ex.data);
   }
 }
 
@@ -6879,6 +7057,19 @@ const fExtra = document.getElementById('fExtra');
 const lblName = document.getElementById('lblName');
 const lblVerifier = document.getElementById('lblVerifier');
 const fIsNew = document.getElementById('fIsNew');
+let fDifficultyValue = '';
+function setDifficulty(v){
+  fDifficultyValue = v || '';
+  document.querySelectorAll('#fDifficulty .lf-diff-opt').forEach(b => {
+    const on = b.dataset.v === fDifficultyValue;
+    b.classList.toggle('on', on);
+    b.setAttribute('aria-checked', on ? 'true' : 'false');
+  });
+}
+document.querySelectorAll('#fDifficulty .lf-diff-opt').forEach(b => b.addEventListener('click', () => {
+  setDifficulty(b.dataset.v);
+  b.classList.remove('pick'); void b.offsetWidth; b.classList.add('pick');
+}));
 const lblPoints = document.getElementById('lblPoints');
 const lblExtra = document.getElementById('lblExtra');
 const fCreator = document.getElementById('fCreator');
@@ -6914,6 +7105,8 @@ function applyTabLabels(){
   if(vf) vf.style.display = '';
   const pf = document.getElementById('pointsField');
   if(pf) pf.style.display = (currentTab === 'players') ? 'none' : '';
+  const dfEl = document.getElementById('difficultyField');
+  if(dfEl) dfEl.style.display = (currentTab === 'players') ? 'none' : '';
   if(fPoints) fPoints.type = (cfg.metaKind === 'progress') ? 'text' : 'number';
   const titleEl = document.getElementById('currentListTitle');
   const btn = document.getElementById(
@@ -6977,6 +7170,7 @@ openFormBtn.addEventListener('click', () => {
     ? Math.max(POINTS_BASE - arr.length * POINTS_STEP, 0)
     : (arr.length ? Math.max(arr[arr.length - 1].points - 40, 0) : 1000);
   fName.value = ''; fVerifier.value = ''; fExtra.value = '';
+  setDifficulty('');
   fIsNew.checked = true;
   fPoints.value = cfg.metaKind === 'progress' ? '' : suggested;
   detailFields.forEach(f => f.value = '');
@@ -6997,6 +7191,7 @@ function openEditForm(lvl, rowEl){
   fPoints.value = cfg.metaKind === 'progress' ? parseProgress(lvl.progress) : lvl.points;
   fIsNew.checked = !!lvl.isNew;
   fExtra.value = lvl.extra || '';
+  setDifficulty(lvl.difficulty || '');
   fCreator.value = lvl.creator || '';
   fThumb.value = lvl.thumbnail || '';
   fVideo.value = lvl.videoUrl || '';
@@ -7059,6 +7254,7 @@ submitBtn.addEventListener('click', () => {
       lvl.name = fName.value.trim();
       lvl.verifier = fVerifier.value.trim();
       lvl.extra = fExtra.value.trim();
+      if(fDifficultyValue) lvl.difficulty = fDifficultyValue; else delete lvl.difficulty;
       if(fIsNew.checked){
         if(!lvl.isNew) lvl.newAt = Date.now();   // отсчёт двух недель с момента включения
         lvl.isNew = true;
@@ -7076,6 +7272,7 @@ submitBtn.addEventListener('click', () => {
       name: fName.value.trim(),
       verifier: fVerifier.value.trim(),
       extra: fExtra.value.trim(),
+      ...(fDifficultyValue ? { difficulty: fDifficultyValue } : {}),
       ...(cfg.metaKind === 'progress'
         ? { points: 0, progress: parseProgress(fPoints.value) }
         : { points: Number(fPoints.value) || 0 }),
