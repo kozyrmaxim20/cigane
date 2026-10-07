@@ -2128,6 +2128,123 @@
     .lv-aura i{ filter:blur(44px); }
   }
 
+
+  /* прочитать всё / прочитать одно */
+  @keyframes readOut{ 0%{ box-shadow:inset 3px 0 0 var(--lemon); } 100%{ box-shadow:inset 0 0 0 transparent; background:transparent; } }
+  @keyframes readCheck{ 0%{ transform:scale(1); } 40%{ transform:scale(1.3) rotate(-10deg); background:var(--lemon); color:#14101f; } 100%{ transform:scale(0); opacity:0; } }
+  .notif-readall{ margin-left:auto; margin-right:10px; display:inline-flex; align-items:center; gap:7px; height:32px; padding:0 12px;
+    border-radius:10px; cursor:pointer; font-family:'Sora',sans-serif; font-weight:600; font-size:12px; color:var(--muted);
+    background:rgba(255,255,255,0.04); border:1px solid var(--glass-line);
+    transition:color .2s, background .2s, border-color .2s, transform .25s cubic-bezier(.16,1,.3,1), opacity .2s; }
+  .notif-readall.has{ color:var(--lemon); border-color:rgba(228,255,92,0.4); background:rgba(228,255,92,0.07); }
+  .notif-readall.has:hover{ background:rgba(228,255,92,0.14); transform:translateY(-1px); }
+  .notif-readall:disabled{ opacity:.45; cursor:default; }
+  .notif-readall b{ min-width:18px; height:18px; padding:0 5px; border-radius:9px; font-size:10.5px; display:inline-flex; align-items:center; justify-content:center;
+    background:var(--lemon); color:#14101f; }
+  .notif-readall b:empty{ display:none; }
+  .notif-readall:hover svg{ animation:penWrite .5s ease; }
+  .notif-item{ align-items:center; }
+  .notif-main{ flex:1 1 auto; }
+  .notif-read-btn{ flex:0 0 34px; width:34px; height:34px; border-radius:11px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+    color:var(--lemon); background:rgba(228,255,92,0.08); border:1px solid rgba(228,255,92,0.35);
+    opacity:.7; transition:opacity .2s, background .2s, transform .25s cubic-bezier(.34,1.56,.64,1); }
+  .notif-item:hover .notif-read-btn{ opacity:1; }
+  .notif-read-btn:hover{ background:rgba(228,255,92,0.18); transform:scale(1.1); }
+  .notif-item.reading{ animation:readOut .45s ease forwards; animation-delay:calc(var(--ri, 0) * 60ms); }
+  .notif-item.reading .notif-read-btn{ animation:readCheck .45s ease forwards; animation-delay:calc(var(--ri, 0) * 60ms); }
+  .notif-item.reading .notif-new{ opacity:0; transform:scale(.6); transition:opacity .3s, transform .3s; }
+  @media (max-width:640px){ .notif-readall span{ display:none; } .notif-readall{ padding:0 9px; } }
+
+
+  /* ══ ВХОД / РЕГИСТРАЦИЯ ══ */
+  @keyframes auCard{ from{ opacity:0; transform:translateY(18px) scale(.97); } to{ opacity:1; transform:none; } }
+  @keyframes auField{ from{ opacity:0; transform:translateX(var(--dx, 14px)); } to{ opacity:1; transform:none; } }
+  @keyframes auShake{ 0%,100%{ transform:translateX(0); } 20%,60%{ transform:translateX(-7px); } 40%,80%{ transform:translateX(7px); } }
+  @keyframes auSpin{ to{ transform:rotate(360deg); } }
+  @keyframes auOk{ 0%{ transform:scale(0); } 65%{ transform:scale(1.15); } 100%{ transform:scale(1); } }
+  @keyframes auRing{ 0%{ box-shadow:0 0 0 0 rgba(228,255,92,0.5); } 100%{ box-shadow:0 0 0 22px rgba(228,255,92,0); } }
+  @keyframes auLemon{ 0%,100%{ transform:rotate(0) scale(1); } 50%{ transform:rotate(20deg) scale(1.05); } }
+  .auth-stage{ position:relative; isolation:isolate; display:flex; justify-content:center; padding:10px 20px 40px; }
+  .auth-stage .lv-aura{ top:-120px; bottom:-40px; }
+  .auth-card{ position:relative; width:100%; max-width:430px; padding:26px 24px 24px; border-radius:24px;
+    background:linear-gradient(160deg, rgba(36,26,64,0.88), rgba(18,13,34,0.92)); border:1px solid var(--glass-line-bright);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.07), 0 40px 80px -40px rgba(0,0,0,0.95), 0 0 0 1px rgba(176,108,240,0.08);
+    backdrop-filter:blur(16px); animation:auCard .6s cubic-bezier(.16,1,.3,1) both; }
+  .auth-card.shake{ animation:auShake .42s ease; }
+  .auth-logo{ display:flex; align-items:center; justify-content:center; gap:11px; margin-bottom:20px; }
+  .auth-lemon{ width:36px; height:36px; border-radius:50%; background:radial-gradient(circle at 35% 35%, #f6ffb0, #d4f45a 55%, #a9cc2c);
+    box-shadow:0 0 22px rgba(228,255,92,0.55); animation:auLemon 6s ease-in-out infinite; }
+  .auth-brand{ font-family:'Oswald',sans-serif; font-weight:700; font-size:18px; letter-spacing:.05em;
+    background:linear-gradient(90deg, var(--lemon), #5eead4, #c9a8ff); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .auth-tabs{ position:relative; display:grid; grid-template-columns:1fr 1fr; padding:4px; margin-bottom:20px; border-radius:14px;
+    background:rgba(255,255,255,0.04); border:1px solid var(--glass-line); }
+  .auth-tabs button{ position:relative; z-index:1; height:38px; border:0; border-radius:10px; cursor:pointer; background:transparent;
+    font-family:'Oswald',sans-serif; font-weight:600; font-size:14px; letter-spacing:.04em; color:var(--mystic); transition:color .3s; }
+  .auth-tabs button.on{ color:#14101f; }
+  .auth-glider{ position:absolute; top:4px; left:4px; width:calc(50% - 4px); height:calc(100% - 8px); border-radius:10px;
+    background:linear-gradient(135deg, var(--lemon), #b9f56b); box-shadow:0 8px 20px -10px rgba(228,255,92,0.8);
+    transition:transform .45s cubic-bezier(.34,1.4,.64,1); }
+  .auth-card.mode-up .auth-glider{ transform:translateX(100%); }
+  .auth-h{ font-family:'Oswald',sans-serif; font-weight:700; font-size:24px; color:#fff; animation:auField .45s cubic-bezier(.16,1,.3,1) both .05s; }
+  .auth-sub{ margin-top:4px; margin-bottom:18px; font-size:13.5px; color:var(--mystic); line-height:1.5; animation:auField .45s cubic-bezier(.16,1,.3,1) both .1s; }
+  .auth-card.mode-up .auth-form > *{ --dx:-14px; }
+  .auth-err{ max-height:0; overflow:hidden; opacity:0; margin:0; padding:0 12px; border-radius:11px; font-size:13px; color:#ffaaaa;
+    background:rgba(255,90,90,0.1); border:1px solid transparent; transition:max-height .3s, opacity .3s, padding .3s, margin .3s, border-color .3s; }
+  .auth-err.show{ max-height:80px; opacity:1; padding:10px 12px; margin-bottom:14px; border-color:rgba(255,110,110,0.35); }
+  .auth-f{ margin-bottom:14px; animation:auField .45s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(.15s + var(--i) * .06s); }
+  .auth-f label{ display:block; margin-bottom:7px; font-family:'Oswald',sans-serif; font-size:11.5px; letter-spacing:.12em; text-transform:uppercase; color:#b9b0d6; }
+  .auth-inp{ position:relative; }
+  .auth-inp input{ width:100%; height:48px; padding:0 44px 0 42px; border-radius:13px; font-size:15px; color:#f3f0fb;
+    background:rgba(8,6,18,0.6); border:1px solid var(--glass-line); outline:none; box-sizing:border-box;
+    transition:border-color .2s, box-shadow .25s, background .2s; }
+  .auth-inp input:hover{ border-color:var(--glass-line-bright); }
+  .auth-inp input:focus{ border-color:rgba(228,255,92,0.6); background:rgba(8,6,18,0.8); box-shadow:0 0 0 4px rgba(228,255,92,0.12); }
+  .auth-inp input::placeholder{ color:#6f6690; }
+  .auth-ic{ position:absolute; left:14px; top:50%; transform:translateY(-50%); display:flex; color:var(--muted); transition:color .2s; pointer-events:none; }
+  .auth-inp:focus-within .auth-ic{ color:var(--lemon); }
+  .auth-eye{ position:absolute; right:7px; top:50%; transform:translateY(-50%); width:34px; height:34px; border-radius:10px; border:0; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; color:var(--muted); background:transparent; transition:color .2s, background .2s; }
+  .auth-eye:hover{ color:#fff; background:rgba(255,255,255,0.07); }
+  .auth-hint{ min-height:16px; margin-top:6px; font-size:12px; color:var(--muted); transition:color .2s; }
+  .auth-hint.ok{ color:#7bf5a8; } .auth-hint.bad{ color:#ff9b9b; }
+  .auth-str{ display:flex; gap:5px; margin-top:8px; }
+  .auth-str i{ flex:1; height:4px; border-radius:2px; background:rgba(255,255,255,0.08); transition:background .3s; }
+  .auth-card label.auth-remember{ display:flex !important; margin:2px 0 16px; padding:9px 12px; animation:auField .45s cubic-bezier(.16,1,.3,1) both .35s; }
+  .auth-remember .lf-switch-text b{ font-family:'Sora',sans-serif; font-weight:500; font-size:13px; letter-spacing:0; }
+  .auth-btn{ position:relative; overflow:hidden; width:100%; height:50px; border:0; border-radius:14px; cursor:pointer;
+    font-family:'Oswald',sans-serif; font-weight:700; font-size:16px; letter-spacing:.06em; color:#14101f;
+    background:linear-gradient(135deg, var(--lemon), #b9f56b); box-shadow:0 16px 34px -14px rgba(228,255,92,0.85);
+    transition:transform .25s cubic-bezier(.16,1,.3,1), box-shadow .25s, filter .2s; animation:auField .45s cubic-bezier(.16,1,.3,1) both .4s; }
+  .auth-btn::after{ content:''; position:absolute; top:0; bottom:0; left:0; width:35%;
+    background:linear-gradient(100deg, transparent, rgba(255,255,255,0.5), transparent); transform:translateX(-140%) skewX(-18deg); }
+  .auth-btn:hover{ transform:translateY(-2px); box-shadow:0 20px 38px -14px rgba(228,255,92,0.95); }
+  .auth-btn:hover::after{ transform:translateX(340%) skewX(-18deg); transition:transform .75s cubic-bezier(.16,1,.3,1); }
+  .auth-btn:active{ transform:scale(.98); }
+  .auth-btn:disabled{ cursor:default; filter:saturate(.7); }
+  .auth-spin{ display:none; width:20px; height:20px; margin:0 auto; border-radius:50%; border:2.5px solid rgba(20,16,31,0.25); border-top-color:#14101f; animation:auSpin .7s linear infinite; }
+  .auth-btn.loading span{ display:none; } .auth-btn.loading .auth-spin{ display:block; }
+  .auth-alt{ margin-top:16px; text-align:center; font-size:13.5px; color:var(--mystic); animation:auField .45s cubic-bezier(.16,1,.3,1) both .45s; }
+  .auth-link{ border:0; background:none; padding:0; cursor:pointer; font:inherit; font-weight:600; color:var(--lemon);
+    background-image:linear-gradient(var(--lemon), var(--lemon)); background-size:0 1.5px; background-position:0 100%; background-repeat:no-repeat;
+    transition:background-size .3s ease; }
+  .auth-link:hover{ background-size:100% 1.5px; }
+  .auth-ok{ display:none; text-align:center; padding:18px 0 6px; }
+  .auth-card.done .auth-form{ display:none; }
+  .auth-card.done .auth-ok{ display:block; }
+  .auth-ok-ring{ width:72px; height:72px; margin:0 auto 16px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    color:var(--lemon); background:rgba(228,255,92,0.12); border:2px solid var(--lemon);
+    animation:auOk .55s cubic-bezier(.34,1.56,.64,1) both, auRing 1.4s ease-out .3s 2; }
+  .auth-ok .auth-h{ font-size:22px; }
+  #adminLoginOpenBtn{ display:inline-flex; align-items:center; gap:8px; }
+  @media (max-width:640px){
+    .auth-stage{ padding:4px 12px 28px; }
+    .auth-card{ padding:22px 16px 18px; border-radius:20px; }
+    .auth-h{ font-size:21px; }
+  }
+  @media (prefers-reduced-motion:reduce){
+    .auth-card, .auth-card.shake, .auth-f, .auth-h, .auth-sub, .auth-btn, .auth-alt, .auth-lemon, .auth-ok-ring, .auth-card label.auth-remember{ animation:none !important; }
+  }
+
   /* ══ MOBILE LAYOUT ══ */
   @media (max-width:640px){
     /* шапка на телефоне в три ряда занимает пятую часть экрана — не держим её приклеенной */
@@ -2241,7 +2358,7 @@
         </div>
       </div>
       <div class="admin-bar" id="adminBarLoggedOut">
-        <button id="adminLoginOpenBtn">Войти как админ</button>
+        <button id="adminLoginOpenBtn"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="m10 17 5-5-5-5"/><path d="M15 12H3"/></svg><span id="signInLabel">Войти</span></button>
       </div>
       <div class="admin-bar" id="adminBarLoggedIn" style="display:none;">
         <button class="icon-btn" id="toggleControlsBtn" title="Скрыть кнопки управления" aria-label="Скрыть кнопки управления">
@@ -2449,6 +2566,18 @@
     <div id="playerContent"></div>
   </div>
 
+  <div class="card detail-page auth-page" id="authView" style="display:none;">
+    <div class="rules-topbar">
+      <button class="detail-back" id="authCloseBtn">
+        <span class="db-arrow"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m11 18-6-6 6-6"/></svg></span><span id="backFromAuthLabel">К списку</span>
+      </button>
+    </div>
+    <div class="auth-stage">
+      <div class="lv-aura au-main" aria-hidden="true"><i></i><i></i><i></i></div>
+      <div class="auth-card" id="authCard"></div>
+    </div>
+  </div>
+
   <div class="card detail-page" id="updatesView" style="display:none;">
     <div class="rules-topbar">
       <button class="detail-back" id="updatesCloseBtn">
@@ -2482,6 +2611,10 @@
           </svg>
         </span>
         <span class="sh-title" id="notifTitle">Уведомления</span>
+        <button class="notif-readall" id="notifReadAll" type="button">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m2 12.5 4.5 4.5L15 8.5"/><path d="m10 16 1.5 1.5L21 8"/></svg>
+          <span id="notifReadAllLabel">Прочитать всё</span><b id="notifUnreadCount"></b>
+        </button>
         <span class="sh-chevron">▲</span>
       </div>
       <div class="subsection-body">
@@ -2540,25 +2673,6 @@
   </div>
 </div>
 
-<div class="modal-overlay" id="authModal">
-  <div class="modal-box">
-    <div class="modal-title" id="modalTitle">Вход для админа</div>
-    <div class="modal-sub" id="modalSub">Редактировать список могут только админы. Введи ник и пароль, чтобы войти.</div>
-    <label id="modalNickLabel">Ник</label>
-    <input type="text" id="authNick" placeholder="Ник" autocomplete="off" />
-    <label id="modalPassLabel">Пароль</label>
-    <input type="password" id="authPass" placeholder="Пароль" autocomplete="off" />
-    <label class="remember-row" for="authRemember">
-      <input type="checkbox" id="authRemember" checked />
-      <span id="rememberLabel">Запомнить меня</span>
-    </label>
-    <div class="modal-error" id="authError"></div>
-    <div class="modal-actions">
-      <button class="primary" id="authLoginBtn">Войти</button>
-      <button id="authCancelBtn">Отмена</button>
-    </div>
-  </div>
-</div>
 
 
 <script>
@@ -2672,6 +2786,7 @@ const I18N = {
     playersSideTitle: "Все игроки",
     pickPlayer: "Выберите игрока из списка",
     profSettingsTitle: "Настройки профиля",
+    profSaveDenied: "Не удалось сохранить: нет прав или нет связи",
     lvSinceAdded: "с момента добавления",
     lvPlace: "Место",
     lvTopShort: "Топ {p}%",
@@ -2680,6 +2795,40 @@ const I18N = {
     lvNobody: "Пока никто",
     lvProgress: "прогресс",
     lvTopPct: "Топ {p}% листа",
+    auHeaderBtn: "Войти",
+    auSignIn: "Вход",
+    auSignUp: "Регистрация",
+    auCreate: "Создать аккаунт",
+    auInTitle: "С возвращением",
+    auInSub: "Войди, чтобы видеть свои уведомления и редактировать профиль",
+    auUpTitle: "Новый аккаунт",
+    auUpSub: "Ник связывает аккаунт с твоим местом в рейтинге",
+    auNick: "Ник",
+    auNickPh: "Твой ник",
+    auPass: "Пароль",
+    auPass2: "Повтори пароль",
+    auPassPhUp: "не меньше 6 символов",
+    auShowPass: "Показать пароль",
+    auRemember: "Запомнить меня",
+    auSignInBtn: "Войти",
+    auSignUpBtn: "Создать аккаунт",
+    auNoAcc: "Нет аккаунта?",
+    auHaveAcc: "Уже есть аккаунт?",
+    auNickBad: "Ник: 2–20 символов — буквы, цифры, пробел, _ . -",
+    auNickTaken: "Этот ник уже занят",
+    auNickLinked: "✓ Ник есть в рейтинге — профиль привяжется к аккаунту",
+    auNickFree: "✓ Ник свободен",
+    auPassShort: "Пароль — минимум 6 символов",
+    auPassMismatch: "Пароли не совпадают",
+    auBadCreds: "Неверный ник или пароль",
+    auConfirmOn: "В Supabase включено подтверждение почты — его нужно выключить",
+    auTooMany: "Слишком много попыток, подожди немного",
+    auNetErr: "Не удалось связаться с сервером",
+    auNoServer: "Сервер не настроен",
+    auWelcome: "Привет, {n}!",
+    auWelcomeNew: "Добро пожаловать, {n}!",
+    auAdminNote: "Вход выполнен · права админа",
+    auPlayerNote: "Вход выполнен",
     achTitle: "Достижения",
     achCustomTitle: "Свои достижения",
     achCustomEditHint: "Выдаются вручную и сразу считаются полученными. Значок — любой эмодзи, можно выбрать ниже.",
@@ -2769,6 +2918,8 @@ const I18N = {
     adminBadge: 'Админ',
     noNotifications: 'Уведомлений пока нет',
     nNew: 'новое',
+    nReadAll: 'Прочитать всё',
+    nMarkRead: 'Отметить прочитанным',
     nRecordTitle: 'Рекорд принят',
     nRecordBodyFull: 'Ваш рекорд {lvl} {pc}% засчитан!',
     nRecordBodyPart: 'Ваш прогресс {lvl} {pc}% засчитан',
@@ -2888,6 +3039,7 @@ const I18N = {
     playersSideTitle: "All players",
     pickPlayer: "Pick a player from the list",
     profSettingsTitle: "Profile settings",
+    profSaveDenied: "Couldn't save: no permission or no connection",
     lvSinceAdded: "since added",
     lvPlace: "Place",
     lvTopShort: "Top {p}%",
@@ -2896,6 +3048,40 @@ const I18N = {
     lvNobody: "Nobody yet",
     lvProgress: "progress",
     lvTopPct: "Top {p}% of the list",
+    auHeaderBtn: "Sign in",
+    auSignIn: "Sign in",
+    auSignUp: "Sign up",
+    auCreate: "Create one",
+    auInTitle: "Welcome back",
+    auInSub: "Sign in to see your notifications and edit your profile",
+    auUpTitle: "Create account",
+    auUpSub: "Your nickname links the account to your place in the rankings",
+    auNick: "Nickname",
+    auNickPh: "Your nickname",
+    auPass: "Password",
+    auPass2: "Repeat password",
+    auPassPhUp: "at least 6 characters",
+    auShowPass: "Show password",
+    auRemember: "Remember me",
+    auSignInBtn: "Sign in",
+    auSignUpBtn: "Create account",
+    auNoAcc: "No account yet?",
+    auHaveAcc: "Already registered?",
+    auNickBad: "Nickname: 2–20 characters — letters, digits, space, _ . -",
+    auNickTaken: "This nickname is taken",
+    auNickLinked: "✓ Found in the rankings — your profile will be linked",
+    auNickFree: "✓ Nickname is free",
+    auPassShort: "Password must be at least 6 characters",
+    auPassMismatch: "Passwords don't match",
+    auBadCreds: "Wrong nickname or password",
+    auConfirmOn: "Email confirmation is on in Supabase — it needs to be turned off",
+    auTooMany: "Too many attempts, wait a bit",
+    auNetErr: "Couldn't reach the server",
+    auNoServer: "Server is not configured",
+    auWelcome: "Hi, {n}!",
+    auWelcomeNew: "Welcome, {n}!",
+    auAdminNote: "Signed in · admin rights",
+    auPlayerNote: "Signed in",
     achTitle: "Achievements",
     achCustomTitle: "Custom achievements",
     achCustomEditHint: "Granted manually and always count as earned. Any emoji works as the icon — pick one below.",
@@ -2985,6 +3171,8 @@ const I18N = {
     adminBadge: 'Admin',
     noNotifications: 'No notifications yet',
     nNew: 'new',
+    nReadAll: 'Mark all as read',
+    nMarkRead: 'Mark as read',
     nRecordTitle: 'Accepted your record',
     nRecordBodyFull: 'Your {lvl} {pc}% record was accepted!',
     nRecordBodyPart: 'Your {lvl} {pc}% progress was accepted',
@@ -3226,144 +3414,212 @@ const state = { levels: [], futureLevels: [], nonListedLevels: [], players: [], 
 let searchQuery = '';
 let currentTab = 'main'; // 'main' | 'future' | 'nonListed' | 'players'
 
-/* ===================== ADMИН-ДОСТУП ===================== */
-const ADMINS = [
-  { nick: 'BaGGet', pass: 'баггетсигма' },
-  { nick: 'muwa1t', pass: '03121702' }
-];
+/* ===================== АККАУНТЫ ======================
+   Вход по нику и паролю через Supabase Auth. Почта нужна Supabase формально —
+   она собирается из ника и пользователю не показывается. Роль (player/admin)
+   хранится в таблице profiles и выдаётся только через SQL.                 */
+const AUTH_URL = `${SUPABASE_URL}/auth/v1`;
+const PROFILES_REST = `${SUPABASE_URL}/rest/v1/profiles`;
+const AUTH_KEY = 'cll_auth';
+const EMAIL_DOMAIN = 'players.cigane.pages.dev';
 
 let isAdmin = false;
-let currentAdminNick = '';
+let currentAdminNick = '';      // ник вошедшего пользователя (любой роли)
+let currentUser = null;         // { id, nick, role, token, refresh, exp, readNotifs:Set }
+let profilesByNick = new Map(); // ник в нижнем регистре → строка profiles
 
-function openAuthModal(){
-  document.getElementById('authError').textContent = '';
-  document.getElementById('authNick').value = '';
-  document.getElementById('authPass').value = '';
-  document.getElementById('authModal').classList.add('open');
-  document.body.classList.add('modal-open');
-  setTimeout(() => document.getElementById('authNick').focus(), 0);
+const NICK_RE = /^[\p{L}\p{N}_.\- ]{2,20}$/u;
+
+async function nickToEmail(nick){
+  const bytes = new TextEncoder().encode(String(nick).trim().toLowerCase());
+  let hex = [...bytes].map(b => b.toString(16).padStart(2, '0')).join('');
+  // часть до @ ограничена 64 символами — длинные ники хешируются
+  if(hex.length > 60 && window.crypto && crypto.subtle){
+    const h = new Uint8Array(await crypto.subtle.digest('SHA-256', bytes));
+    hex = 'h' + [...h].slice(0, 20).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+  return `u${hex}@${EMAIL_DOMAIN}`;
 }
-function closeAuthModal(){
-  document.getElementById('authModal').classList.remove('open');
-  if(!document.querySelector('.modal-overlay.open')) document.body.classList.remove('modal-open');
+
+// заголовки записи: с токеном пользователя, если он вошёл
+function authHeaders(){
+  return { ...SB_HEADERS, Authorization: `Bearer ${currentUser && currentUser.token ? currentUser.token : SUPABASE_ANON_KEY}` };
 }
+
+async function authPost(path, body){
+  const res = await fetch(`${AUTH_URL}${path}`, {
+    method: 'POST',
+    headers: { apikey: SUPABASE_ANON_KEY, 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  const data = await res.json().catch(() => ({}));
+  if(!res.ok) throw Object.assign(new Error(data.msg || data.error_description || data.message || ('HTTP ' + res.status)), { status: res.status, data });
+  return data;
+}
+
+async function fetchProfileById(id, token){
+  const res = await fetch(`${PROFILES_REST}?id=eq.${encodeURIComponent(id)}&select=*`, {
+    headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${token || SUPABASE_ANON_KEY}` },
+  });
+  if(!res.ok) return null;
+  const rows = await res.json().catch(() => []);
+  return rows[0] || null;
+}
+
+// все профили — для аватарок, описаний, лестниц и метки «Админ»
+async function loadProfiles(){
+  try{
+    const res = await fetch(`${PROFILES_REST}?select=id,nick,role,avatar,bio,ladder`, { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` } });
+    if(!res.ok) return;
+    const rows = await res.json();
+    profilesByNick = new Map(rows.map(r => [String(r.nick).toLowerCase(), r]));
+    applyProfilesToPlayers();
+  }catch(e){}
+}
+
+// данные из профиля аккаунта перекрывают то, что лежит в общем JSON
+function applyProfilesToPlayers(){
+  (state.players || []).forEach(p => {
+    const row = profilesByNick.get(String(p.name || '').trim().toLowerCase());
+    if(!row) return;
+    if(row.avatar) p.avatar = row.avatar;
+    if(row.bio) p.bio = row.bio;
+    if(row.ladder && Array.isArray(row.ladder.steps)) p.ladder = row.ladder;
+  });
+}
+function isAdminNickName(nick){
+  const row = profilesByNick.get(String(nick || '').trim().toLowerCase());
+  return !!(row && row.role === 'admin');
+}
+
+function saveAuth(remember){
+  if(!currentUser) return;
+  const data = JSON.stringify({ id: currentUser.id, nick: currentUser.nick, token: currentUser.token, refresh: currentUser.refresh, exp: currentUser.exp });
+  try{
+    (remember ? localStorage : sessionStorage).setItem(AUTH_KEY, data);
+    (remember ? sessionStorage : localStorage).removeItem(AUTH_KEY);
+  }catch(e){}
+}
+function readAuth(){
+  for(const store of [localStorage, sessionStorage]){
+    try{ const raw = store.getItem(AUTH_KEY); if(raw) return { data: JSON.parse(raw), remember: store === localStorage }; }catch(e){}
+  }
+  return null;
+}
+function clearAuth(){
+  try{ localStorage.removeItem(AUTH_KEY); sessionStorage.removeItem(AUTH_KEY); }catch(e){}
+  // старые ключи прежнего входа
+  try{ localStorage.removeItem('gll_admin_session'); sessionStorage.removeItem('gll_admin_session'); }catch(e){}
+}
+
+function applySession(sess, profile){
+  currentUser = {
+    id: sess.user ? sess.user.id : sess.id,
+    nick: profile ? profile.nick : (sess.nick || ''),
+    role: profile ? profile.role : 'player',
+    token: sess.access_token || sess.token,
+    refresh: sess.refresh_token || sess.refresh,
+    exp: sess.expires_at ? sess.expires_at * 1000 : (sess.exp || Date.now() + 3600e3),
+    readNotifs: new Set(profile && Array.isArray(profile.read_notifs) ? profile.read_notifs : []),
+  };
+  currentAdminNick = currentUser.nick;
+  isAdmin = currentUser.role === 'admin';
+}
+
+async function signIn(nick, pass, remember){
+  const email = await nickToEmail(nick);
+  const sess = await authPost('/token?grant_type=password', { email, password: pass });
+  const profile = await fetchProfileById(sess.user.id, sess.access_token);
+  applySession(sess, profile || { nick: (sess.user.user_metadata || {}).nick || nick, role: 'player' });
+  saveAuth(remember);
+  afterAuthChange();
+}
+
+async function signUp(nick, pass, remember){
+  const clean = String(nick).trim();
+  // ник уже занят?
+  if(profilesByNick.has(clean.toLowerCase())) throw Object.assign(new Error('taken'), { code: 'taken' });
+  const email = await nickToEmail(clean);
+  const sess = await authPost('/signup', { email, password: pass, data: { nick: clean } });
+  if(!sess.access_token){
+    // в Supabase включено подтверждение почты — без него войти нельзя
+    throw Object.assign(new Error('confirm'), { code: 'confirm' });
+  }
+  const res = await fetch(PROFILES_REST, {
+    method: 'POST',
+    headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${sess.access_token}`, 'Content-Type': 'application/json', Prefer: 'return=representation' },
+    body: JSON.stringify({ id: sess.user.id, nick: clean }),
+  });
+  const rows = await res.json().catch(() => []);
+  if(!res.ok) throw Object.assign(new Error('profile'), { code: res.status === 409 ? 'taken' : 'profile', detail: rows });
+  applySession(sess, rows[0] || { nick: clean, role: 'player' });
+  profilesByNick.set(clean.toLowerCase(), rows[0] || { nick: clean, role: 'player' });
+  saveAuth(remember);
+  afterAuthChange();
+}
+
+async function refreshSessionIfNeeded(){
+  if(!currentUser || !currentUser.refresh) return;
+  if(currentUser.exp - Date.now() > 120e3) return;
+  try{
+    const sess = await authPost('/token?grant_type=refresh_token', { refresh_token: currentUser.refresh });
+    currentUser.token = sess.access_token;
+    currentUser.refresh = sess.refresh_token;
+    currentUser.exp = sess.expires_at * 1000;
+    const stored = readAuth();
+    saveAuth(stored ? stored.remember : true);
+  }catch(e){ signOut(true); }
+}
+
+function signOut(silent){
+  const tok = currentUser && currentUser.token;
+  if(tok && !silent) fetch(`${AUTH_URL}/logout`, { method: 'POST', headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${tok}` } }).catch(() => {});
+  currentUser = null; isAdmin = false; currentAdminNick = '';
+  clearAuth();
+  afterAuthChange();
+}
+
+function afterAuthChange(){
+  updateAdminBar();
+  if(typeof closeForm === 'function') closeForm();
+  render();
+  const pv = document.getElementById('playerView');
+  if(pv && pv.style.display !== 'none' && typeof renderPlayerProfile === 'function') renderPlayerProfile();
+}
+
+async function restoreAdminSession(){
+  updateAdminBar();
+  const stored = readAuth();
+  if(!stored || !stored.data || !stored.data.token) return;
+  applySession(stored.data, null);
+  await refreshSessionIfNeeded();
+  if(!currentUser) return;
+  const profile = await fetchProfileById(currentUser.id, currentUser.token);
+  if(profile){
+    currentUser.nick = profile.nick; currentUser.role = profile.role;
+    currentUser.readNotifs = new Set(Array.isArray(profile.read_notifs) ? profile.read_notifs : []);
+    currentAdminNick = profile.nick; isAdmin = profile.role === 'admin';
+  }
+  updateAdminBar();
+}
+// токен живёт час — обновляем заранее
+setInterval(() => { refreshSessionIfNeeded(); }, 60e3);
 
 function updateAdminBar(){
   if(typeof updateNotifBadge === 'function') setTimeout(updateNotifBadge, 0);
   const loggedOut = document.getElementById('adminBarLoggedOut');
   const loggedIn = document.getElementById('adminBarLoggedIn');
   const addZone = document.getElementById('addZone');
-  if(isAdmin){
-    loggedOut.style.display = 'none';
-    loggedIn.style.display = 'flex';
-    document.getElementById('adminNickLabel').textContent = currentAdminNick;
-    addZone.style.display = 'block';
-  } else {
-    loggedOut.style.display = 'flex';
-    loggedIn.style.display = 'none';
-    addZone.style.display = 'none';
-  }
+  const signedIn = !!currentAdminNick;
+  loggedOut.style.display = signedIn ? 'none' : 'flex';
+  loggedIn.style.display = signedIn ? 'flex' : 'none';
+  if(signedIn) document.getElementById('adminNickLabel').textContent = currentAdminNick;
+  addZone.style.display = isAdmin ? 'block' : 'none';
+  document.body.classList.toggle('is-admin', isAdmin);
 }
 
-/* ── admin session persistence ───────────────────────────────
-   "Запомнить меня" → localStorage, живёт 30 дней.
-   Без галочки → sessionStorage, только текущая вкладка.       */
-const SESSION_KEY = 'gll_admin_session';
-const SESSION_DAYS = 30;
-
-function saveAdminSession(nick, remember){
-  const payload = JSON.stringify({
-    nick,
-    exp: Date.now() + SESSION_DAYS * 24 * 60 * 60 * 1000
-  });
-  try{
-    if(remember){
-      localStorage.setItem(SESSION_KEY, payload);
-      sessionStorage.removeItem(SESSION_KEY);
-    } else {
-      sessionStorage.setItem(SESSION_KEY, payload);
-      localStorage.removeItem(SESSION_KEY);
-    }
-  }catch(e){}
-}
-
-function clearAdminSession(){
-  try{
-    localStorage.removeItem(SESSION_KEY);
-    sessionStorage.removeItem(SESSION_KEY);
-    // подчистить ключ старого формата
-    sessionStorage.removeItem('gll_admin_nick');
-    localStorage.removeItem('gll_admin_nick');
-  }catch(e){}
-}
-
-function readAdminSession(){
-  for(const store of [localStorage, sessionStorage]){
-    let raw = null;
-    try{ raw = store.getItem(SESSION_KEY); }catch(e){ continue; }
-    if(!raw) continue;
-    try{
-      const data = JSON.parse(raw);
-      if(!data || !data.nick) continue;
-      if(data.exp && Date.now() > data.exp){      // срок вышел
-        try{ store.removeItem(SESSION_KEY); }catch(e){}
-        continue;
-      }
-      if(ADMINS.some(a => a.nick === data.nick)) return data.nick;
-    }catch(e){}
-  }
-  // миграция со старого sessionStorage-ключа
-  try{
-    const old = sessionStorage.getItem('gll_admin_nick');
-    if(old && ADMINS.some(a => a.nick === old)) return old;
-  }catch(e){}
-  return '';
-}
-
-function tryLogin(){
-  const nick = document.getElementById('authNick').value.trim();
-  const pass = document.getElementById('authPass').value;
-  const rememberEl = document.getElementById('authRemember');
-  const remember = rememberEl ? rememberEl.checked : true;
-  const found = ADMINS.find(a => a.nick.toLowerCase() === nick.toLowerCase() && a.pass === pass);
-  if(found){
-    isAdmin = true;
-    currentAdminNick = found.nick;
-    saveAdminSession(found.nick, remember);
-    updateAdminBar();
-    closeAuthModal();
-    render();
-  } else {
-    document.getElementById('authError').textContent = I18N[currentLang].loginError;
-  }
-}
-
-document.getElementById('adminLoginOpenBtn').addEventListener('click', openAuthModal);
-document.getElementById('authLoginBtn').addEventListener('click', tryLogin);
-[document.getElementById('authNick'), document.getElementById('authPass')].forEach(input => {
-  input.addEventListener('keydown', (e) => { if(e.key === 'Enter') tryLogin(); });
-});
-document.getElementById('authCancelBtn').addEventListener('click', closeAuthModal);
-document.getElementById('authModal').addEventListener('click', (e) => {
-  if(e.target.id === 'authModal') closeAuthModal();
-});
-document.getElementById('adminLogoutBtn').addEventListener('click', () => {
-  isAdmin = false;
-  currentAdminNick = '';
-  clearAdminSession();
-  updateAdminBar();
-  closeForm();
-  render();
-});
-
-function restoreAdminSession(){
-  const savedNick = readAdminSession();
-  if(savedNick){
-    isAdmin = true;
-    currentAdminNick = savedNick;
-  }
-  updateAdminBar();
-}
+document.getElementById('adminLoginOpenBtn').addEventListener('click', () => openAuthPage('in'));
+document.getElementById('adminLogoutBtn').addEventListener('click', () => signOut(false));
 /* =========================================================== */
 
 function applyStaticTexts(){
@@ -3389,7 +3645,7 @@ function applyStaticTexts(){
   const bfu = document.getElementById('backFromUpdatesLabel');
   if(bfu) bfu.textContent = t.backFromRules;
   if(document.getElementById('updatesView').style.display !== 'none') openUpdatesPage();
-  document.getElementById('adminLoginOpenBtn').textContent = t.adminLoginBtn;
+  document.getElementById('signInLabel').textContent = t.auHeaderBtn;
   document.getElementById('loggedInPrefix').textContent = t.loggedInPrefix;
   const logoutBtn = document.getElementById('adminLogoutBtn');
   logoutBtn.title = t.logout;
@@ -3402,22 +3658,13 @@ function applyStaticTexts(){
   }
   const notifTitleEl = document.getElementById('notifTitle');
   if(notifTitleEl) notifTitleEl.textContent = t.notificationsTitle;
-  ['backToListLabel','backToPlayersLabel','backFromNotifLabel'].forEach(id => {
+  ['backToListLabel','backToPlayersLabel','backFromNotifLabel','backFromAuthLabel'].forEach(id => {
     const el = document.getElementById(id);
     if(el) el.textContent = t.backToList;
   });
   document.getElementById('footerText').textContent = t.footer;
   document.getElementById('cancelBtn').textContent = t.cancel;
-  document.getElementById('modalTitle').textContent = t.modalTitle;
-  document.getElementById('modalSub').textContent = t.modalSub;
-  document.getElementById('modalNickLabel').textContent = t.nickLabel;
-  document.getElementById('modalPassLabel').textContent = t.passLabel;
-  const remLbl = document.getElementById('rememberLabel');
-  if(remLbl) remLbl.textContent = t.rememberMe;
-  document.getElementById('authNick').placeholder = t.nickLabel;
-  document.getElementById('authPass').placeholder = t.passLabel;
-  document.getElementById('authLoginBtn').textContent = t.loginBtn;
-  document.getElementById('authCancelBtn').textContent = t.cancel;
+  if(document.getElementById('authView') && document.getElementById('authView').style.display !== 'none') renderAuthPage();
 
   document.getElementById('formSectionDetails').textContent = t.formSectionDetails;
   [['lfSub','lfSub'],['lfMainTitle','lfMainTitle'],['lfNewHint','lfNewHint'],['lfDetailsHint','lfDetailsHint']].forEach(([id, k]) => {
@@ -3543,6 +3790,7 @@ function saveLevels(){
 }
 
 async function doSave(){
+  await refreshSessionIfNeeded();
   if(!isConfigured()){
     document.getElementById('configWarning').classList.add('show');
     setStatus(I18N[currentLang].statusSaveNoConfig);
@@ -3554,7 +3802,7 @@ async function doSave(){
       method: 'PATCH',
       // просим вернуть обновлённую строку: при запрете RLS ответ будет 2xx,
       // но пустой — без этой проверки запись «успешно» уходила в никуда
-      headers: { ...SB_HEADERS, 'Prefer': 'return=representation' },
+      headers: { ...authHeaders(), 'Prefer': 'return=representation' },
       body: JSON.stringify({ data: payload, updated_at: new Date().toISOString() }),
     });
     if(!res.ok){
@@ -3603,7 +3851,7 @@ function medalFor(i){
 }
 // пройден ли уровень тем, кто сейчас вошёл (засчитываем только 100%)
 function isLevelBeatenByMe(lvl){
-  if(!isAdmin || !currentAdminNick) return false;
+  if(!currentAdminNick) return false;
   const me = currentAdminNick.trim().toLowerCase();
   if(!me) return false;
 
@@ -3948,7 +4196,7 @@ function renderPlayerPane(){
     return;
   }
   const initial = (player.name || '?').trim().charAt(0).toUpperCase() || '?';
-  const isAdminNick = ADMINS.some(a => a.nick.toLowerCase() === String(player.name || '').trim().toLowerCase());
+  const isAdminNick = isAdminNickName(player.name);
   const { hardestHtml, recordsBody, verifiedHtml, ladder } = buildPlayerSections(player);
   const myPts = computePlayerPoints(player);
   const totalPts = arr.reduce((n, p) => n + computePlayerPoints(p), 0);
@@ -4592,7 +4840,7 @@ function pointsByList(recs, listKey){
 
 // служебные страницы (обновления, правила, уведомления) прячутся при переходе на другую
 function hideSidePages(except){
-  ['updatesView', 'rulesView', 'notifView'].forEach(id => {
+  ['updatesView', 'rulesView', 'notifView', 'authView'].forEach(id => {
     if(id === except) return;
     const el = document.getElementById(id);
     if(el) el.style.display = 'none';
@@ -5033,14 +5281,14 @@ function renderProfileSettings(player){
       </section>
     </div>
 
-    <section class="ps-sec ps-achs" style="--i:2">
+    ${isAdmin ? `<section class="ps-sec ps-achs" style="--i:2">
       <div class="ps-label"><span class="ps-ladder-title">🏅 ${escapeHtml(t.achCustomTitle)}</span></div>
       <div class="ps-dl-hint">${escapeHtml(t.achCustomEditHint)}</div>
       <div class="ps-ach-list" id="psAchList"></div>
       <div class="ps-ach-presets" id="psAchPresets">${['🏆','💎','⚡','🎯','🧠','🎮','🌙','🚀','🐐','💀']
         .map(e => `<button type="button" class="ps-ach-emoji" data-e="${e}">${e}</button>`).join('')}</div>
       <button class="ps-btn ps-dl-add" id="psAchAdd" type="button">＋ ${escapeHtml(t.achCustomAdd)}</button>
-    </section>
+    </section>` : ''}
 
     <section class="ps-sec ps-ladder" style="--i:3">
       <div class="ps-label">
@@ -5112,7 +5360,7 @@ function bindProfileSettings(player){
     pending = ''; document.getElementById('psAvaUrl').value = ''; showPreview();
   });
   // ── свои ачивки ──
-  const achList = document.getElementById('psAchList');
+  const achList = document.getElementById('psAchList') || document.createElement('div');
   let lastIconInput = null;
   const achRow = (a = {}) => {
     const row = document.createElement('div');
@@ -5130,7 +5378,8 @@ function bindProfileSettings(player){
     return row;
   };
   (Array.isArray(player.achievements) ? player.achievements : []).forEach(a => achList.appendChild(achRow(a)));
-  document.getElementById('psAchAdd').addEventListener('click', () => {
+  const achAddBtn = document.getElementById('psAchAdd');
+  if(achAddBtn) achAddBtn.addEventListener('click', () => {
     const r = achRow(); r.classList.add('entering'); achList.appendChild(r);
     lastIconInput = r.querySelector('.ps-ach-icon');
     r.querySelector('.ps-ach-title').focus();
@@ -5212,19 +5461,43 @@ function bindProfileSettings(player){
     document.getElementById('psPreview').innerHTML = bioCard(v || t.profBioPh, !v);
   });
 
-  document.getElementById('psSave').addEventListener('click', () => {
+  document.getElementById('psSave').addEventListener('click', async () => {
     const v = document.getElementById('psAvaUrl').value.trim();
     if(v && !/^https?:\/\//i.test(v)){ err.textContent = t.profUrlErr; return; }
-    const target = (state.players || []).find(p => String(p.id) === String(player.id));
-    if(!target) return;
-    if(pending) target.avatar = pending; else delete target.avatar;
+    const saveBtn = document.getElementById('psSave');
     const b = bio.value.trim().slice(0, 300);
-    if(b) target.bio = b; else delete target.bio;
-    const achs = collectAchievements();
-    if(achs.length) target.achievements = achs; else delete target.achievements;
     const lad = collectLadder();
-    if(lad.steps.length) target.ladder = lad; else delete target.ladder;
-    saveLevels();
+    const fields = { avatar: pending || null, bio: b || null, ladder: lad.steps.length ? lad : null };
+
+    // у игрока есть аккаунт — профиль хранится в его строке profiles
+    const row = profilesByNick.get(String(player.name || '').trim().toLowerCase());
+    if(row && row.id){
+      saveBtn.disabled = true;
+      try{
+        await refreshSessionIfNeeded();
+        const res = await fetch(`${PROFILES_REST}?id=eq.${encodeURIComponent(row.id)}`, {
+          method: 'PATCH', headers: { ...authHeaders(), Prefer: 'return=representation' }, body: JSON.stringify(fields),
+        });
+        const out = await res.json().catch(() => []);
+        if(!res.ok || !out.length){ err.textContent = t.profSaveDenied; saveBtn.disabled = false; return; }
+        Object.assign(row, out[0]);
+      }catch(e){ err.textContent = t.profSaveDenied; saveBtn.disabled = false; return; }
+    }
+
+    // в общем JSON: для игроков без аккаунта (правит админ) и для своих ачивок
+    const target = (state.players || []).find(p => String(p.id) === String(player.id));
+    if(target){
+      if(fields.avatar) target.avatar = fields.avatar; else delete target.avatar;
+      if(fields.bio) target.bio = fields.bio; else delete target.bio;
+      if(fields.ladder) target.ladder = fields.ladder; else delete target.ladder;
+      if(isAdmin){
+        const achs = collectAchievements();
+        if(achs.length) target.achievements = achs; else delete target.achievements;
+        saveLevels();
+      }
+    } else {
+      Object.assign(player, fields);
+    }
     render();               // список и пьедестал под профилем тоже должны обновиться
     renderPlayerProfile();
   });
@@ -5243,12 +5516,17 @@ function toggleProfileSettings(force){
   if(open) setTimeout(() => wrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 120);
 }
 
+function canEditProfile(player){
+  if(!currentAdminNick) return false;
+  return isAdmin || String(player.name || '').trim().toLowerCase() === currentAdminNick.toLowerCase();
+}
+
 function renderPlayerProfile(){
   if(!playerCtx) return;
   const t = I18N[currentLang];
   const { player, idx } = playerCtx;
   const initial = (player.name || '?').trim().charAt(0).toUpperCase() || '?';
-  const isAdminNick = ADMINS.some(a => a.nick.toLowerCase() === String(player.name || '').trim().toLowerCase());
+  const isAdminNick = isAdminNickName(player.name);
   const { hardestHtml, recordsBody, verifiedHtml, ladder } = buildPlayerSections(player);
 
   document.getElementById('playerContent').innerHTML = `
@@ -5263,7 +5541,7 @@ function renderPlayerProfile(){
       </div>` : ''}
       ${bioHtml(player)}
     </div>
-    ${isAdmin ? renderProfileSettings(player) : ''}
+    ${canEditProfile(player) ? renderProfileSettings(player) : ''}
     <div class="pr-stats">
       <div class="pr-stat">
         <span class="pr-stat-ico rank">🏆</span>
@@ -5295,7 +5573,7 @@ function renderPlayerProfile(){
   `;
 
   const toolsSlot = document.getElementById('playerToolsSlot');
-  if(toolsSlot) toolsSlot.innerHTML = isAdmin
+  if(toolsSlot) toolsSlot.innerHTML = canEditProfile(player)
     ? `<button class="pr-gear ps-trigger" id="prSettingsBtn" title="${escapeHtml(t.profSettingsTitle)}" aria-label="${escapeHtml(t.profSettingsTitle)}">
          ${SLIDERS_SVG}
        </button>`
@@ -5749,7 +6027,7 @@ function myNotifications(){
 function updateNotifBadge(){
   const btn = document.getElementById('notifBtn');
   if(!btn) return;
-  const unread = myNotifications().filter(n => !n.read).length;
+  const unread = myNotifications().filter(n => !isNotifRead(n)).length;
   let dot = btn.querySelector('.notif-dot');
   btn.classList.toggle('has-unread', unread > 0);
   if(unread){
@@ -5786,6 +6064,54 @@ function notifText(n, t){
   };
 }
 
+function isNotifRead(n){
+  return !!(n.read || (currentUser && currentUser.readNotifs && currentUser.readNotifs.has(n.id)));
+}
+
+// список прочитанных хранится в профиле пользователя — писать в общий лист обычный игрок не может
+async function saveReadNotifs(){
+  if(!currentUser) return;
+  const ids = [...currentUser.readNotifs].slice(-400);
+  try{
+    await refreshSessionIfNeeded();
+    await fetch(`${PROFILES_REST}?id=eq.${encodeURIComponent(currentUser.id)}`, {
+      method: 'PATCH', headers: { ...authHeaders(), Prefer: 'return=minimal' }, body: JSON.stringify({ read_notifs: ids }),
+    });
+  }catch(e){}
+}
+
+function markNotifRead(ids, animateEls){
+  const set = new Set(ids);
+  let changed = false;
+  myNotifications().forEach(n => {
+    if(set.has(n.id) && !isNotifRead(n)){ currentUser && currentUser.readNotifs.add(n.id); changed = true; }
+  });
+  if(!changed) return;
+  (animateEls || []).forEach(el => el.classList.add('reading'));
+  updateNotifBadge();
+  syncReadAllBtn();
+  saveReadNotifs();
+  setTimeout(() => {
+    (animateEls || []).forEach(el => {
+      el.classList.remove('unread', 'reading');
+      const b = el.querySelector('.notif-read-btn'); if(b) b.remove();
+      const nw = el.querySelector('.notif-new'); if(nw) nw.remove();
+    });
+  }, 450);
+}
+
+function syncReadAllBtn(){
+  const btn = document.getElementById('notifReadAll');
+  if(!btn) return;
+  const n = myNotifications().filter(x => !isNotifRead(x)).length;
+  btn.disabled = n === 0;
+  btn.classList.toggle('has', n > 0);
+  const c = document.getElementById('notifUnreadCount');
+  if(c) c.textContent = n ? String(n) : '';
+  const lbl = document.getElementById('notifReadAllLabel');
+  if(lbl) lbl.textContent = I18N[currentLang].nReadAll;
+}
+
 function renderNotifBody(){
   const t = I18N[currentLang];
   const body = document.getElementById('notifBody');
@@ -5813,24 +6139,36 @@ function renderNotifBody(){
     const ico = n.type === 'verify'
       ? '<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/><path d="m9 12 2 2 4-4"/></svg>'
       : '<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>';
-    return `<div class="notif-item${n.read ? '' : ' unread'}" style="--i:${Math.min(ni, 12)}" data-level="${escapeHtml(n.level || '')}" data-list="${escapeHtml(n.list || '')}">
+    const nRead = isNotifRead(n);
+    const readBtn = nRead ? '' : `<button class="notif-read-btn" type="button" data-id="${escapeHtml(n.id)}" title="${escapeHtml(t.nMarkRead)}" aria-label="${escapeHtml(t.nMarkRead)}">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></button>`;
+    return `<div class="notif-item${nRead ? '' : ' unread'}" style="--i:${Math.min(ni, 12)}" data-id="${escapeHtml(n.id)}" data-level="${escapeHtml(n.level || '')}" data-list="${escapeHtml(n.list || '')}">
       <span class="notif-badge ${n.type === 'verify' ? 'is-verify' : 'is-record'}">${ico}</span>
       <div class="notif-main">
-        <div class="notif-title">${escapeHtml(title)}${n.read ? '' : `<span class="notif-new">${escapeHtml(t.nNew)}</span>`}</div>
+        <div class="notif-title">${escapeHtml(title)}${nRead ? '' : `<span class="notif-new">${escapeHtml(t.nNew)}</span>`}</div>
         <div class="notif-text">${text}</div>
         <div class="notif-time">
           <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
           ${escapeHtml(relTime(n.at))}
         </div>
       </div>
+      ${readBtn}
     </div>`;
   }).join('')}</div>`;
 
-  // клик ведёт на страницу уровня
-  setTimeout(() => body.querySelectorAll('.notif-item.unread').forEach(el => el.classList.add('seen')), 2600);
+  syncReadAllBtn();
 
+  // кнопка «прочитано» на уведомлении
+  body.querySelectorAll('.notif-read-btn').forEach(b => b.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const item = b.closest('.notif-item');
+    markNotifRead([b.dataset.id], [item]);
+  }));
+
+  // клик по уведомлению ведёт на страницу уровня и помечает его прочитанным
   body.querySelectorAll('.notif-item').forEach(el => {
     el.addEventListener('click', () => {
+      markNotifRead([el.getAttribute('data-id')], []);
       const key = el.getAttribute('data-list');
       const name = nickKey(el.getAttribute('data-level'));
       const arr = state[key];
@@ -5857,13 +6195,6 @@ function openNotifView(){
   const t = I18N[currentLang];
   document.getElementById('notifTitle').textContent = t.notificationsTitle;
   renderNotifBody();
-  // прочитанными помечаем после отрисовки — подсветка новых видна в этот заход
-  const mine = myNotifications().filter(n => !n.read);
-  if(mine.length){
-    mine.forEach(n => { n.read = true; });
-    updateNotifBadge();
-    saveLevels();
-  }
   const sbHide = document.getElementById('searchBar');
   if(sbHide) sbHide.style.display = 'none';
   document.getElementById('listView').style.display = 'none';
@@ -6018,6 +6349,169 @@ function textToUpdates(txt){
 }
 
 // в меню подсвечен пункт текущего экрана: вкладка листа или отдельная страница
+/* ── страница входа / регистрации ── */
+let authMode = 'in';
+
+function openAuthPage(mode){
+  authMode = mode || 'in';
+  hideSidePages();
+  syncMenuActive('auth');
+  ['listView','detailView','playerView','notifView','updatesView','rulesView'].forEach(id => {
+    const el = document.getElementById(id); if(el) el.style.display = 'none';
+  });
+  const sb = document.getElementById('searchBar'); if(sb) sb.style.display = 'none';
+  const v = document.getElementById('authView');
+  v.style.display = '';
+  v.classList.remove('page-in'); void v.offsetWidth; v.classList.add('page-in');
+  renderAuthPage();
+  window.scrollTo({ top: 0, behavior: 'auto' });
+}
+function closeAuthPage(){
+  document.getElementById('authView').style.display = 'none';
+  document.getElementById('listView').style.display = '';
+  const sb = document.getElementById('searchBar'); if(sb) sb.style.display = '';
+  syncMenuActive();
+}
+
+const EYE_SVG = '<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>';
+const EYE_OFF_SVG = '<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.9 4.2A10 10 0 0 1 12 4c6.5 0 10 8 10 8a17 17 0 0 1-3.1 4.2M6.6 6.6A17 17 0 0 0 2 12s3.5 7 10 7a10 10 0 0 0 5.4-1.6"/><path d="M14.1 14.1a3 3 0 0 1-4.2-4.2"/><path d="m2 2 20 20"/></svg>';
+
+function renderAuthPage(){
+  const t = I18N[currentLang];
+  const up = authMode === 'up';
+  const card = document.getElementById('authCard');
+  card.className = 'auth-card' + (up ? ' mode-up' : '');
+  card.innerHTML = `
+    <div class="auth-logo"><span class="auth-lemon" aria-hidden="true"></span><span class="auth-brand">CIGANE LEMON LIST</span></div>
+    <div class="auth-tabs" role="tablist">
+      <span class="auth-glider" aria-hidden="true"></span>
+      <button class="${up ? '' : 'on'}" data-mode="in" role="tab" aria-selected="${!up}">${escapeHtml(t.auSignIn)}</button>
+      <button class="${up ? 'on' : ''}" data-mode="up" role="tab" aria-selected="${up}">${escapeHtml(t.auSignUp)}</button>
+    </div>
+    <form class="auth-form" id="authForm" novalidate autocomplete="on">
+      <div class="auth-h">${escapeHtml(up ? t.auUpTitle : t.auInTitle)}</div>
+      <div class="auth-sub">${escapeHtml(up ? t.auUpSub : t.auInSub)}</div>
+      <div class="auth-err" id="authErr" role="alert"></div>
+      <div class="auth-f" style="--i:0">
+        <label for="auNick">${escapeHtml(t.auNick)}</label>
+        <div class="auth-inp">
+          <span class="auth-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span>
+          <input id="auNick" name="username" autocomplete="username" maxlength="20" placeholder="${escapeHtml(t.auNickPh)}" required />
+        </div>
+        ${up ? `<div class="auth-hint" id="auNickHint"></div>` : ''}
+      </div>
+      <div class="auth-f" style="--i:1">
+        <label for="auPass">${escapeHtml(t.auPass)}</label>
+        <div class="auth-inp">
+          <span class="auth-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></span>
+          <input id="auPass" type="password" name="password" autocomplete="${up ? 'new-password' : 'current-password'}" placeholder="${escapeHtml(up ? t.auPassPhUp : '••••••••')}" required />
+          <button type="button" class="auth-eye" id="auEye" aria-label="${escapeHtml(t.auShowPass)}">${EYE_SVG}</button>
+        </div>
+        ${up ? `<div class="auth-str" id="auStr" aria-hidden="true"><i></i><i></i><i></i><i></i></div>` : ''}
+      </div>
+      ${up ? `<div class="auth-f" style="--i:2">
+        <label for="auPass2">${escapeHtml(t.auPass2)}</label>
+        <div class="auth-inp">
+          <span class="auth-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></span>
+          <input id="auPass2" type="password" autocomplete="new-password" placeholder="••••••••" required />
+        </div>
+      </div>` : ''}
+      <label class="lf-switch auth-remember" for="auRemember" style="--i:3">
+        <input type="checkbox" id="auRemember" checked />
+        <span class="lf-switch-track" aria-hidden="true"><span class="lf-switch-knob"></span></span>
+        <span class="lf-switch-text"><b>${escapeHtml(t.auRemember)}</b></span>
+      </label>
+      <button type="submit" class="auth-btn" id="auSubmit"><span>${escapeHtml(up ? t.auSignUpBtn : t.auSignInBtn)}</span><i class="auth-spin" aria-hidden="true"></i></button>
+      <div class="auth-alt">${escapeHtml(up ? t.auHaveAcc : t.auNoAcc)} <button type="button" class="auth-link" data-mode="${up ? 'in' : 'up'}">${escapeHtml(up ? t.auSignIn : t.auCreate)}</button></div>
+    </form>
+    <div class="auth-ok" id="authOk">
+      <div class="auth-ok-ring"><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></div>
+      <div class="auth-h" id="authOkTitle"></div>
+      <div class="auth-sub" id="authOkSub"></div>
+    </div>`;
+
+  card.querySelectorAll('[data-mode]').forEach(b => b.addEventListener('click', () => {
+    if(b.dataset.mode === authMode) return;
+    authMode = b.dataset.mode;
+    const nick = document.getElementById('auNick').value;
+    renderAuthPage();
+    document.getElementById('auNick').value = nick;
+    document.getElementById('auNick').dispatchEvent(new Event('input'));
+  }));
+  const pass = document.getElementById('auPass');
+  document.getElementById('auEye').addEventListener('click', (e) => {
+    const show = pass.type === 'password';
+    pass.type = show ? 'text' : 'password';
+    const p2 = document.getElementById('auPass2'); if(p2) p2.type = pass.type;
+    e.currentTarget.innerHTML = show ? EYE_OFF_SVG : EYE_SVG;
+  });
+  if(up){
+    pass.addEventListener('input', () => {
+      const v = pass.value;
+      const score = (v.length >= 6) + (v.length >= 10) + (/[A-ZА-Я]/.test(v) && /[a-zа-я]/.test(v)) + (/\d/.test(v) && /[^\p{L}\p{N}]/u.test(v) || /\d/.test(v) && v.length >= 12);
+      const COLORS = ['#ff8f8f', '#ffb37a', '#e4ff5c', '#7bf5a8'];
+      document.querySelectorAll('#auStr i').forEach((el, i) => { el.style.background = (v && i < Math.max(1, score)) ? COLORS[Math.max(0, score - 1)] : ''; });
+    });
+    const nickEl = document.getElementById('auNick');
+    nickEl.addEventListener('input', () => {
+      const hint = document.getElementById('auNickHint');
+      const v = nickEl.value.trim();
+      if(!v){ hint.textContent = ''; hint.className = 'auth-hint'; return; }
+      if(!NICK_RE.test(v)){ hint.textContent = t.auNickBad; hint.className = 'auth-hint bad'; return; }
+      if(profilesByNick.has(v.toLowerCase())){ hint.textContent = t.auNickTaken; hint.className = 'auth-hint bad'; return; }
+      const inRank = (state.players || []).some(p => String(p.name).trim().toLowerCase() === v.toLowerCase());
+      hint.textContent = inRank ? t.auNickLinked : t.auNickFree;
+      hint.className = 'auth-hint ok';
+    });
+  }
+  document.getElementById('authForm').addEventListener('submit', onAuthSubmit);
+  setTimeout(() => { const f = document.getElementById('auNick'); if(f && window.matchMedia('(hover:hover)').matches) f.focus({ preventScroll: true }); }, 350);
+}
+
+function authFail(msg){
+  const card = document.getElementById('authCard');
+  const err = document.getElementById('authErr');
+  err.textContent = msg;
+  err.classList.add('show');
+  card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake');
+}
+
+async function onAuthSubmit(e){
+  e.preventDefault();
+  const t = I18N[currentLang];
+  const nick = document.getElementById('auNick').value.trim();
+  const pass = document.getElementById('auPass').value;
+  const remember = document.getElementById('auRemember').checked;
+  const up = authMode === 'up';
+  document.getElementById('authErr').classList.remove('show');
+  if(!NICK_RE.test(nick)) return authFail(t.auNickBad);
+  if(pass.length < 6) return authFail(t.auPassShort);
+  if(up && pass !== document.getElementById('auPass2').value) return authFail(t.auPassMismatch);
+  if(!isConfigured()) return authFail(t.auNoServer);
+
+  const btn = document.getElementById('auSubmit');
+  btn.classList.add('loading'); btn.disabled = true;
+  try{
+    if(up) await signUp(nick, pass, remember);
+    else await signIn(nick, pass, remember);
+    const card = document.getElementById('authCard');
+    document.getElementById('authOkTitle').textContent = (up ? t.auWelcomeNew : t.auWelcome).replace('{n}', currentAdminNick);
+    document.getElementById('authOkSub').textContent = isAdmin ? t.auAdminNote : t.auPlayerNote;
+    card.classList.add('done');
+    setTimeout(() => { closeAuthPage(); }, 1500);
+  }catch(ex){
+    btn.classList.remove('loading'); btn.disabled = false;
+    const m = String(ex && (ex.code || ex.message) || '');
+    if(ex.code === 'taken' || /already registered|already exists/i.test(m)) authFail(t.auNickTaken);
+    else if(ex.code === 'confirm') authFail(t.auConfirmOn);
+    else if(ex.status === 400 || /invalid login|invalid_grant/i.test(m)) authFail(t.auBadCreds);
+    else if(ex.status === 429) authFail(t.auTooMany);
+    else authFail(t.auNetErr);
+  }
+}
+
+document.getElementById('authCloseBtn').addEventListener('click', closeAuthPage);
+
 function syncMenuActive(page){
   const map = { main:'tabMainBtn', future:'tabFutureBtn', nonListed:'tabNonListedBtn', players:'tabPlayersBtn', updates:'updatesBtn' };
   const activeId = page ? map[page] : map[currentTab];
@@ -6340,6 +6834,12 @@ applyControlsVisibility();
 document.getElementById('notifBtn').addEventListener('click', openNotifView);
 document.getElementById('notifCloseBtn').addEventListener('click', closeNotifView);
 document.getElementById('notifHeader').addEventListener('click', () => toggleSubsection(document.getElementById('notifSection')));
+document.getElementById('notifReadAll').addEventListener('click', (e) => {
+  e.stopPropagation();   // не сворачивать блок
+  const items = [...document.querySelectorAll('#notifBody .notif-item.unread')];
+  items.forEach((el, i) => { el.style.setProperty('--ri', i); });
+  markNotifRead(myNotifications().filter(n => !isNotifRead(n)).map(n => n.id), items);
+});
 
 /* ── свой профиль из шапки ── */
 document.getElementById('profileBtn').addEventListener('click', () => {
@@ -6355,6 +6855,7 @@ document.addEventListener('keydown', (e) => {
   if(document.getElementById('detailView').style.display !== 'none') closeDetailModal();
   else if(document.getElementById('playerView').style.display !== 'none') closePlayerProfile();
   else if(document.getElementById('notifView').style.display !== 'none') closeNotifView();
+  else if(document.getElementById('authView').style.display !== 'none') closeAuthPage();
 });
 
 // add / edit form
@@ -6623,10 +7124,11 @@ deleteFromFormBtn.addEventListener('click', () => {
   if(codeEl2) codeEl2.textContent = (currentLang === 'ru') ? 'RU' : 'EN';
   document.getElementById('langEnBtn').classList.toggle('active', currentLang === 'en');
 
-  restoreAdminSession();
   render();                                  // скелетон сразу, до ответа базы
+  const sessionReady = restoreAdminSession();
   const loadStarted = performance.now();
   await loadLevels();
+  await Promise.all([loadProfiles(), sessionReady]);
   // слишком быстрый ответ дал бы вспышку — даём заготовкам мелькнуть хотя бы 350 мс
   const waited = performance.now() - loadStarted;
   if(waited < 350) await new Promise(r => setTimeout(r, 350 - waited));
@@ -6662,6 +7164,7 @@ deleteFromFormBtn.addEventListener('click', () => {
     if(mm) mm.classList.remove('open');
     document.getElementById('rulesView').style.display = 'none';
     document.getElementById('updatesView').style.display = 'none';
+    document.getElementById('authView').style.display = 'none';
     document.getElementById('listView').style.display = '';
   const sbShow = document.getElementById('searchBar');
   if(sbShow) sbShow.style.display = (currentTab === 'players') ? 'none' : '';
