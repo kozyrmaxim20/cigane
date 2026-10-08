@@ -1052,21 +1052,25 @@
     font-family:'Oswald',sans-serif; line-height:1; border:1px solid transparent; }
   .pos-badge.is-up{ color:#7bf5a8; background:rgba(88,235,150,0.12); border-color:rgba(88,235,150,0.28); }
   .pos-badge.is-down{ color:#ff7b7b; background:rgba(255,95,95,0.12); border-color:rgba(255,95,95,0.28); }
-  /* NEW: капсула с живой точкой — читается как «только что добавлено» */
-  @keyframes newPing{ 0%{ transform:scale(1); opacity:.75; } 100%{ transform:scale(2.6); opacity:0; } }
+  /* NEW: капсула, по контуру которой бегает светящаяся комета */
+  @property --comet{ syntax:'<angle>'; inherits:false; initial-value:0deg; }
   @keyframes newIn{ 0%{ opacity:0; transform:scale(.7); } 70%{ opacity:1; transform:scale(1.06); } 100%{ opacity:1; transform:none; } }
-  .pos-badge.is-new{ display:inline-flex; align-items:center; gap:7px; height:24px; padding:0 10px 0 8px; border-radius:999px;
-    font-family:'Oswald',sans-serif; font-weight:600; font-size:11px; letter-spacing:.13em; color:var(--lemon);
-    background:rgba(214,255,110,0.08); border:1px solid rgba(214,255,110,0.38);
-    flex:0 0 auto; align-self:center; position:relative; top:1px; cursor:pointer;
+  @keyframes cometRun{ to{ --comet:360deg; } }
+  .pos-badge.is-new{ position:relative; isolation:isolate; display:inline-flex; align-items:center; height:24px; padding:0 12px; border-radius:999px;
+    font-family:'Oswald',sans-serif; font-weight:600; font-size:11px; letter-spacing:.16em; color:var(--lemon);
+    flex:0 0 auto; align-self:center; top:1px; cursor:pointer;
     animation:newIn .45s cubic-bezier(.34,1.56,.64,1) both .2s;
-    transition:background .2s, border-color .2s, transform .2s cubic-bezier(.34,1.56,.64,1); }
-  .pos-badge.is-new:hover{ background:rgba(214,255,110,0.16); border-color:rgba(214,255,110,0.7); transform:scale(1.05); }
-  .new-dot{ position:relative; width:7px; height:7px; flex:0 0 7px; border-radius:50%; background:var(--lemon);
-    box-shadow:0 0 6px rgba(214,255,110,0.8); }
-  .new-dot::after{ content:''; position:absolute; inset:0; border-radius:50%; background:var(--lemon);
-    animation:newPing 1.6s cubic-bezier(.2,.6,.3,1) infinite; will-change:transform, opacity; }
-  @media (prefers-reduced-motion:reduce){ .pos-badge.is-new, .new-dot::after{ animation:none !important; } }
+    transition:transform .2s cubic-bezier(.34,1.56,.64,1); }
+  /* слой рамки: тусклый контур + яркий хвост кометы, бегущий по кругу */
+  .pos-badge.is-new::before{ content:''; position:absolute; inset:-1.5px; z-index:-2; border-radius:inherit;
+    background:conic-gradient(from var(--comet), transparent 0 68%, rgba(214,255,110,0.35) 82%, #f4ffc9 96%, transparent 100%), rgba(214,255,110,0.28);
+    animation:cometRun 2.4s linear infinite; }
+  /* внутренняя заливка закрывает середину — видна только рамка */
+  .pos-badge.is-new::after{ content:''; position:absolute; inset:0; z-index:-1; border-radius:inherit; background:#1a1430;
+    box-shadow:inset 0 0 10px -4px rgba(214,255,110,0.45); }
+  .pos-badge.is-new:hover{ transform:scale(1.06); }
+  .pos-badge.is-new:hover::before{ animation-duration:1.1s; }
+  @media (prefers-reduced-motion:reduce){ .pos-badge.is-new, .pos-badge.is-new::before{ animation:none !important; } }
   .search-bar{ margin:0 0 14px; }
   .search-box{ position:relative; display:flex; align-items:center; gap:11px; height:50px; padding:0 6px 0 17px;
     border-radius:16px; background:linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.02));
@@ -1688,24 +1692,53 @@
   @keyframes achSweep{ 0%{ transform:translateX(-100%) skewX(-20deg); opacity:0; } 4%{ opacity:1; }
     16%{ transform:translateX(330%) skewX(-20deg); opacity:1; } 18%,100%{ transform:translateX(330%) skewX(-20deg); opacity:0; } }
   @keyframes achIcon{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-2px); } }
-  .pl-stats{ display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:10px; padding:4px 20px 14px; }
-  .pl-stat{ position:relative; overflow:hidden; display:flex; flex-direction:column; gap:2px; padding:12px 14px; border-radius:14px;
-    background:rgba(255,255,255,0.035); border:1px solid var(--glass-line); animation:stIn .5s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i) * .07s); }
-  .pl-stat::after{ content:''; position:absolute; right:-18px; top:-18px; width:70px; height:70px; border-radius:50%;
-    background:radial-gradient(circle, rgba(228,255,92,0.14), transparent 70%); }
-  .pl-stat-ico{ font-size:13px; color:var(--lemon); opacity:.85; }
-  .pl-stat b{ font-family:'Oswald',sans-serif; font-weight:700; font-size:23px; color:#fff; line-height:1.15; }
-  .pl-stat span:last-child{ font-size:11.5px; color:var(--muted); }
+  .pl-stats{ display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:12px; padding:4px 20px 16px; }
+  .pl-stat{ --c:#c9a8ff; --c2:rgba(176,108,240,0.18);
+    position:relative; overflow:hidden; isolation:isolate; display:flex; align-items:center; gap:13px; padding:15px 16px; border-radius:18px;
+    background:linear-gradient(160deg, rgba(255,255,255,0.05), rgba(255,255,255,0.015));
+    border:1px solid var(--glass-line); animation:stIn .55s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i) * .08s);
+    transition:transform .3s cubic-bezier(.16,1,.3,1), border-color .3s, box-shadow .3s; }
+  .pl-stat.st-points{ --c:var(--lemon); --c2:rgba(228,255,92,0.16); }
+  .pl-stat.st-cmp{ --c:#7bf5a8; --c2:rgba(88,235,150,0.16); }
+  .pl-stat.st-ver{ --c:#5eead4; --c2:rgba(94,234,212,0.16); }
+  .pl-stat::before{ content:''; position:absolute; inset:0; z-index:-1; border-radius:inherit; padding:1px; pointer-events:none;
+    background:linear-gradient(135deg, var(--c), transparent 45%, transparent 60%, var(--c));
+    -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite:xor; mask-composite:exclude;
+    opacity:0; transition:opacity .35s; }
+  .pl-stat:hover{ transform:translateY(-3px); box-shadow:0 18px 36px -22px var(--c); }
+  .pl-stat:hover::before{ opacity:.75; }
+  .pl-stat-glow{ position:absolute; z-index:-2; right:-30px; top:-40px; width:120px; height:120px; border-radius:50%;
+    background:radial-gradient(circle, var(--c2), transparent 70%); pointer-events:none; transition:transform .5s cubic-bezier(.16,1,.3,1); }
+  .pl-stat:hover .pl-stat-glow{ transform:scale(1.35) translate(-10px, 8px); }
+  .pl-stat-ico{ position:relative; flex:0 0 42px; width:42px; height:42px; border-radius:13px; display:flex; align-items:center; justify-content:center;
+    color:var(--c); background:var(--c2); border:1px solid color-mix(in srgb, var(--c) 35%, transparent); overflow:hidden;
+    transition:transform .35s cubic-bezier(.34,1.56,.64,1); }
+  .pl-stat-ico::after{ content:''; position:absolute; top:0; bottom:0; left:0; width:45%; background:linear-gradient(100deg, transparent, rgba(255,255,255,0.35), transparent);
+    transform:translateX(-140%) skewX(-18deg); }
+  .pl-stat:hover .pl-stat-ico{ transform:rotate(-8deg) scale(1.08); }
+  .pl-stat:hover .pl-stat-ico::after{ transform:translateX(320%) skewX(-18deg); transition:transform .7s cubic-bezier(.16,1,.3,1); }
+  .pl-stat-txt{ display:flex; flex-direction:column; gap:1px; min-width:0; }
+  .pl-stat b{ font-family:'Oswald',sans-serif; font-weight:700; font-size:25px; color:#fff; line-height:1.1; letter-spacing:.01em; }
+  .pl-stat-txt span{ font-size:11.5px; color:var(--muted); text-transform:lowercase; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
-  .pl-tabs{ position:relative; display:inline-flex; gap:2px; margin:0 20px 16px; padding:4px; border-radius:13px;
-    background:rgba(255,255,255,0.04); border:1px solid var(--glass-line); }
-  .pl-tab{ position:relative; z-index:1; padding:8px 14px; border:0; border-radius:10px; cursor:pointer; background:transparent;
-    font-family:'Oswald',sans-serif; font-weight:600; font-size:13px; letter-spacing:.04em; color:var(--mystic); transition:color .25s; }
-  .pl-tab:hover{ color:#fff; }
+  /* вкладки сортировки: равные колонки, подложка едет по номеру вкладки */
+  @keyframes tabPop{ 0%{ transform:scale(1); } 40%{ transform:scale(.94); } 100%{ transform:scale(1); } }
+  .pl-tabs{ --n:3; --idx:0; position:relative; display:grid; grid-template-columns:repeat(var(--n), minmax(0,1fr));
+    max-width:520px; margin:0 auto 18px; padding:5px; border-radius:16px;
+    background:rgba(10,8,20,0.45); border:1px solid var(--glass-line); box-shadow:inset 0 1px 0 rgba(255,255,255,0.04); }
+  .pl-tab-glider{ position:absolute; z-index:0; top:5px; bottom:5px; left:5px; width:calc((100% - 10px) / var(--n)); border-radius:12px;
+    background:linear-gradient(135deg, var(--lemon), #b9f56b); box-shadow:0 8px 22px -10px rgba(228,255,92,0.85), inset 0 1px 0 rgba(255,255,255,0.45);
+    transform:translateX(calc(var(--idx) * 100%)); transition:transform .5s cubic-bezier(.34,1.35,.64,1); }
+  .pl-tab{ position:relative; z-index:1; display:flex; align-items:center; justify-content:center; gap:7px; height:40px; padding:0 10px;
+    border:0; border-radius:12px; cursor:pointer; background:transparent; color:var(--mystic);
+    font-family:'Oswald',sans-serif; font-weight:600; font-size:13.5px; letter-spacing:.04em; transition:color .3s; }
+  .pl-tab:not(.on):hover{ color:#fff; }
+  .pl-tab:not(.on):hover .pl-tab-ico{ transform:translateY(-2px) rotate(-8deg); }
   .pl-tab.on{ color:#14101f; }
-  .pl-tab-glider{ position:absolute; z-index:0; top:4px; left:0; height:calc(100% - 8px); border-radius:10px;
-    background:linear-gradient(135deg, var(--lemon), #b9f56b); box-shadow:0 6px 18px -8px rgba(228,255,92,0.8);
-    transition:transform .4s cubic-bezier(.34,1.4,.64,1), width .3s ease; }
+  .pl-tab.pop{ animation:tabPop .35s ease; }
+  .pl-tab-ico{ display:flex; transition:transform .3s cubic-bezier(.34,1.56,.64,1); }
+  .pl-tab-ico svg{ width:15px; height:15px; }
+  .pl-tab-lbl{ white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
   .pod-1{ overflow:hidden; }
   .pod-beam{ position:absolute; top:-40%; left:0; width:28%; height:180%; pointer-events:none;
@@ -1747,13 +1780,17 @@
   .share-bar i{ display:block; height:100%; width:0; border-radius:5px; background:linear-gradient(90deg, #b06cf0, var(--lemon));
     transition:width 1.1s cubic-bezier(.16,1,.3,1) .2s; }
   .pr-ach-wrap{ margin:0 30px 22px; }
+  .share-note{ margin-top:7px; font-size:11.5px; color:var(--muted); }
 
   @media (max-width:760px){ .pl-extras{ grid-template-columns:minmax(0,1fr); } }
   @media (max-width:640px){
     .pl-stats{ grid-template-columns:repeat(2, minmax(0,1fr)); padding:4px 12px 12px; gap:8px; }
-    .pl-stat b{ font-size:20px; }
-    .pl-tabs{ display:flex; margin:0 12px 14px; }
-    .pl-tab{ flex:1 1 0; padding:8px 4px; font-size:12px; white-space:nowrap; }
+    .pl-stat{ padding:12px; gap:10px; border-radius:15px; }
+    .pl-stat-ico{ flex-basis:36px; width:36px; height:36px; border-radius:11px; }
+    .pl-stat b{ font-size:21px; }
+    .pl-tabs{ max-width:none; margin:0 12px 14px; }
+    .pl-tab{ padding:0 4px; font-size:12px; gap:5px; }
+    .pl-tab-ico{ display:none; }
     .pl-extras{ margin:0 12px 16px; }
     .pr-ach-wrap{ margin:0 14px 18px; }
     .pl-minis{ display:none; }
@@ -2305,6 +2342,111 @@
     transition:opacity .28s ease, transform .35s cubic-bezier(.4,0,.2,1), height .4s cubic-bezier(.4,0,.2,1) .12s, padding .4s cubic-bezier(.4,0,.2,1) .12s; }
   .notif-item.leaving .notif-read-btn{ background:var(--lemon); color:#14101f; transform:scale(1.15); }
 
+
+  /* лестница: свой редактор и пустое состояние */
+  .dl-edit-btn{ display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px; margin-right:6px; border-radius:9px; cursor:pointer;
+    color:var(--mystic); background:rgba(255,255,255,0.04); border:1px solid var(--glass-line);
+    transition:color .2s, background .2s, border-color .2s, transform .25s cubic-bezier(.34,1.56,.64,1); }
+  .dl-edit-btn:hover{ color:var(--lemon); background:rgba(228,255,92,0.1); border-color:rgba(228,255,92,0.4); transform:rotate(-8deg) scale(1.08); }
+  .dl-sec.dl-editing .dl-edit-btn{ color:var(--lemon); border-color:rgba(228,255,92,0.5); background:rgba(228,255,92,0.1); }
+  .dl-sec .lvl-group-count + .dl-edit-btn, .dl-sec .sh-title + .dl-edit-btn{ margin-left:auto; }
+  .dl-editor{ margin:14px 20px 4px; padding:16px; border-radius:16px; background:rgba(255,255,255,0.03); border:1px solid var(--glass-line);
+    animation:secIn .4s cubic-bezier(.16,1,.3,1); }
+  .dl-editor[hidden]{ display:none; }
+  .dl-ed-top{ display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:8px; }
+  .dl-ed-title{ font-family:'Oswald',sans-serif; font-size:12px; letter-spacing:.13em; text-transform:uppercase; color:var(--lemon); }
+  .dl-sec.dl-editing .dl-stage, .dl-sec.dl-editing .dl-sub{ opacity:.35; pointer-events:none; transition:opacity .25s; }
+  .dl-empty{ display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin:6px 20px 4px; padding:16px; border-radius:16px;
+    border:1.5px dashed rgba(176,108,240,0.4); background:rgba(176,108,240,0.05); }
+  .dl-empty[hidden]{ display:none; }
+  .dl-empty-ico{ display:flex; align-items:center; justify-content:center; width:44px; height:44px; border-radius:13px; color:var(--lemon);
+    background:rgba(228,255,92,0.1); border:1px solid rgba(228,255,92,0.3); }
+  .dl-empty > div{ flex:1 1 180px; display:flex; flex-direction:column; gap:2px; }
+  .dl-empty b{ font-family:'Oswald',sans-serif; font-weight:600; font-size:15px; color:#fff; }
+  .dl-empty span:not(.dl-empty-ico){ font-size:13px; color:var(--muted); }
+  @media (max-width:640px){ .dl-editor{ margin:12px 12px 4px; padding:13px; } .dl-empty{ margin:6px 12px 4px; } }
+
+
+  /* ══ РЕДАКТОР ОБНОВЛЕНИЙ ══ */
+  @keyframes ueIn{ from{ opacity:0; transform:translateY(14px) scale(.985); } to{ opacity:1; transform:none; } }
+  @keyframes ueCard{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:none; } }
+  .ue{ margin:0 30px 28px; padding:22px; border-radius:22px; position:relative;
+    background:radial-gradient(120% 120% at 0% 0%, rgba(176,108,240,0.16), transparent 55%), radial-gradient(120% 120% at 100% 100%, rgba(228,255,92,0.07), transparent 55%), rgba(18,13,34,0.88);
+    border:1px solid var(--glass-line-bright); box-shadow:inset 0 1px 0 rgba(255,255,255,0.06), 0 30px 70px -36px rgba(0,0,0,0.95); }
+  .ue[hidden]{ display:none; }
+  .ue.in{ animation:ueIn .5s cubic-bezier(.16,1,.3,1) both; }
+  .ue-head{ display:flex; align-items:center; gap:14px; margin-bottom:16px; }
+  .ue-head-ico{ display:flex; align-items:center; justify-content:center; flex:0 0 44px; width:44px; height:44px; border-radius:14px;
+    color:var(--lemon); background:rgba(228,255,92,0.1); border:1px solid rgba(228,255,92,0.32); box-shadow:0 0 22px -8px rgba(228,255,92,0.7); }
+  .ue-head-txt{ flex:1; min-width:0; }
+  .ue-title{ font-family:'Oswald',sans-serif; font-weight:700; font-size:21px; color:#fff; }
+  .ue-sub{ margin-top:2px; font-size:13px; color:var(--mystic); }
+  .ue-lang{ font-family:'Oswald',sans-serif; font-weight:600; font-size:12px; letter-spacing:.1em; padding:5px 10px; border-radius:9px;
+    color:var(--lemon); background:rgba(228,255,92,0.08); border:1px solid rgba(228,255,92,0.35); }
+  .ue-bar{ display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:14px; }
+  .ue-add-entry{ height:40px; padding:0 16px; border-radius:12px; cursor:pointer; font-family:'Oswald',sans-serif; font-weight:600; font-size:13.5px; letter-spacing:.04em;
+    color:var(--lemon); background:rgba(228,255,92,0.08); border:1.5px dashed rgba(228,255,92,0.45);
+    transition:background .2s, border-color .2s, transform .25s cubic-bezier(.16,1,.3,1); }
+  .ue-add-entry:hover{ background:rgba(228,255,92,0.15); border-style:solid; transform:translateY(-1px); }
+  .ue-add-entry[hidden]{ display:none; }
+  .ue-mode{ --idx:0; position:relative; display:grid; grid-template-columns:1fr 1fr; padding:4px; border-radius:12px; margin-left:auto;
+    background:rgba(10,8,20,0.5); border:1px solid var(--glass-line); }
+  .ue-mode-glider{ position:absolute; top:4px; bottom:4px; left:4px; width:calc(50% - 4px); border-radius:9px; background:rgba(176,108,240,0.35);
+    border:1px solid rgba(176,108,240,0.6); transform:translateX(calc(var(--idx) * 100%)); transition:transform .4s cubic-bezier(.34,1.35,.64,1); }
+  .ue-mode button{ position:relative; z-index:1; height:32px; padding:0 14px; border:0; border-radius:9px; cursor:pointer; background:transparent;
+    font-family:'Oswald',sans-serif; font-weight:600; font-size:12.5px; letter-spacing:.04em; color:var(--muted); transition:color .25s; }
+  .ue-mode button.on{ color:#fff; }
+  .ue-list{ display:flex; flex-direction:column; gap:12px; }
+  .ue-list[hidden], .ue-text[hidden]{ display:none; }
+  .ue-entry{ padding:14px; border-radius:16px; background:rgba(255,255,255,0.03); border:1px solid var(--glass-line);
+    animation:ueCard .45s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i, 0) * .05s);
+    transition:border-color .25s, opacity .25s, transform .3s; }
+  .ue-entry:focus-within{ border-color:rgba(176,108,240,0.55); background:rgba(176,108,240,0.05); }
+  .ue-entry.entering{ animation:ueCard .4s cubic-bezier(.16,1,.3,1) both; }
+  .ue-entry.leaving{ opacity:0; transform:translateX(24px) scale(.98); }
+  .ue-entry-top{ display:flex; align-items:center; gap:8px; margin-bottom:10px; }
+  .ue-date{ display:inline-flex; align-items:center; gap:7px; height:40px; padding:0 10px; border-radius:11px; color:#c9a8ff;
+    background:rgba(176,108,240,0.14); border:1px solid rgba(176,108,240,0.38); flex:0 0 auto; }
+  .ue-date input{ border:0; background:transparent; color:#fff; font-family:'Oswald',sans-serif; font-weight:600; font-size:14px; outline:none; color-scheme:dark; width:128px; }
+  .ue-title-in, .ue-item-in{ flex:1; min-width:0; height:40px; padding:0 12px; border-radius:11px; font-size:14px; color:#f3f0fb;
+    background:rgba(8,6,18,0.55); border:1px solid var(--glass-line); outline:none; transition:border-color .2s, box-shadow .2s; }
+  .ue-title-in{ font-family:'Oswald',sans-serif; font-weight:600; font-size:16px; }
+  .ue-title-in:focus, .ue-item-in:focus{ border-color:rgba(228,255,92,0.55); box-shadow:0 0 0 3px rgba(228,255,92,0.1); }
+  .ue-title-in::placeholder, .ue-item-in::placeholder{ color:#6f6690; }
+  .ue-del-entry{ flex:0 0 40px; width:40px; height:40px; border-radius:11px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+    color:var(--muted); background:transparent; border:1px solid var(--glass-line); transition:color .2s, background .2s, border-color .2s, transform .2s; }
+  .ue-del-entry:hover{ color:#ff9b9b; background:rgba(255,90,90,0.12); border-color:rgba(255,110,110,0.45); transform:rotate(-8deg); }
+  .ue-items{ display:flex; flex-direction:column; gap:7px; padding-left:4px; border-left:2px solid rgba(176,108,240,0.25); margin-left:6px; }
+  .ue-item{ display:flex; align-items:center; gap:8px; padding-left:10px; transition:opacity .22s, transform .22s; }
+  .ue-item.entering{ animation:ueCard .3s ease both; }
+  .ue-item.leaving{ opacity:0; transform:translateX(12px); }
+  .ue-tag{ flex:0 0 78px; min-width:0; text-align:center; transition:all .2s; }
+  .ue-tag.k-new{ color:#7bf5a8; background:rgba(88,235,150,0.12); border:1px solid rgba(88,235,150,0.3); }
+  .ue-tag.k-fix{ color:#ffb37a; background:rgba(255,157,92,0.12); border:1px solid rgba(255,157,92,0.3); }
+  .ue-tag.k-del{ color:#ff8f8f; background:rgba(255,95,95,0.12); border:1px solid rgba(255,95,95,0.3); }
+  .ue-tag.k-upd{ color:var(--lemon); background:rgba(214,255,110,0.1); border:1px solid rgba(214,255,110,0.3); }
+  .ue-item-in{ height:36px; font-size:13.5px; }
+  .ue-ctrls{ display:flex; gap:4px; opacity:.4; transition:opacity .2s; }
+  .ue-item:hover .ue-ctrls, .ue-item:focus-within .ue-ctrls{ opacity:1; }
+  .ue-add-item{ margin:9px 0 0 22px; height:32px; padding:0 12px; border-radius:10px; cursor:pointer; font-size:12.5px; font-weight:600;
+    color:var(--mystic); background:transparent; border:1px dashed var(--glass-line-bright); transition:color .2s, border-color .2s, background .2s; }
+  .ue-add-item:hover{ color:var(--lemon); border-color:rgba(228,255,92,0.5); background:rgba(228,255,92,0.06); }
+  .ue-text{ width:100%; min-height:320px; padding:14px; border-radius:14px; resize:vertical; box-sizing:border-box;
+    font-family:ui-monospace,Menlo,Consolas,monospace; font-size:13px; line-height:1.65; color:#f3f0fb;
+    background:rgba(8,6,18,0.6); border:1px solid var(--glass-line); outline:none; }
+  .ue-text:focus{ border-color:rgba(228,255,92,0.55); }
+  .ue-hint{ margin-top:12px; font-size:12px; line-height:1.5; color:var(--muted); }
+  .ue-actions{ display:flex; gap:10px; margin-top:16px; flex-wrap:wrap; }
+  @media (max-width:640px){
+    .ue{ margin:0 12px 22px; padding:16px; }
+    .ue-entry-top{ flex-wrap:wrap; }
+    .ue-title-in{ flex-basis:100%; order:3; }
+    .ue-tag{ flex-basis:64px; }
+    .ue-ctrls .ps-mini[data-a="up"], .ue-ctrls .ps-mini[data-a="down"]{ display:none; }
+    .ue-mode{ margin-left:0; }
+  }
+  @media (prefers-reduced-motion:reduce){ .ue.in, .ue-entry, .ue-entry.entering, .ue-item.entering{ animation:none !important; } }
+
   /* ══ MOBILE LAYOUT ══ */
   @media (max-width:640px){
     /* шапка на телефоне в три ряда занимает пятую часть экрана — не держим её приклеенной */
@@ -2323,8 +2465,7 @@
     .row:not(:has(.thumb)){ grid-template-columns:minmax(0, 1fr); }
     .title-line{ flex-wrap:wrap; row-gap:5px; column-gap:8px; }
     .level-name{ flex:0 1 auto; max-width:100%; }
-    .pos-badge.is-new{ height:22px; font-size:10.5px; padding:0 8px 0 7px; gap:6px; top:0; }
-    .new-dot{ width:6px; height:6px; flex-basis:6px; }
+    .pos-badge.is-new{ height:22px; font-size:10.5px; padding:0 10px; top:0; }
     .meta-line{ flex-wrap:wrap; row-gap:2px; }
     .meta-line .meta-sep{ display:none; }
     .row .admin-col{ grid-column:1 / -1; display:flex; flex-direction:row; align-items:center;
@@ -2796,6 +2937,16 @@ const I18N = {
     updatesTab: "Обновления",
     updatesEyebrow: "Журнал изменений",
     updLatest: "Последнее",
+    ueTitle: "Редактор обновлений",
+    ueSub: "Каждая карточка — одно обновление. Метки NEW / FIX ставятся по первому слову пункта",
+    ueAddEntry: "Новое обновление",
+    ueModeCards: "Карточки",
+    ueModeText: "Текстом",
+    ueTitlePh: "Заголовок (необязательно)",
+    ueItemPh: "Например: Добавлен новый уровень",
+    ueAddItem: "Пункт",
+    ueDelEntry: "Удалить обновление",
+    ueHint: "Enter — новый пункт, Backspace в пустом пункте — удалить его. Начни пункт с «Добавлен», «Исправлен», «Убран» или «Added», «Fixed», «Removed» — метка поставится сама.",
     updPinned: "Закреплено",
     updPin: "Закрепить",
     updUnpin: "Открепить",
@@ -2916,10 +3067,15 @@ const I18N = {
     achTop3: "Топ-3 пройден", achTop3Hint: "Пройден уровень из первой тройки листа",
     achBeat1: "Пройден №1", achBeat1Hint: "Пройден первый уровень листа",
     shareTitle: "Доля от всех очков",
+    shareOf: "{a} из {b} очков",
     stPlayers: "игроков", stPoints: "очков всего", stCompletions: "прохождений", stVerifications: "верификаций",
     sortPts: "Очки", sortCmp: "Прохождения", sortVer: "Верификации",
     unitPts: "очк.", unitCmp: "прох.", unitVer: "вериф.",
     dlTitle: "Лестница демонов",
+    dlEditTitle: "Редактировать лестницу",
+    dlEmptyTitle: "Лестницы пока нет",
+    dlEmptySub: "Собери путь от первого демона к цели",
+    dlCreate: "Создать лестницу",
     dlSub: "От первого демона к цели · пройдено {d} из {n}",
     dlDone: "Пройден",
     dlCur: "В процессе",
@@ -3055,6 +3211,16 @@ const I18N = {
     updatesTab: "Updates",
     updatesEyebrow: "Changelog",
     updLatest: "Latest",
+    ueTitle: "Updates editor",
+    ueSub: "Each card is one update. NEW / FIX tags come from the first word of an item",
+    ueAddEntry: "New update",
+    ueModeCards: "Cards",
+    ueModeText: "Text",
+    ueTitlePh: "Title (optional)",
+    ueItemPh: "e.g. Added a new level",
+    ueAddItem: "Item",
+    ueDelEntry: "Delete update",
+    ueHint: "Enter adds an item, Backspace in an empty item removes it. Start an item with Added, Fixed or Removed and the tag sets itself.",
     updPinned: "Pinned",
     updPin: "Pin",
     updUnpin: "Unpin",
@@ -3175,10 +3341,15 @@ const I18N = {
     achTop3: "Top-3 beaten", achTop3Hint: "Beat a level from the top three",
     achBeat1: "Beat #1", achBeat1Hint: "Beat the #1 level of the list",
     shareTitle: "Share of all points",
+    shareOf: "{a} of {b} points",
     stPlayers: "players", stPoints: "total points", stCompletions: "completions", stVerifications: "verifications",
     sortPts: "Points", sortCmp: "Completions", sortVer: "Verifications",
     unitPts: "pts", unitCmp: "beaten", unitVer: "verified",
     dlTitle: "Demon ladder",
+    dlEditTitle: "Edit ladder",
+    dlEmptyTitle: "No ladder yet",
+    dlEmptySub: "Build a path from your first demon to the goal",
+    dlCreate: "Create ladder",
     dlSub: "From the first demon to the goal · {d} of {n} done",
     dlDone: "Done",
     dlCur: "Grinding",
@@ -3998,7 +4169,7 @@ function isNewLevel(lvl){
 }
 function positionBadge(lvl){
   return isNewLevel(lvl)
-    ? `<span class="pos-badge is-new" title="${escapeHtml(I18N[currentLang].newBadgeHint)}"><span class="new-dot" aria-hidden="true"></span>NEW</span>`
+    ? `<span class="pos-badge is-new" title="${escapeHtml(I18N[currentLang].newBadgeHint)}">NEW</span>`
     : '';
 }
 
@@ -4271,6 +4442,21 @@ function countUp(root){
   });
 }
 
+// доля очков: целые проценты округляли 30 из 11 910 (0,25%) до «0%» — теперь точность подстраивается
+function fmtShare(part, total){
+  if(!total || !part) return '0%';
+  const pct = part / total * 100;
+  const loc = currentLang === 'ru' ? 'ru' : 'en';
+  const digits = pct >= 10 ? 0 : pct >= 1 ? 1 : pct >= 0.1 ? 2 : 3;
+  const shown = Number(pct.toFixed(digits));
+  return (shown === 0 ? '<0.001' : shown.toLocaleString(loc, { maximumFractionDigits: digits })) + '%';
+}
+// у ненулевой доли полоса не короче 3%, иначе её не видно
+function shareBarWidth(part, total){
+  if(!total || !part) return 0;
+  return Math.max(3, part / total * 100).toFixed(2);
+}
+
 function renderPlayerPane(){
   const pane = document.getElementById('plPane');
   if(!pane) return;
@@ -4318,8 +4504,9 @@ function renderPlayerPane(){
     <div class="pl-extras">
       ${achievementsHtml(player, idx)}
       <div class="share-block">
-        <div class="ach-head"><span>${escapeHtml(t.shareTitle)}</span><b>${totalPts ? Math.round(myPts / totalPts * 100) : 0}%</b></div>
-        <div class="share-bar"><i data-w="${totalPts ? (myPts / totalPts * 100).toFixed(1) : 0}"></i></div>
+        <div class="ach-head"><span>${escapeHtml(t.shareTitle)}</span><b>${escapeHtml(fmtShare(myPts, totalPts))}</b></div>
+        <div class="share-bar"><i data-w="${shareBarWidth(myPts, totalPts)}"></i></div>
+        <div class="share-note">${escapeHtml(t.shareOf.replace('{a}', myPts.toLocaleString(currentLang === 'ru' ? 'ru' : 'en')).replace('{b}', totalPts.toLocaleString(currentLang === 'ru' ? 'ru' : 'en')))}</div>
       </div>
     </div>
     ${hardestHtml}
@@ -4387,14 +4574,24 @@ function renderPlayersSplit(list, arr, q){
 
   // общая статистика
   const tot = [...stats.values()].reduce((m, s) => ({ pts: m.pts + s.pts, cmp: m.cmp + s.cmp, ver: m.ver + s.ver }), { pts: 0, cmp: 0, ver: 0 });
+  const IC = {"players": "<svg viewBox=\"0 0 24 24\" width=\"18\" height=\"18\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"9\" cy=\"8\" r=\"3.5\"/><path d=\"M2.5 20a6.5 6.5 0 0 1 13 0\"/><path d=\"M16 4.5a3.5 3.5 0 0 1 0 7\"/><path d=\"M18 14.5a6.5 6.5 0 0 1 3.5 5.5\"/></svg>", "points": "<svg viewBox=\"0 0 24 24\" width=\"18\" height=\"18\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 2.5l2.6 6.2 6.7.6-5.1 4.4 1.6 6.6L12 16.8l-5.8 3.5 1.6-6.6L2.7 9.3l6.7-.6z\"/></svg>", "cmp": "<svg viewBox=\"0 0 24 24\" width=\"18\" height=\"18\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"9.5\"/><path d=\"m7.5 12.5 3 3 6-6.5\"/></svg>", "ver": "<svg viewBox=\"0 0 24 24\" width=\"18\" height=\"18\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 2.5 20 6v6c0 4.6-3.3 8.3-8 9.5-4.7-1.2-8-4.9-8-9.5V6z\"/><path d=\"m8.5 12 2.5 2.5 4.5-5\"/></svg>"};
   const statsHtml = `<div class="pl-stats">${[
-      ['👥', arr.length, t.stPlayers], ['✦', tot.pts, t.stPoints], ['✓', tot.cmp, t.stCompletions], ['🛡', tot.ver, t.stVerifications],
-    ].map(([ico, v, label], i) => `<div class="pl-stat" style="--i:${i}">
-      <span class="pl-stat-ico">${ico}</span><b data-count="${v}">0</b><span>${escapeHtml(label)}</span></div>`).join('')}</div>`;
+      ['players', arr.length, t.stPlayers], ['points', tot.pts, t.stPoints], ['cmp', tot.cmp, t.stCompletions], ['ver', tot.ver, t.stVerifications],
+    ].map(([k, v, label], i) => `<div class="pl-stat st-${k}" style="--i:${i}">
+      <span class="pl-stat-glow" aria-hidden="true"></span>
+      <span class="pl-stat-ico">${IC[k]}</span>
+      <div class="pl-stat-txt"><b data-count="${v}">0</b><span>${escapeHtml(label)}</span></div>
+    </div>`).join('')}</div>`;
 
-  const tabs = `<div class="pl-tabs" role="tablist">${[['pts', t.sortPts], ['cmp', t.sortCmp], ['ver', t.sortVer]]
-    .map(([k, label]) => `<button class="pl-tab${k === key ? ' on' : ''}" data-sort="${k}" role="tab" aria-selected="${k === key}">${escapeHtml(label)}</button>`).join('')}
-    <span class="pl-tab-glider" aria-hidden="true"></span></div>`;
+  // подложка вкладок ставится через CSS по номеру вкладки — без замеров ширины,
+  // поэтому не ломается, если рейтинг перерисовался, пока был скрыт
+  const TABS = [['pts', t.sortPts, IC.points], ['cmp', t.sortCmp, IC.cmp], ['ver', t.sortVer, IC.ver]];
+  const tabIdx = Math.max(0, TABS.findIndex(x => x[0] === key));
+  const tabs = `<div class="pl-tabs" role="tablist" style="--n:${TABS.length};--idx:${tabIdx}">
+    <span class="pl-tab-glider" aria-hidden="true"></span>
+    ${TABS.map(([k, label, ico]) => `<button class="pl-tab${k === key ? ' on' : ''}" data-sort="${k}" role="tab" aria-selected="${k === key}">
+      <span class="pl-tab-ico" aria-hidden="true">${ico}</span><span class="pl-tab-lbl">${escapeHtml(label)}</span></button>`).join('')}
+  </div>`;
 
   // пьедестал — без поиска
   const podiumOrder = [1, 0, 2];
@@ -4441,22 +4638,14 @@ function renderPlayersSplit(list, arr, q){
     <div class="pl-pane" id="plPane"></div>
   </div>`;
 
-  // подложка вкладок плавно едет под выбранную
-  const placeGlider = (animate) => {
-    const on = list.querySelector('.pl-tab.on'), g = list.querySelector('.pl-tab-glider');
-    if(!on || !g) return;
-    if(!animate) g.style.transition = 'none';
-    g.style.width = on.offsetWidth + 'px';
-    g.style.transform = `translateX(${on.offsetLeft}px)`;
-    if(!animate){ g.getBoundingClientRect(); g.style.transition = ''; }
-  };
-  requestAnimationFrame(() => placeGlider(false));
-  list.querySelectorAll('.pl-tab').forEach(btn => btn.addEventListener('click', () => {
+  list.querySelectorAll('.pl-tab').forEach((btn, i) => btn.addEventListener('click', () => {
     if(btn.dataset.sort === playerSortKey) return;
-    list.querySelectorAll('.pl-tab').forEach(b => b.classList.toggle('on', b === btn));
-    placeGlider(true);
+    const bar = list.querySelector('.pl-tabs');
+    bar.style.setProperty('--idx', i);
+    list.querySelectorAll('.pl-tab').forEach(b => { b.classList.toggle('on', b === btn); b.setAttribute('aria-selected', b === btn); });
+    btn.classList.remove('pop'); void btn.offsetWidth; btn.classList.add('pop');
     playerSortKey = btn.dataset.sort;
-    setTimeout(() => render(), 200);
+    setTimeout(() => render(), 260);
   }));
 
   countUp(list.querySelector('.pl-stats'));
@@ -4976,11 +5165,13 @@ function ladderSteps(player){
   return (l && Array.isArray(l.steps)) ? l.steps.filter(st => String(st.name || '').trim()) : [];
 }
 
-function ladderHtml(player, uid){
+function ladderHtml(player, uid, editable){
   const t = I18N[currentLang];
   const steps = ladderSteps(player);
-  // скрытая лестница видна только админу — чтобы он понимал, что она есть
-  if(!steps.length || (player.ladder.visible === false && !isAdmin)) return '';
+  const hidden = !!(player.ladder && player.ladder.visible === false);
+  // скрытую видят только хозяин и админ
+  if(hidden && !editable && !isAdmin) return '';
+  if(!steps.length && !editable) return '';
   const done = steps.filter(st => st.status === 'done').length;
   const TAG = { done: [t.dlDone, 't-done'], cur: [t.dlCur, 't-cur'], goal: [t.dlGoal, 't-goal'] };
   const cards = steps.map((st, i) => {
@@ -4998,16 +5189,40 @@ function ladderHtml(player, uid){
       ${st.note ? `<div class="dl-s-note">${escapeHtml(st.note)}</div>` : ''}
     </div>`;
   }).join('');
-  return `<div class="detail-subsection dl-sec" id="dlSec_${uid}">
+  const editor = editable ? `<div class="dl-editor" data-dl-editor hidden>
+      <div class="dl-ed-top">
+        <span class="dl-ed-title">${escapeHtml(t.dlEditTitle)}</span>
+        <label class="lf-switch ps-dl-vis">
+          <input type="checkbox" data-dl-visible ${hidden ? '' : 'checked'} />
+          <span class="lf-switch-track" aria-hidden="true"><span class="lf-switch-knob"></span></span>
+          <span class="lf-switch-text"><b>${escapeHtml(t.dlShow)}</b></span>
+        </label>
+      </div>
+      <div class="ps-dl-hint">${escapeHtml(t.dlEditHint)}</div>
+      <div class="ps-dl-list" data-dl-list></div>
+      <datalist id="dlLevels_${uid}">${[...state.levels, ...state.nonListedLevels, ...state.futureLevels]
+        .map(l => `<option value="${escapeHtml(l.name)}"></option>`).join('')}</datalist>
+      <button class="ps-btn ps-dl-add" data-dl-add type="button">＋ ${escapeHtml(t.dlAdd)}</button>
+      <div class="ps-err" data-dl-err></div>
+      <div class="ps-actions">
+        <button class="ps-btn ps-save" data-dl-save type="button">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>
+          ${escapeHtml(t.rulesSave)}</button>
+        <button class="ps-btn" data-dl-cancel type="button">${escapeHtml(t.rulesCancel)}</button>
+      </div>
+    </div>` : '';
+  return `<div class="detail-subsection dl-sec collapsed" id="dlSec_${uid}" data-player-id="${escapeHtml(String(player.id || ''))}">
     <div class="subsection-header" data-dl-toggle="${uid}">
       <span class="sh-icon dl-ico">${STAIRS_SVG}</span>
       <span class="sh-title">${escapeHtml(t.dlTitle)}</span>
-      ${player.ladder.visible === false ? `<span class="dl-hidden-tag">${escapeHtml(t.dlHiddenTag)}</span>` : ''}
-      <span class="lvl-group-count">${done}/${steps.length}</span>
+      ${hidden ? `<span class="dl-hidden-tag">${escapeHtml(t.dlHiddenTag)}</span>` : ''}
+      ${steps.length ? `<span class="lvl-group-count">${done}/${steps.length}</span>` : ''}
+      ${editable ? `<button class="dl-edit-btn" data-dl-edit type="button" title="${escapeHtml(t.dlEditTitle)}" aria-label="${escapeHtml(t.dlEditTitle)}">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>` : ''}
       <span class="sh-chevron">▲</span>
     </div>
     <div class="subsection-body"><div class="subsection-inner">
-      <div class="dl-sub">${escapeHtml(t.dlSub.replace('{d}', done).replace('{n}', steps.length))}</div>
+      ${steps.length ? `<div class="dl-sub">${escapeHtml(t.dlSub.replace('{d}', done).replace('{n}', steps.length))}</div>
       <div class="dl-stage" data-ladder>
         <svg class="dl-svg" aria-hidden="true"><defs><linearGradient id="dlg_${uid}" x1="0" y1="1" x2="1" y2="0">
           <stop offset="0" stop-color="#7bf5a8"/><stop offset=".6" stop-color="#e4ff5c"/><stop offset="1" stop-color="#a979ff"/>
@@ -5015,9 +5230,103 @@ function ladderHtml(player, uid){
         <div class="dl-climber" aria-hidden="true"></div>
         <div class="dl-crown" aria-hidden="true">👑</div>
         ${cards}
-      </div>
+      </div>` : `<div class="dl-empty">
+        <span class="dl-empty-ico">${STAIRS_SVG}</span>
+        <div><b>${escapeHtml(t.dlEmptyTitle)}</b><span>${escapeHtml(t.dlEmptySub)}</span></div>
+        <button class="ps-btn ps-save" data-dl-create type="button">＋ ${escapeHtml(t.dlCreate)}</button>
+      </div>`}
+      ${editor}
     </div></div>
   </div>`;
+}
+
+// редактор лестницы прямо в её блоке
+function bindLadderEditor(sec, player){
+  const t = I18N[currentLang];
+  const ed = sec.querySelector('[data-dl-editor]');
+  if(!ed) return;
+  const dlList = ed.querySelector('[data-dl-list]');
+  const listId = ed.querySelector('datalist').id;
+  const renumber = () => [...dlList.children].forEach((r, i) => { r.querySelector('.ps-dl-num').textContent = i + 1; });
+  const dlRow = (st = {}) => {
+    const row = document.createElement('div');
+    row.className = 'ps-dl-row';
+    const status = ['done','cur','goal'].includes(st.status) ? st.status : 'goal';
+    row.innerHTML = `
+      <span class="ps-dl-num"></span>
+      <input type="text" class="ps-dl-name" list="${listId}" placeholder="${escapeHtml(t.dlNamePh)}" value="${escapeHtml(st.name || '')}" />
+      <select class="ps-dl-status">
+        <option value="done"${status === 'done' ? ' selected' : ''}>${escapeHtml(t.dlDone)}</option>
+        <option value="cur"${status === 'cur' ? ' selected' : ''}>${escapeHtml(t.dlCur)}</option>
+        <option value="goal"${status === 'goal' ? ' selected' : ''}>${escapeHtml(t.dlGoal)}</option>
+      </select>
+      <input type="text" class="ps-dl-prog" placeholder="${escapeHtml(t.dlProgPh)}" value="${escapeHtml(st.progress || '')}" />
+      <div class="ps-dl-ctrls">
+        <button type="button" class="ps-mini" data-act="up" title="↑">↑</button>
+        <button type="button" class="ps-mini" data-act="down" title="↓">↓</button>
+        <button type="button" class="ps-mini ps-dl-del" data-act="del" title="✕">✕</button>
+      </div>
+      <input type="text" class="ps-dl-note" placeholder="${escapeHtml(t.dlNotePh)}" value="${escapeHtml(st.note || '')}" maxlength="160" />`;
+    const syncProg = () => {
+      const v = row.querySelector('.ps-dl-status').value;
+      row.querySelector('.ps-dl-prog').disabled = (v !== 'cur');
+      row.dataset.status = v;
+    };
+    row.querySelector('.ps-dl-status').addEventListener('change', syncProg);
+    row.querySelectorAll('[data-act]').forEach(b => b.addEventListener('click', () => {
+      const act = b.getAttribute('data-act');
+      if(act === 'del'){ row.classList.add('leaving'); setTimeout(() => { row.remove(); renumber(); }, 220); return; }
+      if(act === 'up' && row.previousElementSibling) dlList.insertBefore(row, row.previousElementSibling);
+      if(act === 'down' && row.nextElementSibling) dlList.insertBefore(row.nextElementSibling, row);
+      renumber();
+    }));
+    syncProg();
+    return row;
+  };
+  const fill = () => {
+    dlList.innerHTML = '';
+    (player.ladder && Array.isArray(player.ladder.steps) ? player.ladder.steps : []).forEach(st => dlList.appendChild(dlRow(st)));
+    renumber();
+  };
+  const open = (show) => {
+    if(show) fill();
+    ed.hidden = !show;
+    sec.classList.toggle('dl-editing', show);
+    const empty = sec.querySelector('.dl-empty'); if(empty) empty.hidden = show;
+    if(show){
+      if(sec.classList.contains('collapsed')) toggleSubsection(sec);
+      if(!dlList.children.length){ const r = dlRow(); dlList.appendChild(r); renumber(); }
+      setTimeout(() => ed.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 60);
+    }
+  };
+  const editBtn = sec.querySelector('[data-dl-edit]');
+  if(editBtn) editBtn.addEventListener('click', (e) => { e.stopPropagation(); open(ed.hidden); });
+  const createBtn = sec.querySelector('[data-dl-create]');
+  if(createBtn) createBtn.addEventListener('click', () => open(true));
+  ed.querySelector('[data-dl-add]').addEventListener('click', () => {
+    const r = dlRow(); r.classList.add('entering'); dlList.appendChild(r); renumber();
+    r.querySelector('.ps-dl-name').focus();
+  });
+  ed.querySelector('[data-dl-cancel]').addEventListener('click', () => open(false));
+  ed.querySelector('[data-dl-save]').addEventListener('click', async (e) => {
+    const btn = e.currentTarget, err = ed.querySelector('[data-dl-err]');
+    const lad = {
+      visible: ed.querySelector('[data-dl-visible]').checked,
+      steps: [...dlList.children].map(r => ({
+        name: r.querySelector('.ps-dl-name').value.trim(),
+        status: r.querySelector('.ps-dl-status').value,
+        progress: r.querySelector('.ps-dl-status').value === 'cur' ? parseProgress(r.querySelector('.ps-dl-prog').value) : '',
+        note: r.querySelector('.ps-dl-note').value.trim().slice(0, 160),
+      })).filter(st => st.name),
+    };
+    btn.disabled = true; err.textContent = '';
+    try{ await savePlayerLadder(player, lad); }
+    catch(ex){ err.textContent = t.profSaveDenied; btn.disabled = false; return; }
+    render();
+    renderPlayerProfile();
+    const nsec = document.querySelector('#playerContent .dl-sec');
+    if(nsec) nsec.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  });
 }
 
 // верхняя граница прогресса: «40-100» → 100, «67» → 67
@@ -5034,7 +5343,8 @@ function layoutLadder(stage){
   const path = stage.querySelector('.dl-path');
   const n = steps.length;
   const W = stage.clientWidth;
-  const vertical = W < 560;
+  // единый вид везде: вертикальная лестница не ломается при любом числе ступеней
+  const vertical = true;
   stage.classList.toggle('is-vertical', vertical);
   const pts = [];
   if(vertical){
@@ -5172,7 +5482,8 @@ function initLadders(root){
     ro.observe(stage);
   });
   root.querySelectorAll('[data-dl-toggle]').forEach(h => {
-    h.addEventListener('click', () => {
+    h.addEventListener('click', (e) => {
+      if(e.target.closest('[data-dl-edit]')) return;
       const sec = document.getElementById('dlSec_' + h.getAttribute('data-dl-toggle'));
       if(!sec) return;
       toggleSubsection(sec);
@@ -5184,7 +5495,7 @@ function initLadders(root){
   });
 }
 
-function buildPlayerSections(player){
+function buildPlayerSections(player, opts){
   const t = I18N[currentLang];
   const recs = collectPlayerRecords(player);
 
@@ -5273,7 +5584,7 @@ function buildPlayerSections(player){
          </div>
        </div>`;
 
-  const ladder = ladderHtml(player, String(player.id || 'x').replace(/[^\w-]/g, '') + '_' + Math.random().toString(36).slice(2, 6));
+  const ladder = ladderHtml(player, String(player.id || 'x').replace(/[^\w-]/g, '') + '_' + Math.random().toString(36).slice(2, 6), !!(opts && opts.editable));
   return { hardestHtml, recordsBody, verifiedHtml, ladder };
 }
 
@@ -5377,21 +5688,6 @@ function renderProfileSettings(player){
       <button class="ps-btn ps-dl-add" id="psAchAdd" type="button">＋ ${escapeHtml(t.achCustomAdd)}</button>
     </section>` : ''}
 
-    <section class="ps-sec ps-ladder" style="--i:3">
-      <div class="ps-label">
-        <span class="ps-ladder-title">${STAIRS_SVG}${escapeHtml(t.dlTitle)}</span>
-        <label class="lf-switch ps-dl-vis" for="psDlVisible">
-          <input type="checkbox" id="psDlVisible" ${(!player.ladder || player.ladder.visible !== false) ? 'checked' : ''} />
-          <span class="lf-switch-track" aria-hidden="true"><span class="lf-switch-knob"></span></span>
-          <span class="lf-switch-text"><b>${escapeHtml(t.dlShow)}</b></span>
-        </label>
-      </div>
-      <div class="ps-dl-hint">${escapeHtml(t.dlEditHint)}</div>
-      <div class="ps-dl-list" id="psDlList"></div>
-      <datalist id="psDlLevels">${[...state.levels, ...state.nonListedLevels, ...state.futureLevels]
-        .map(l => `<option value="${escapeHtml(l.name)}"></option>`).join('')}</datalist>
-      <button class="ps-btn ps-dl-add" id="psDlAdd" type="button">＋ ${escapeHtml(t.dlAdd)}</button>
-    </section>
 
     <div class="ps-err" id="psErr"></div>
     <div class="ps-actions">
@@ -5485,60 +5781,6 @@ function bindProfileSettings(player){
     desc: r.querySelector('.ps-ach-desc').value.trim().slice(0, 80),
   })).filter(a => a.title);
 
-  // ── лестница: строки ступеней ──
-  const dlList = document.getElementById('psDlList');
-  const dlRow = (st = {}) => {
-    const row = document.createElement('div');
-    row.className = 'ps-dl-row';
-    const status = ['done','cur','goal'].includes(st.status) ? st.status : 'goal';
-    row.innerHTML = `
-      <span class="ps-dl-num"></span>
-      <input type="text" class="ps-dl-name" list="psDlLevels" placeholder="${escapeHtml(t.dlNamePh)}" value="${escapeHtml(st.name || '')}" />
-      <select class="ps-dl-status">
-        <option value="done"${status === 'done' ? ' selected' : ''}>${escapeHtml(t.dlDone)}</option>
-        <option value="cur"${status === 'cur' ? ' selected' : ''}>${escapeHtml(t.dlCur)}</option>
-        <option value="goal"${status === 'goal' ? ' selected' : ''}>${escapeHtml(t.dlGoal)}</option>
-      </select>
-      <input type="text" class="ps-dl-prog" placeholder="${escapeHtml(t.dlProgPh)}" value="${escapeHtml(st.progress || '')}" />
-      <div class="ps-dl-ctrls">
-        <button type="button" class="ps-mini" data-act="up" title="↑">↑</button>
-        <button type="button" class="ps-mini" data-act="down" title="↓">↓</button>
-        <button type="button" class="ps-mini ps-dl-del" data-act="del" title="✕">✕</button>
-      </div>
-      <input type="text" class="ps-dl-note" placeholder="${escapeHtml(t.dlNotePh)}" value="${escapeHtml(st.note || '')}" maxlength="160" />`;
-    const syncProg = () => {
-      const v = row.querySelector('.ps-dl-status').value;
-      row.querySelector('.ps-dl-prog').disabled = (v !== 'cur');
-      row.dataset.status = v;
-    };
-    row.querySelector('.ps-dl-status').addEventListener('change', syncProg);
-    row.querySelectorAll('[data-act]').forEach(b => b.addEventListener('click', () => {
-      const act = b.getAttribute('data-act');
-      if(act === 'del'){ row.classList.add('leaving'); setTimeout(() => { row.remove(); renumber(); }, 220); return; }
-      if(act === 'up' && row.previousElementSibling) dlList.insertBefore(row, row.previousElementSibling);
-      if(act === 'down' && row.nextElementSibling) dlList.insertBefore(row.nextElementSibling, row);
-      renumber();
-    }));
-    syncProg();
-    return row;
-  };
-  const renumber = () => [...dlList.children].forEach((r, i) => { r.querySelector('.ps-dl-num').textContent = i + 1; });
-  (player.ladder && Array.isArray(player.ladder.steps) ? player.ladder.steps : []).forEach(st => dlList.appendChild(dlRow(st)));
-  renumber();
-  document.getElementById('psDlAdd').addEventListener('click', () => {
-    const r = dlRow(); r.classList.add('entering'); dlList.appendChild(r); renumber();
-    r.querySelector('.ps-dl-name').focus();
-  });
-  const collectLadder = () => ({
-    visible: document.getElementById('psDlVisible').checked,
-    steps: [...dlList.children].map(r => ({
-      name: r.querySelector('.ps-dl-name').value.trim(),
-      status: r.querySelector('.ps-dl-status').value,
-      progress: r.querySelector('.ps-dl-status').value === 'cur' ? parseProgress(r.querySelector('.ps-dl-prog').value) : '',
-      note: r.querySelector('.ps-dl-note').value.trim().slice(0, 160),
-    })).filter(st => st.name),
-  });
-
   const bio = document.getElementById('psBio');
   bio.addEventListener('input', () => {
     const n = bio.value.length;
@@ -5553,8 +5795,7 @@ function bindProfileSettings(player){
     if(v && !/^https?:\/\//i.test(v)){ err.textContent = t.profUrlErr; return; }
     const saveBtn = document.getElementById('psSave');
     const b = bio.value.trim().slice(0, 300);
-    const lad = collectLadder();
-    const fields = { avatar: pending || null, bio: b || null, ladder: lad.steps.length ? lad : null };
+    const fields = { avatar: pending || null, bio: b || null };
 
     // у игрока есть аккаунт — профиль хранится в его строке profiles
     const row = profilesByNick.get(String(player.name || '').trim().toLowerCase());
@@ -5576,7 +5817,6 @@ function bindProfileSettings(player){
     if(target){
       if(fields.avatar) target.avatar = fields.avatar; else delete target.avatar;
       if(fields.bio) target.bio = fields.bio; else delete target.bio;
-      if(fields.ladder) target.ladder = fields.ladder; else delete target.ladder;
       if(isAdmin){
         const achs = collectAchievements();
         if(achs.length) target.achievements = achs; else delete target.achievements;
@@ -5603,6 +5843,24 @@ function toggleProfileSettings(force){
   if(open) setTimeout(() => wrap.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 120);
 }
 
+async function savePlayerLadder(player, lad){
+  const value = lad.steps.length ? lad : null;
+  const row = profilesByNick.get(String(player.name || '').trim().toLowerCase());
+  if(row && row.id){
+    await refreshSessionIfNeeded();
+    const res = await fetch(`${PROFILES_REST}?id=eq.${encodeURIComponent(row.id)}`, {
+      method: 'PATCH', headers: { ...authHeaders(), Prefer: 'return=representation' }, body: JSON.stringify({ ladder: value }),
+    });
+    const out = await res.json().catch(() => []);
+    if(!res.ok || !out.length) throw new Error('denied');
+    Object.assign(row, out[0]);
+  }
+  const target = (state.players || []).find(p => String(p.id) === String(player.id));
+  const obj = target || player;
+  if(value) obj.ladder = value; else delete obj.ladder;
+  if(target && isAdmin && !(row && row.id)) saveLevels();
+}
+
 function canEditProfile(player){
   if(!currentAdminNick) return false;
   return isAdmin || String(player.name || '').trim().toLowerCase() === currentAdminNick.toLowerCase();
@@ -5614,7 +5872,7 @@ function renderPlayerProfile(){
   const { player, idx } = playerCtx;
   const initial = (player.name || '?').trim().charAt(0).toUpperCase() || '?';
   const isAdminNick = isAdminNickName(player.name);
-  const { hardestHtml, recordsBody, verifiedHtml, ladder } = buildPlayerSections(player);
+  const { hardestHtml, recordsBody, verifiedHtml, ladder } = buildPlayerSections(player, { editable: canEditProfile(player) });
 
   document.getElementById('playerContent').innerHTML = `
     <div class="pr-head">
@@ -5672,6 +5930,7 @@ function renderPlayerProfile(){
 
   bindLevelChipNav(document.getElementById('playerContent'));
   initLadders(document.getElementById('playerContent'));
+  document.querySelectorAll('#playerContent .dl-sec').forEach(sec => bindLadderEditor(sec, player));
 
   const vHdr = document.getElementById('playerVerifiedHeader');
   if(vHdr) vHdr.addEventListener('click', () => toggleSubsection(document.getElementById('playerVerifiedSection')));
@@ -6768,14 +7027,28 @@ function openUpdatesPage(){
     ${hero}
     ${list.length ? `<div class="upd-feed">${entries}</div>`
                   : `<div class="rules-note">${escapeHtml(t.updatesEmpty)}</div>`}
-    ${isAdmin ? `<div class="rules-editor add-form open" id="updatesEditor" style="display:none;">
-      <div class="form-title">${escapeHtml(t.rulesEdit)}</div>
-      <label for="updatesTextarea">${escapeHtml(t.updatesTitle)}</label>
-      <textarea id="updatesTextarea" spellcheck="false" rows="16"></textarea>
-      <div class="rules-editor-hint">${escapeHtml(t.updatesEditHint)}</div>
-      <div class="actions">
-        <button class="primary" id="updatesSaveBtn">${escapeHtml(t.rulesSave)}</button>
-        <button class="ghost" id="updatesCancelBtn">${escapeHtml(t.rulesCancel)}</button>
+    ${isAdmin ? `<div class="ue" id="updatesEditor" hidden>
+      <div class="ue-head">
+        <span class="ue-head-ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></span>
+        <div class="ue-head-txt"><div class="ue-title">${escapeHtml(t.ueTitle)}</div><div class="ue-sub">${escapeHtml(t.ueSub)}</div></div>
+        <span class="ue-lang">${currentLang.toUpperCase()}</span>
+      </div>
+      <div class="ue-bar">
+        <button class="ue-add-entry" id="ueAddEntry" type="button">＋ ${escapeHtml(t.ueAddEntry)}</button>
+        <div class="ue-mode" role="tablist" style="--idx:0">
+          <span class="ue-mode-glider" aria-hidden="true"></span>
+          <button type="button" class="on" data-mode="cards">${escapeHtml(t.ueModeCards)}</button>
+          <button type="button" data-mode="text">${escapeHtml(t.ueModeText)}</button>
+        </div>
+      </div>
+      <div class="ue-list" id="ueList"></div>
+      <textarea class="ue-text" id="updatesTextarea" spellcheck="false" rows="16" hidden></textarea>
+      <div class="ue-hint" id="ueHint">${escapeHtml(t.ueHint)}</div>
+      <div class="ue-actions">
+        <button class="ps-btn ps-save" id="updatesSaveBtn" type="button">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>
+          ${escapeHtml(t.rulesSave)}</button>
+        <button class="ps-btn" id="updatesCancelBtn" type="button">${escapeHtml(t.rulesCancel)}</button>
       </div>
     </div>` : ''}`;
 
@@ -6796,24 +7069,114 @@ function openUpdatesPage(){
   if(isAdmin){
     const editor = document.getElementById('updatesEditor');
     const ta = document.getElementById('updatesTextarea');
+    const listEl = document.getElementById('ueList');
+    let mode = 'cards';
+    const today = () => new Date().toISOString().slice(0, 10);
+    const tagHtml = (txt) => { const k = kindOf(txt || ''); return `<span class="upd-tag ue-tag k-${k}">${escapeHtml(KIND_LABEL[k])}</span>`; };
+
+    const itemRow = (text = '') => {
+      const row = document.createElement('div');
+      row.className = 'ue-item';
+      row.innerHTML = `${tagHtml(text)}
+        <input type="text" class="ue-item-in" value="${escapeHtml(text)}" placeholder="${escapeHtml(t.ueItemPh)}" />
+        <div class="ue-ctrls">
+          <button type="button" class="ps-mini" data-a="up" title="↑">↑</button>
+          <button type="button" class="ps-mini" data-a="down" title="↓">↓</button>
+          <button type="button" class="ps-mini ps-dl-del" data-a="del" title="✕">✕</button>
+        </div>`;
+      const inp = row.querySelector('.ue-item-in');
+      // метка обновляется на лету: «Added…» → NEW, «Fixed…» → FIX
+      inp.addEventListener('input', () => { row.querySelector('.ue-tag').outerHTML = tagHtml(inp.value); });
+      inp.addEventListener('keydown', (e) => {
+        if(e.key === 'Enter'){ e.preventDefault(); const r = itemRow(); r.classList.add('entering'); row.after(r); r.querySelector('input').focus(); }
+        if(e.key === 'Backspace' && !inp.value && row.parentElement.children.length > 1){
+          e.preventDefault(); const prev = row.previousElementSibling || row.nextElementSibling; row.remove(); if(prev) prev.querySelector('input').focus();
+        }
+      });
+      row.querySelectorAll('[data-a]').forEach(b => b.addEventListener('click', () => {
+        const act = b.dataset.a;
+        if(act === 'del'){ row.classList.add('leaving'); setTimeout(() => row.remove(), 220); return; }
+        if(act === 'up' && row.previousElementSibling) row.parentElement.insertBefore(row, row.previousElementSibling);
+        if(act === 'down' && row.nextElementSibling) row.parentElement.insertBefore(row.nextElementSibling, row);
+      }));
+      return row;
+    };
+
+    const entryCard = (e = {}) => {
+      const card = document.createElement('div');
+      card.className = 'ue-entry';
+      card.innerHTML = `
+        <div class="ue-entry-top">
+          <label class="ue-date"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+            <input type="date" class="ue-date-in" value="${escapeHtml(e.date || today())}" /></label>
+          <input type="text" class="ue-title-in" value="${escapeHtml(e.title || '')}" placeholder="${escapeHtml(t.ueTitlePh)}" />
+          <button type="button" class="ue-del-entry" title="${escapeHtml(t.ueDelEntry)}" aria-label="${escapeHtml(t.ueDelEntry)}">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg></button>
+        </div>
+        <div class="ue-items"></div>
+        <button type="button" class="ue-add-item">＋ ${escapeHtml(t.ueAddItem)}</button>`;
+      const items = card.querySelector('.ue-items');
+      (e.items && e.items.length ? e.items : ['']).forEach(x => items.appendChild(itemRow(x)));
+      card.querySelector('.ue-add-item').addEventListener('click', () => {
+        const r = itemRow(); r.classList.add('entering'); items.appendChild(r); r.querySelector('input').focus();
+      });
+      card.querySelector('.ue-del-entry').addEventListener('click', () => {
+        card.classList.add('leaving'); setTimeout(() => card.remove(), 260);
+      });
+      return card;
+    };
+
+    const collect = () => [...listEl.children].map(c => ({
+      date: c.querySelector('.ue-date-in').value || today(),
+      title: c.querySelector('.ue-title-in').value.trim(),
+      items: [...c.querySelectorAll('.ue-item-in')].map(i => i.value.trim()).filter(Boolean),
+    })).filter(e => e.title || e.items.length)
+      .sort((a, b) => String(b.date).localeCompare(String(a.date)));
+
+    const fillCards = (entries) => {
+      listEl.innerHTML = '';
+      entries.forEach((e, i) => { const c = entryCard(e); c.style.setProperty('--i', Math.min(i, 8)); listEl.appendChild(c); });
+    };
+
+    const setMode = (m) => {
+      if(m === mode) return;
+      if(m === 'text') ta.value = updatesToText(collect());
+      else fillCards(textToUpdates(ta.value));
+      mode = m;
+      listEl.hidden = m !== 'cards';
+      ta.hidden = m !== 'text';
+      document.getElementById('ueAddEntry').hidden = m !== 'cards';
+      document.getElementById('ueHint').textContent = m === 'cards' ? t.ueHint : t.updatesEditHint;
+      const bar = editor.querySelector('.ue-mode');
+      bar.style.setProperty('--idx', m === 'cards' ? 0 : 1);
+      bar.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.mode === m));
+    };
+    editor.querySelectorAll('.ue-mode button').forEach(b => b.addEventListener('click', () => setMode(b.dataset.mode)));
+
     document.getElementById('updatesEditBtn').addEventListener('click', () => {
+      if(!editor.hidden){ editor.hidden = true; return; }
       // свой язык пуст — подставляем записи с другого, чтобы осталось только перевести
       const own = getUpdatesRaw(currentLang);
-      ta.value = updatesToText(own.length ? own : getUpdatesRaw(currentLang === 'ru' ? 'en' : 'ru'));
-      editor.style.display = editor.style.display === 'none' ? '' : 'none';
-      if(editor.style.display === ''){
-        ta.focus();
-        // подсказка с сегодняшней датой, если поле пустое
-        if(!ta.value.trim()) ta.value = `${new Date().toISOString().slice(0, 10)} | \n- `;
-      }
+      const src = own.length ? own : getUpdatesRaw(currentLang === 'ru' ? 'en' : 'ru');
+      mode = 'cards'; listEl.hidden = false; ta.hidden = true;
+      fillCards(src.length ? src : [{ date: today(), title: '', items: [''] }]);
+      editor.hidden = false;
+      editor.classList.remove('in'); void editor.offsetWidth; editor.classList.add('in');
+      setTimeout(() => editor.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60);
+    });
+    document.getElementById('ueAddEntry').addEventListener('click', () => {
+      const c = entryCard({ date: today(), title: '', items: [''] });
+      c.classList.add('entering');
+      listEl.prepend(c);
+      c.querySelector('.ue-title-in').focus();
     });
     document.getElementById('updatesSaveBtn').addEventListener('click', () => {
       if(!state.updates || typeof state.updates !== 'object') state.updates = {};
-      state.updates[currentLang] = textToUpdates(ta.value);
+      state.updates[currentLang] = mode === 'text' ? textToUpdates(ta.value) : collect();
       saveLevels();
       openUpdatesPage();
     });
-    document.getElementById('updatesCancelBtn').addEventListener('click', () => { editor.style.display = 'none'; });
+    document.getElementById('updatesCancelBtn').addEventListener('click', () => { editor.hidden = true; });
   }
 
   const sbHide = document.getElementById('searchBar');
