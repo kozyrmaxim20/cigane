@@ -340,8 +340,9 @@
   }
   .meta-sep{ color:var(--muted-dim); }
 
+  .thumb-wrap{ position:relative; flex:0 0 auto; margin:16px 0 16px 16px; }
   .thumb{
-    width:224px; height:126px; flex:0 0 auto; margin:10px 0 10px 10px;
+    width:224px; height:126px; flex:0 0 auto; margin:0;
     border-radius:12px; overflow:hidden; border:1px solid var(--glass-line);
     position:relative; z-index:3; box-shadow:0 8px 22px -10px rgba(0,0,0,0.8);
   }
@@ -2447,6 +2448,76 @@
   }
   @media (prefers-reduced-motion:reduce){ .ue.in, .ue-entry, .ue-entry.entering, .ue-item.entering{ animation:none !important; } }
 
+
+  /* NEW на превью: плотный лимонный бейдж заходит за левый верхний край обложки */
+  @keyframes newGlow{ 0%,100%{ box-shadow:0 3px 8px rgba(0,0,0,0.45), 0 0 0 0 rgba(214,255,110,0); }
+                      50%{ box-shadow:0 3px 8px rgba(0,0,0,0.45), 0 0 12px 1px rgba(214,255,110,0.55); } }
+  @keyframes newShine{ 0%,75%{ transform:translateX(-140%) skewX(-20deg); } 100%{ transform:translateX(320%) skewX(-20deg); } }
+  .pos-badge.is-new.on-thumb{ position:absolute; z-index:5; left:-9px; top:-9px; height:auto; padding:7px 11px 6px; border-radius:7px; overflow:hidden;
+    font-family:'Oswald',sans-serif; font-weight:700; font-size:15px; letter-spacing:.06em; line-height:1; color:#17200a;
+    background:#d6ff6e; border:0; isolation:auto;
+    animation:newIn .45s cubic-bezier(.34,1.56,.64,1) both .2s, newGlow 2.8s ease-in-out .7s infinite; }
+  .pos-badge.is-new.on-thumb::before{ display:none; }
+  .pos-badge.is-new.on-thumb::after{ content:''; position:absolute; inset:0 auto 0 0; z-index:1; width:40%; border-radius:0; box-shadow:none;
+    background:linear-gradient(90deg, transparent, rgba(255,255,255,0.75), transparent); animation:newShine 3.6s ease-in-out infinite; }
+  .pos-badge.is-new.on-thumb:hover{ transform:scale(1.08); }
+  @media (max-width:640px){ .pos-badge.is-new.on-thumb{ left:-7px; top:-7px; padding:5px 8px 4px; font-size:12.5px; border-radius:6px; } }
+  @media (prefers-reduced-motion:reduce){ .pos-badge.is-new.on-thumb, .pos-badge.is-new.on-thumb::after{ animation:none !important; } }
+
+
+  /* ══ БУДУЩИЙ ЛИСТ ══ */
+  @keyframes fxRun{ from{ transform:scaleX(0); } to{ transform:scaleX(1); } }
+  @keyframes fxHot{ 0%,100%{ box-shadow:0 0 0 0 rgba(255,140,60,0); } 50%{ box-shadow:0 0 12px 1px rgba(255,140,60,0.55); } }
+  @keyframes fxFlame{ 0%,100%{ transform:rotate(-6deg) scale(1); } 50%{ transform:rotate(6deg) scale(1.12); } }
+  .fx-prog{ display:flex; align-items:center; gap:10px; margin-top:9px; max-width:420px; }
+  .fx-track{ position:relative; flex:1; height:8px; border-radius:4px; background:rgba(255,255,255,0.07); overflow:hidden; }
+  .fx-tick{ position:absolute; top:0; bottom:0; width:1px; background:rgba(255,255,255,0.09); }
+  .fx-run{ position:absolute; top:0; bottom:0; left:var(--a); width:var(--w); border-radius:4px; transform-origin:left;
+    background:linear-gradient(90deg, #8a5ae0, var(--lemon)); box-shadow:0 0 10px -2px rgba(228,255,92,0.6);
+    animation:fxRun .9s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(var(--i, 0) * 45ms + .2s); }
+  .fx-prog.hot .fx-run{ background:linear-gradient(90deg, #ff8a3d, #ffd66b); box-shadow:0 0 12px -2px rgba(255,160,60,0.8); }
+  .fx-hot{ flex:0 0 auto; display:inline-flex; align-items:center; gap:4px; height:22px; padding:0 9px; border-radius:999px;
+    font-family:'Oswald',sans-serif; font-weight:600; font-size:11.5px; letter-spacing:.06em; color:#ffc08a;
+    background:rgba(255,140,60,0.12); border:1px solid rgba(255,140,60,0.45); animation:fxHot 2.4s ease-in-out infinite; }
+  .fx-delta{ flex:0 0 auto; font-family:'Oswald',sans-serif; font-weight:600; font-size:12px; }
+  .fx-delta.up{ color:#7bf5a8; } .fx-delta.down{ color:#ff8f8f; }
+
+  .row-actions .fx-verify:hover{ color:#7bf5a8; background:rgba(88,235,150,0.14); border-color:rgba(88,235,150,0.45); transform:scale(1.1); }
+  .row .row-actions .fx-verify{ width:28px; height:28px; padding:0; border-radius:9px; display:inline-flex; align-items:center; justify-content:center;
+    color:var(--muted); background:rgba(255,255,255,0.025); border:1px solid transparent; cursor:pointer; transition:color .2s, background .2s, border-color .2s, transform .25s cubic-bezier(.34,1.56,.64,1); }
+
+  .fx-sort{ display:inline-flex; gap:4px; margin:6px 0 14px; padding:4px; border-radius:13px; background:rgba(10,8,20,0.45); border:1px solid var(--glass-line); }
+  .fx-sort[hidden]{ display:none; }
+  .fx-sort button{ height:32px; padding:0 13px; border:0; border-radius:10px; cursor:pointer; background:transparent; color:var(--mystic);
+    font-family:'Oswald',sans-serif; font-weight:600; font-size:12.5px; letter-spacing:.04em; transition:color .2s, background .25s; }
+  .fx-sort button:hover{ color:#fff; }
+  .fx-sort button.on{ color:#14101f; background:linear-gradient(135deg, var(--lemon), #b9f56b); box-shadow:0 6px 16px -8px rgba(228,255,92,0.8); }
+
+  /* график прогресса верификации */
+  @keyframes fxBar{ from{ transform:scaleY(0); } to{ transform:scaleY(1); } }
+  .fx-bars{ display:flex; align-items:flex-end; gap:6px; height:130px; padding:4px 2px 0; overflow-x:auto; }
+  .fx-bar-col{ flex:1 0 22px; max-width:90px; display:flex; flex-direction:column; align-items:center; gap:5px; height:100%; }
+  .fx-bar-track{ position:relative; flex:1; width:100%; border-radius:6px; background:rgba(255,255,255,0.05); overflow:hidden; }
+  .fx-bar-track span{ position:absolute; left:0; right:0; bottom:var(--a); height:var(--h); border-radius:5px; transform-origin:bottom;
+    background:linear-gradient(0deg, rgba(176,108,240,0.7), rgba(201,168,255,0.9)); animation:fxBar .6s cubic-bezier(.16,1,.3,1) both; animation-delay:calc(.9s + var(--i) * .07s); }
+  .fx-bar-col.last .fx-bar-track span{ background:linear-gradient(0deg, #8a5ae0, var(--lemon)); box-shadow:0 0 12px -2px rgba(228,255,92,0.7); }
+  .fx-bar-col em{ font-style:normal; font-size:10.5px; color:var(--muted); white-space:nowrap; }
+  .fx-bar-col.last em{ color:var(--lemon); }
+  .fx-log-foot{ margin-top:8px; font-size:12px; color:var(--muted); }
+  .fx-best{ color:var(--lemon); font-weight:600; }
+
+  /* праздник при верификации */
+  @keyframes fxFall{ 0%{ transform:translate(0,-10vh) rotate(0); opacity:1; } 100%{ transform:translate(var(--dx), 105vh) rotate(var(--r)); opacity:.9; } }
+  @keyframes fxMsg{ 0%{ opacity:0; transform:translate(-50%, 20px) scale(.9); } 100%{ opacity:1; transform:translate(-50%, 0) scale(1); } }
+  .fx-party{ position:fixed; inset:0; z-index:300; pointer-events:none; overflow:hidden; transition:opacity .5s; }
+  .fx-party.out{ opacity:0; }
+  .fx-party i{ position:absolute; top:0; width:8px; height:12px; border-radius:2px; animation:fxFall 2.6s cubic-bezier(.25,.6,.5,1) both; }
+  .fx-party-msg{ position:absolute; left:50%; top:22%; transform:translateX(-50%); padding:14px 22px; border-radius:16px; max-width:90vw; text-align:center;
+    font-family:'Oswald',sans-serif; font-weight:700; font-size:22px; color:#14101f; background:linear-gradient(135deg, var(--lemon), #b9f56b);
+    box-shadow:0 20px 50px -16px rgba(228,255,92,0.9); animation:fxMsg .5s cubic-bezier(.34,1.56,.64,1) both; }
+  @media (max-width:640px){ .fx-prog{ max-width:none; } .fx-party-msg{ font-size:17px; } .fx-sort{ display:flex; } .fx-sort button{ flex:1; padding:0 6px; font-size:11.5px; } }
+  @media (prefers-reduced-motion:reduce){ .fx-run, .fx-hot, .fx-bar-track span, .fx-party i{ animation:none !important; } }
+
   /* ══ MOBILE LAYOUT ══ */
   @media (max-width:640px){
     /* шапка на телефоне в три ряда занимает пятую часть экрана — не держим её приклеенной */
@@ -2460,7 +2531,8 @@
 
     /* строка уровня: обложка + текст сверху, кнопки админа отдельной полосой снизу */
     .row{ display:grid; grid-template-columns:112px minmax(0, 1fr); align-items:center; }
-    .row .thumb{ width:auto; height:64px; margin:10px 0 10px 10px; }
+    .row .thumb-wrap{ margin:13px 0 13px 13px; min-width:0; }
+    .row .thumb{ width:auto; height:64px; margin:0; }
     .row .row-body{ padding:10px 12px; min-width:0; }
     .row:not(:has(.thumb)){ grid-template-columns:minmax(0, 1fr); }
     .title-line{ flex-wrap:wrap; row-gap:5px; column-gap:8px; }
@@ -2616,6 +2688,10 @@
   <div class="card" id="listView">
     <div class="section-head">
       <h1 class="section-title" id="currentListTitle">Классический список</h1>
+      <div class="fx-sort" id="fxSort" hidden>
+        <button type="button" class="on" data-fx-sort="order" id="fxSortOrder">Порядок листа</button>
+        <button type="button" data-fx-sort="close" id="fxSortClose">🔥 Ближе к верификации</button>
+      </div>
       <div class="config-warning" id="configWarning"></div>
     </div>
 
@@ -3053,6 +3129,17 @@ const I18N = {
     auWelcomeNew: "Добро пожаловать, {n}!",
     auAdminNote: "Вход выполнен · права админа",
     auPlayerNote: "Вход выполнен",
+    fxAlmost: "Почти!",
+    fxVerifyTitle: "Верифицирован — перенести в классический лист",
+    fxPromptPos: "«{name}» верифицирован! На какое место классического листа его поставить? (1–{n})",
+    fxHistoryNote: "Верифицирован, перенесён из будущего листа",
+    fxCelebrate: "{name} верифицирован и встал на #{pos}!",
+    fxLogTitle: "Прогресс верификации",
+    fxBestFromZero: "лучший с нуля",
+    fxLogFrom: "от {a} до {b}",
+    fxLogOne: "история появится после следующего обновления прогресса",
+    fxSortOrder: "Порядок листа",
+    fxSortClose: "🔥 Ближе к верификации",
     achTitle: "Достижения",
     achCustomTitle: "Свои достижения",
     achCustomEditHint: "Выдаются вручную и сразу считаются полученными. Значок — любой эмодзи, можно выбрать ниже.",
@@ -3327,6 +3414,17 @@ const I18N = {
     auWelcomeNew: "Welcome, {n}!",
     auAdminNote: "Signed in · admin rights",
     auPlayerNote: "Signed in",
+    fxAlmost: "Almost!",
+    fxVerifyTitle: "Verified — move to the main list",
+    fxPromptPos: "“{name}” is verified! Which main list place should it take? (1–{n})",
+    fxHistoryNote: "Verified, moved from the future list",
+    fxCelebrate: "{name} is verified and placed at #{pos}!",
+    fxLogTitle: "Verification progress",
+    fxBestFromZero: "best from 0",
+    fxLogFrom: "from {a} to {b}",
+    fxLogOne: "history starts with the next progress update",
+    fxSortOrder: "List order",
+    fxSortClose: "🔥 Closest to verification",
     achTitle: "Achievements",
     achCustomTitle: "Custom achievements",
     achCustomEditHint: "Granted manually and always count as earned. Any emoji works as the icon — pick one below.",
@@ -4669,11 +4767,19 @@ let sortDragging = false;
 
 // пока данные едут из Supabase — вместо пустоты мерцающие заготовки строк
 let isLoadingData = true;
+let fxSortMode = 'order';
+document.addEventListener('click', (e) => {
+  const b = e.target.closest && e.target.closest('[data-fx-sort]');
+  if(!b || b.dataset.fxSort === fxSortMode) return;
+  fxSortMode = b.dataset.fxSort;
+  document.querySelectorAll('[data-fx-sort]').forEach(x => x.classList.toggle('on', x === b));
+  render();
+});
 function renderSkeleton(list, cfg){
   const thumb = cfg.showLevelInfo && cfg.showThumb !== false;
   list.innerHTML = Array.from({ length: 6 }, (_, i) => `
     <div class="row skel${thumb ? '' : ' no-thumb'}" style="--i:${i}" aria-hidden="true">
-      ${thumb ? '<div class="thumb skel-box"></div>' : ''}
+      ${thumb ? '<div class="thumb-wrap"><div class="thumb skel-box"></div></div>' : ''}
       <div class="row-body">
         <div class="skel-line w-title"></div>
         <div class="skel-line w-meta"></div>
@@ -4688,6 +4794,13 @@ function render(){
   const list = document.getElementById('list');
   restoreFormHome();
   list.innerHTML = '';
+  const fxs = document.getElementById('fxSort');
+  if(fxs){
+    fxs.hidden = currentTab !== 'future';
+    const tt = I18N[currentLang];
+    document.getElementById('fxSortOrder').textContent = tt.fxSortOrder;
+    document.getElementById('fxSortClose').textContent = tt.fxSortClose;
+  }
   if(isLoadingData && currentTab !== 'players'){
     if(typeof applyTabLabels === 'function') applyTabLabels();
     renderSkeleton(list, cfg);
@@ -4702,11 +4815,15 @@ function render(){
   // поиск не меняет данные — прячется только то, что не совпало
   const q = searchQuery.trim().toLowerCase();
   if(currentTab === 'players'){ renderPlayersSplit(list, arr, q); return; }
-  // перетаскивать можно только полный, неотфильтрованный список
-  const canDrag = isAdmin && !q;
+  // будущий лист можно показать «ближе к верификации» — это только вид, данные не меняются
+  const fxClose = currentTab === 'future' && fxSortMode === 'close';
+  // перетаскивать можно только полный, неотфильтрованный список в его настоящем порядке
+  const canDrag = isAdmin && !q && !fxClose;
   let shown = 0;
+  const viewArr = fxClose ? [...arr].sort((a, b) => progressHeat(b.progress) - progressHeat(a.progress)) : arr;
 
-  arr.forEach((lvl, i) => {
+  viewArr.forEach((lvl, vi) => {
+    const i = arr.indexOf(lvl);
     if(q && !String(lvl.name || '').toLowerCase().includes(q)) return;
     shown++;
     const row = document.createElement('div');
@@ -4738,25 +4855,27 @@ function render(){
       : `<span class="thumb-fallback">◆</span>`;
 
     row.innerHTML = `
-      ${(cfg.showLevelInfo && cfg.showThumb !== false) ? `<div class="thumb${lvl.videoUrl ? ' has-video' : ''}"${lvl.videoUrl ? ` data-video="${escapeHtml(lvl.videoUrl)}"` : ''}>
+      ${(cfg.showLevelInfo && cfg.showThumb !== false) ? `<div class="thumb-wrap">${isNewLevel(lvl) ? `<span class="pos-badge is-new on-thumb" title="${escapeHtml(t.newBadgeHint)}">NEW</span>` : ''}<div class="thumb${lvl.videoUrl ? ' has-video' : ''}"${lvl.videoUrl ? ` data-video="${escapeHtml(lvl.videoUrl)}"` : ''}>
         ${thumbInner}
         ${lvl.videoUrl ? `<span class="thumb-play" aria-hidden="true">
           <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M8 5.5v13l11-6.5-11-6.5Z"/></svg>
         </span>` : ''}
-      </div>` : ''}
+      </div></div>` : ''}
       <div class="row-body">
         <div class="title-line">
           ${cfg.showRanking ? `<span class="rank-badge">#${i + 1}</span>` : ''}
           <span class="level-name">${escapeHtml(lvl.name)}</span>
-          ${positionBadge(lvl)}
+          ${(cfg.showLevelInfo && cfg.showThumb !== false) ? '' : positionBadge(lvl)}
         </div>
         ${cfg.showMeta ? `<div class="meta-line">
           ${cfg.hideVerifierLine ? '' : `<span class="verifier">${verifierLine}</span><span class="meta-sep">·</span>`}
           <span class="points">${cfg.metaKind === 'progress' ? formatProgress(lvl.progress) : lvl.points}<span>${cfg.metaKind === 'progress' ? t.rowBestProgress : t.rowPoints}</span></span>
         </div>` : ''}
+        ${cfg.metaKind === 'progress' ? futureBarHtml(lvl, t) : ''}
       </div>
       ${isAdmin ? `<div class="admin-col">
         <div class="row-actions">
+          ${cfg.key === 'futureLevels' ? `<button class="fx-verify" title="${escapeHtml(t.fxVerifyTitle)}" aria-label="${escapeHtml(t.fxVerifyTitle)}"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5 20 6v6c0 4.6-3.3 8.3-8 9.5-4.7-1.2-8-4.9-8-9.5V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg></button>` : ''}
           <button class="edit" title="${t.editTitle}" aria-label="${t.editTitle}"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>
           <button class="del" title="${t.deleteTitle}" aria-label="${t.deleteTitle}"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
         </div>
@@ -4780,6 +4899,9 @@ function render(){
         delete target.isNew; delete target.newAt;
         render(); saveLevels();
       });
+
+      const vb = row.querySelector('.fx-verify');
+      if(vb) vb.addEventListener('click', (e) => { e.stopPropagation(); promoteFutureLevel(lvl); });
 
       row.querySelector('.del').addEventListener('click', (e) => {
         e.stopPropagation();
@@ -5100,6 +5222,39 @@ function parseProgress(raw){
   const b = cl(m[2]);
   return (a <= b) ? `${a}-${b}` : `${b}-${a}`;
 }
+// «47-100» → {a:47,b:100}; «79» → {a:0,b:79}
+function progressRange(raw){
+  const v = parseProgress(raw);
+  if(!v) return null;
+  const [x, y] = v.split('-').map(Number);
+  return y === undefined ? { a: 0, b: x } : { a: x, b: y };
+}
+// насколько близко к верификации: прогон с нуля важнее, чем со старт-позиции
+function progressHeat(raw){
+  const r = progressRange(raw);
+  if(!r) return 0;
+  return r.a === 0 ? r.b : Math.round(r.b - r.a) * 0.6;
+}
+function lastProgressDelta(lvl){
+  const log = Array.isArray(lvl.progressLog) ? lvl.progressLog : [];
+  if(log.length < 2) return null;
+  const a = progressRange(log[log.length - 2].p), b = progressRange(log[log.length - 1].p);
+  if(!a || !b) return null;
+  const d = (b.a === 0 && a.a === 0) ? b.b - a.b : (b.b - b.a) - (a.b - a.a);
+  return d ? { d, date: log[log.length - 1].date } : null;
+}
+function futureBarHtml(lvl, t){
+  const r = progressRange(lvl.progress);
+  const hot = r && r.a === 0 && r.b >= 90;
+  const delta = lastProgressDelta(lvl);
+  return `<div class="fx-prog${hot ? ' hot' : ''}" title="${escapeHtml(formatProgress(lvl.progress))}">
+    <div class="fx-track"><i class="fx-tick" style="left:25%"></i><i class="fx-tick" style="left:50%"></i><i class="fx-tick" style="left:75%"></i>
+      ${r ? `<span class="fx-run" style="--a:${r.a}%;--w:${Math.max(1.5, r.b - r.a)}%"></span>` : ''}</div>
+    ${hot ? `<span class="fx-hot">🔥 ${escapeHtml(t.fxAlmost)}</span>` : ''}
+    ${delta ? `<span class="fx-delta ${delta.d > 0 ? 'up' : 'down'}">${delta.d > 0 ? '▲ +' : '▼ '}${delta.d}%</span>` : ''}
+  </div>`;
+}
+
 function formatProgress(raw){
   const v = parseProgress(raw);
   return v ? v + '%' : '0%';
@@ -6048,6 +6203,68 @@ function toggleSubsection(el){
 const DIFFICULTIES = { insane: 'Insane Demon', extreme: 'Extreme Demon' };
 const DIFF_ICON = { insane: '👹', extreme: '😈' };
 
+/* ── будущий лист: перенос верифицированного уровня в классический ── */
+function promoteFutureLevel(lvl){
+  const t = I18N[currentLang];
+  const n = state.levels.length;
+  const ans = prompt(t.fxPromptPos.replace('{name}', lvl.name).replace('{n}', n + 1), String(n + 1));
+  if(ans === null) return;
+  const pos = Math.max(1, Math.min(n + 1, parseInt(ans, 10) || n + 1));
+  const today = new Date().toISOString().slice(0, 10);
+  const { progress, progressLog, ...rest } = lvl;
+  const moved = {
+    ...rest,
+    id: uid(),
+    points: 0,
+    isNew: true, newAt: Date.now(),
+    historyExtra: [String(rest.historyExtra || '').trim(), `${today}|${pos}|${t.fxHistoryNote}`].filter(Boolean).join('\n'),
+  };
+  state.futureLevels = state.futureLevels.filter(l => l.id !== lvl.id);
+  state.levels.splice(pos - 1, 0, moved);
+  recalcPoints(state.levels);
+  // верификатору приходит уведомление, как при обычной верификации
+  emitLevelNotifications({ verifier: '', records: '' }, moved, 'levels');
+  saveLevels();
+  updateNotifBadge();
+  if(typeof window.switchTab === 'function') window.switchTab('main');
+  setTimeout(() => {
+    openDetailModal(moved);
+    fxCelebrate(t.fxCelebrate.replace('{name}', moved.name).replace('{pos}', pos));
+  }, 250);
+}
+
+// праздничная вспышка конфетти + надпись
+function fxCelebrate(text){
+  const layer = document.createElement('div');
+  layer.className = 'fx-party';
+  const COLORS = ['#e4ff5c', '#c9a8ff', '#5eead4', '#ffd66b', '#ff9ed8'];
+  layer.innerHTML = `<div class="fx-party-msg">${escapeHtml(text)}</div>` + Array.from({ length: 70 }, (_, i) => {
+    const x = Math.random() * 100, d = Math.random() * 0.6, r = Math.random() * 720 - 360, dx = Math.random() * 40 - 20;
+    return `<i style="left:${x}%;background:${COLORS[i % COLORS.length]};animation-delay:${d}s;--r:${r}deg;--dx:${dx}vw"></i>`;
+  }).join('');
+  document.body.appendChild(layer);
+  setTimeout(() => layer.classList.add('out'), 2600);
+  setTimeout(() => layer.remove(), 3200);
+}
+
+// график прогресса верификации на странице уровня: столбики «от–до» по датам
+function progressLogHtml(lvl, t){
+  const log = (Array.isArray(lvl.progressLog) ? lvl.progressLog : []).map(e => ({ date: e.date, r: progressRange(e.p), p: e.p })).filter(e => e.r);
+  const cur = progressRange(lvl.progress);
+  if(!log.length && !cur) return '';
+  const items = log.length ? log : [{ date: '', r: cur, p: lvl.progress }];
+  const last = items.length - 1;
+  const first = items[0], best = items.reduce((m, e) => e.r.a === 0 && e.r.b > m ? e.r.b : m, 0);
+  return `<div class="lv-card fx-log" style="--d:.7s">
+    <div class="lv-lab"><span>${escapeHtml(t.fxLogTitle)}</span><span>${escapeHtml(t.fxBestFromZero)}: <b class="fx-best">${best}%</b></span></div>
+    <div class="fx-bars">${items.map((e, i) => `<div class="fx-bar-col${i === last ? ' last' : ''}" style="--i:${i}" title="${escapeHtml((e.date ? fmtEuDate(e.date) + ' · ' : '') + formatProgress(e.p))}">
+        <div class="fx-bar-track"><span style="--a:${e.r.a}%;--h:${Math.max(2, e.r.b - e.r.a)}%"></span></div>
+        <em>${escapeHtml(e.date ? fmtEuDate(e.date).slice(0, 5) : '')}</em>
+      </div>`).join('')}</div>
+    <div class="fx-log-foot"><span>${items.length > 1 ? escapeHtml(t.fxLogFrom.replace('{a}', formatProgress(first.p)).replace('{b}', formatProgress(items[last].p))) : escapeHtml(t.fxLogOne)}</span></div>
+  </div>`;
+}
+
 function positionChartHtml(lvl, idx, t){
   const pts = buildHistoryEntries(lvl, idx, t)
     .map(e => ({ date: e.date, pos: Number(e.position) }))
@@ -6237,7 +6454,7 @@ function openDetailModal(lvl){
     : (cfg.showRanking && idx === 2) ? 'au-bronze'
     : cfg.key === 'futureLevels' ? 'au-future'
     : cfg.key === 'nonListedLevels' ? 'au-non' : 'au-main';
-  const chart = positionChartHtml(lvl, idx, t);
+  const chart = cfg.key === 'futureLevels' ? progressLogHtml(lvl, t) : positionChartHtml(lvl, idx, t);
   const beaten = beatenByHtml(lvl, cfg, t);
 
   document.getElementById('detailContent').innerHTML = `
@@ -7609,7 +7826,7 @@ submitBtn.addEventListener('click', () => {
   };
   // снимок до правки — по нему видно, какие рекорды и верификации появились
   const beforeLvl = editingId ? arr.find(l => l.id === editingId) : null;
-  const beforeSnap = beforeLvl ? { verifier: beforeLvl.verifier, records: beforeLvl.records } : { verifier: '', records: '' };
+  const beforeSnap = beforeLvl ? { verifier: beforeLvl.verifier, records: beforeLvl.records, progress: parseProgress(beforeLvl.progress) } : { verifier: '', records: '', progress: null };
 
   if(editingId){
     const lvl = arr.find(l => l.id === editingId);
@@ -7644,6 +7861,17 @@ submitBtn.addEventListener('click', () => {
   }
   if(cfg.autoRecalc) recalcPoints(arr);
   const afterLvl = editingId ? arr.find(l => l.id === editingId) : arr[arr.length - 1];
+  if(afterLvl && cfg.key === 'futureLevels'){
+    const now = parseProgress(afterLvl.progress);
+    if(now && now !== beforeSnap.progress){
+      const log = Array.isArray(afterLvl.progressLog) ? afterLvl.progressLog : [];
+      const today = new Date().toISOString().slice(0, 10);
+      // за один день храним одно значение — последнее
+      if(log.length && log[log.length - 1].date === today) log[log.length - 1].p = now;
+      else log.push({ date: today, p: now });
+      afterLvl.progressLog = log.slice(-60);
+    }
+  }
   if(afterLvl && currentTab !== 'players') emitLevelNotifications(beforeSnap, afterLvl, cfg.key);
   closeForm();
   render();
@@ -7687,13 +7915,16 @@ deleteFromFormBtn.addEventListener('click', () => {
   render();                                  // скелетон сразу, до ответа базы
   const sessionReady = restoreAdminSession();
   const loadStarted = performance.now();
+  // профили и сессия грузятся параллельно с листом — лист не ждёт их
+  const extrasReady = Promise.all([loadProfiles(), sessionReady]);
   await loadLevels();
-  await Promise.all([loadProfiles(), sessionReady]);
   // слишком быстрый ответ дал бы вспышку — даём заготовкам мелькнуть хотя бы 350 мс
   const waited = performance.now() - loadStarted;
   if(waited < 350) await new Promise(r => setTimeout(r, 350 - waited));
   isLoadingData = false;
   render();
+  // аватарки, описания и права подтягиваются следом
+  extrasReady.then(() => { applyProfilesToPlayers(); updateAdminBar(); render(); });
 
   const tabMainBtn = document.getElementById('tabMainBtn');
   const tabFutureBtn = document.getElementById('tabFutureBtn');
