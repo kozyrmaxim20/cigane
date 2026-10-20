@@ -3522,6 +3522,95 @@
     box-shadow:0 28px 50px -18px rgba(0,0,0,0.85), 0 0 0 1px rgba(228,255,92,0.25), 0 0 34px -8px rgba(228,255,92,0.35); animation:none !important; }
   .cl-row.is-dragging .cl-grip{ color:var(--lemon); }
   body.cl-dragging, body.cl-dragging *{ cursor:grabbing !important; user-select:none; }
+
+
+  /* ══ ПОСЛЕДНИЕ ИЗМЕНЕНИЯ ══ */
+  @keyframes rcIn{ from{ opacity:0; transform:translateY(6px); } to{ opacity:1; transform:none; } }
+  body.tab-changes #addZone, body.tab-changes #searchBar{ display:none !important; }
+  .rc-root{ display:block; }
+  .rc-card{ padding:4px 20px 14px; border-radius:16px; background:rgba(8,6,18,0.45); border:1px solid var(--glass-line); }
+  .rc-head{ display:flex; align-items:center; gap:10px; margin-bottom:6px; color:var(--mystic-soft); }
+  .rc-head b{ font-family:'Oswald',sans-serif; font-weight:700; font-size:19px; color:#fff; letter-spacing:.01em; }
+  .rc-day{ display:flex; align-items:center; gap:12px; margin:16px 0 6px; font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:var(--mystic-soft);
+    animation:rcIn .4s ease both; animation-delay:calc(var(--i) * .025s); }
+  .rc-day::before, .rc-day::after{ content:''; flex:1; height:1px; background:var(--glass-line); }
+  .rc-ev{ display:flex; align-items:center; gap:12px; padding:7px 10px; border-radius:10px; font-size:13.5px; cursor:pointer; transition:background .18s;
+    animation:rcIn .4s ease both; animation-delay:calc(.03s + var(--i) * .025s); }
+  .rc-ev:hover{ background:rgba(255,255,255,0.035); }
+  .rc-ic{ flex:0 0 22px; width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; transition:transform .25s cubic-bezier(.34,1.56,.64,1); }
+  .rc-ev:hover .rc-ic{ transform:scale(1.15); }
+  .k-up .rc-ic{ color:#5ee6a0; background:rgba(94,230,160,0.14); } .k-dn .rc-ic{ color:#f5c24e; background:rgba(245,194,78,0.14); }
+  .k-new .rc-ic{ background:rgba(94,230,160,0.14); } .k-new .rc-ic i{ width:9px; height:9px; border-radius:50%; border:2.5px solid #5ee6a0; box-sizing:border-box; }
+  .k-same .rc-ic{ color:var(--muted); background:rgba(255,255,255,0.06); }
+  .rc-tx{ flex:1; min-width:0; line-height:1.5; color:var(--muted); }
+  .rc-name{ border:0; padding:0; margin-right:6px; background:none; cursor:pointer; font:inherit; font-size:14.5px; font-weight:600; color:#fff; transition:color .18s; }
+  .rc-name:hover{ color:var(--lemon); }
+  .rc-what{ font-size:12.5px; color:#9a93b8; font-variant-numeric:tabular-nums; }
+  .rc-nb{ font-size:12.5px; color:#7f789c; }
+  .rc-lk{ border:0; padding:0; background:none; cursor:pointer; font:inherit; color:#8fa8ff; transition:color .18s; } .rc-lk:hover{ color:var(--lemon); text-decoration:underline; text-underline-offset:3px; }
+  .rc-note{ font-size:12.5px; font-style:italic; color:#a9a2c4; }
+  .rc-empty{ padding:24px 8px 12px; text-align:center; color:var(--muted); font-size:13.5px; }
+  .rc-more{ display:block; width:100%; height:38px; margin-top:10px; border-radius:10px; cursor:pointer; font:inherit; font-size:13px; font-weight:600; color:#cfc7e6; background:rgba(255,255,255,0.03); border:1px dashed var(--glass-line-bright); }
+  .rc-more:hover{ background:rgba(255,255,255,0.06); }
+  @media (max-width:640px){ .rc-card{ padding:14px 12px 10px; } .rc-ev{ padding:7px 6px; align-items:flex-start; } .rc-ic{ margin-top:1px; } }
+  @media (prefers-reduced-motion:reduce){ .rc-ev, .rc-day{ animation:none !important; } }
+
+  /* последние изменения: приколюхи */
+  @keyframes rcBobU{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-2px); } }
+  @keyframes rcBobD{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(2px); } }
+  @keyframes rcRing{ 0%{ box-shadow:0 0 0 0 rgba(94,230,160,0.55); } 100%{ box-shadow:0 0 0 9px rgba(94,230,160,0); } }
+  @keyframes rcFlash{ 0%{ background:rgba(228,255,92,0.18); } 100%{ background:transparent; } }
+  @keyframes rcShimmer{ from{ background-position:-120% 0; } to{ background-position:220% 0; } }
+  @keyframes rcCell{ from{ opacity:0; transform:scale(.3); } to{ opacity:1; transform:none; } }
+  .rc-top{ display:grid; grid-template-columns:minmax(0,1.35fr) minmax(0,1fr); gap:12px; margin-bottom:12px; }
+  .rc-top:not(:has(.rc-hero)){ grid-template-columns:1fr; }
+  .rc-hm{ padding:13px 16px 14px; border-radius:16px; background:rgba(8,6,18,0.45); border:1px solid var(--glass-line); min-width:0; }
+  .rc-hm-lab > span{ display:flex; align-items:center; flex-wrap:wrap; gap:6px 8px; }
+  .rc-hm-n{ white-space:nowrap; padding:1px 7px; border-radius:6px; font-weight:700; letter-spacing:.04em; color:#5ee6a0; background:rgba(94,230,160,0.1); }
+  .rc-hm-lab{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px 10px; margin-bottom:10px; font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--mystic-soft); }
+  .rc-hm-lab em{ display:flex; align-items:center; gap:3px; font-style:normal; font-weight:500; letter-spacing:0; text-transform:none; color:var(--muted-dim); }
+  .rc-hm-lab em i{ width:10px; height:10px; border-radius:3px; }
+  .rc-hm-grid{ display:grid; grid-template-rows:repeat(7, 13px); grid-auto-flow:column; grid-auto-columns:13px; gap:3px; justify-content:space-between; width:100%; box-sizing:border-box; overflow-x:auto; padding:2px; scrollbar-width:none; }
+  .rc-hm-grid::-webkit-scrollbar{ display:none; }
+  .rc-hm-c{ width:13px; height:13px; padding:0; border:0; border-radius:3px; cursor:pointer; animation:rcCell .35s cubic-bezier(.34,1.56,.64,1) both; animation-delay:calc(var(--c) * 3ms); transition:transform .15s; }
+  .rc-hm-c:disabled{ cursor:default; }
+  .rc-hm-c:not(:disabled):hover{ transform:scale(1.35); z-index:1; }
+  .l0{ background:rgba(255,255,255,0.05); } .l1{ background:rgba(94,230,160,0.35); } .l2{ background:rgba(94,230,160,0.65); } .l3{ background:#5ee6a0; box-shadow:0 0 8px -1px rgba(94,230,160,0.8); }
+  .rc-hm-c.now{ outline:1.5px solid var(--lemon); outline-offset:1px; }
+  .rc-hero{ position:relative; overflow:hidden; display:flex; flex-direction:column; justify-content:center; gap:4px; padding:14px 18px; border-radius:16px; cursor:pointer;
+    background:radial-gradient(120% 90% at 100% 0%, rgba(255,214,107,0.16), transparent 60%), rgba(8,6,18,0.45); border:1px solid rgba(255,214,107,0.3); transition:transform .25s cubic-bezier(.16,1,.3,1), border-color .25s; }
+  .rc-hero:hover{ transform:translateY(-2px); border-color:rgba(255,214,107,0.6); }
+  .rc-hero.empty{ cursor:default; border-color:var(--glass-line); } .rc-hero.empty:hover{ transform:none; }
+  .rc-hero::after{ content:''; position:absolute; inset:0; background:linear-gradient(100deg, transparent 35%, rgba(255,255,255,0.08) 50%, transparent 65%); background-size:200% 100%; animation:rcShimmer 3.5s ease-in-out infinite; pointer-events:none; }
+  .rc-hero-lab{ font-family:'JetBrains Mono',monospace; font-size:10.5px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--gold); }
+  .rc-hero b{ font-family:'Oswald',sans-serif; font-weight:700; font-size:24px; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .rc-hero-d{ font-size:12.5px; color:#5ee6a0; font-weight:600; } .rc-hero-d i{ font-style:normal; }
+  .rc-hero-sub{ font-size:11.5px; color:var(--muted); }
+  .rc-day{ position:relative; }
+  .rc-sum{ display:flex; gap:5px; font-style:normal; letter-spacing:0; order:3; } .rc-day::after{ order:2; }
+  .rc-day span{ order:1; }
+  .rc-sum b{ font-weight:700; font-size:10px; padding:1px 5px; border-radius:5px; } .rc-sum .u{ color:#5ee6a0; background:rgba(94,230,160,0.1); } .rc-sum .d{ color:#f5c24e; background:rgba(245,194,78,0.1); } .rc-sum .n{ color:var(--lemon); background:rgba(228,255,92,0.1); }
+  .rc-day.flash, .rc-ev.flash{ animation:rcFlash 1.4s ease-out; border-radius:10px; }
+  .k-up:hover .rc-ic svg{ animation:rcBobU .6s ease-in-out infinite; } .k-dn:hover .rc-ic svg{ animation:rcBobD .6s ease-in-out infinite; }
+  .rc-ev.is-today .rc-ic{ animation:rcRing 1.8s ease-out infinite; }
+  .rc-ev.is-big .rc-ic{ box-shadow:0 0 12px -1px currentColor; }
+  .rc-ev.is-top{ background:linear-gradient(90deg, rgba(255,214,107,0.08), transparent 60%); }
+  .rc-tag{ display:inline-flex; align-items:center; gap:3px; margin-left:4px; padding:1px 7px; border-radius:6px; font-size:11px; font-weight:700; white-space:nowrap; vertical-align:1px; }
+  .rc-tag.gold{ color:#3d2a00; background:linear-gradient(90deg, #ffd66b, #ffe9a8, #ffd66b); background-size:200% 100%; animation:rcShimmer 2.6s linear infinite; }
+  .rc-tag.lime{ color:#14101f; background:var(--lemon); } .rc-tag.up{ color:#5ee6a0; background:rgba(94,230,160,0.12); } .rc-tag.dn{ color:#f5a14e; background:rgba(245,161,78,0.12); }
+  .rc-pop{ position:fixed; z-index:9000; width:190px; padding:11px 12px; border-radius:13px; pointer-events:none; background:rgba(22,16,40,0.97); border:1px solid var(--glass-line-bright);
+    box-shadow:0 18px 40px -14px rgba(0,0,0,0.9); opacity:0; transform:translateY(6px) scale(.97); transition:opacity .15s, transform .2s cubic-bezier(.16,1,.3,1); }
+  .rc-pop.on{ opacity:1; transform:none; }
+  .rc-pop-top{ display:flex; justify-content:space-between; gap:8px; } .rc-pop-top b{ font-family:'Oswald',sans-serif; font-size:15px; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .rc-pop-top span{ font-family:'Oswald',sans-serif; font-weight:700; color:var(--lemon); }
+  .rc-pop-meta{ margin-top:2px; font-size:11.5px; color:var(--muted); } .rc-pop-meta i{ font-style:normal; color:#fff; }
+  .rc-pop-spark{ margin-top:8px; } .rc-pop-spark svg{ display:block; width:100%; height:42px; }
+  .rc-pop-spark polyline{ fill:none; stroke:var(--lemon); stroke-width:2; stroke-linejoin:round; stroke-linecap:round; } .rc-pop-spark circle{ fill:var(--lemon); }
+  .rc-pop-spark em{ font-style:normal; font-size:10px; color:var(--muted-dim); }
+  @media (max-width:760px){ .rc-top{ grid-template-columns:1fr; } }
+  @media (max-width:640px){ .rc-tag{ margin-left:0; } .rc-hm-grid{ grid-template-rows:repeat(7, 10px); grid-auto-columns:10px; gap:2px; } .rc-hm-c{ width:10px; height:10px; border-radius:2px; } }
+  @media (prefers-reduced-motion:reduce){ .rc-hm-c, .rc-hero::after, .rc-tag.gold, .rc-ev.is-today .rc-ic, .rc-ic svg{ animation:none !important; } }
+
 </style>
 </head>
 <body>
@@ -3557,6 +3646,7 @@
         </button>
         <div class="nav-dropdown" id="moreDropdown">
           <button class="tab-btn" id="tabPlayersBtn">Рейтинг игроков</button>
+          <button class="tab-btn" id="tabChangesBtn">Последние изменения</button>
           <button class="tab-btn" id="updatesBtn">Обновления</button>
         </div>
       </div>
@@ -3633,7 +3723,7 @@
   <div class="card" id="listView">
     <div class="section-head">
       <h1 class="section-title" id="currentListTitle">Классический список</h1>
-        <div class="lv-viewbar" id="lvViewBar" style="display:none">
+      <div class="lv-viewbar" id="lvViewBar" style="display:none">
           <button type="button" data-lv="list"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg><span data-lv-t="list">List</span></button>
           <button type="button" data-lv="grid"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/></svg><span data-lv-t="grid">Grid</span></button>
           <span class="lv-viewbar-ind" aria-hidden="true"></span>
@@ -4800,6 +4890,11 @@ const TAB_CONFIG_I18N = {
       metaKind: 'points',
       hideVerifierLine: true,
     },
+    changes: {
+      key: 'customLists', addLabel: '', newTitle: '', nameLabel: '', namePlaceholder: '', verifierLabel: '', verifierPlaceholder: '', verifierPrefix: '',
+      extraLabel: '', extraPlaceholder: '', pointsLabel: '', subtitlePrefix: '', autoRecalc: false, deleteWord: '', deleteWordKey: '',
+      showLevelInfo: false, showRanking: false, showMeta: false, metaKind: 'points', hideVerifierLine: true,
+    },
     custom: {
       key: 'customLists', addLabel: '', newTitle: '', nameLabel: '', namePlaceholder: '', verifierLabel: '', verifierPlaceholder: '', verifierPrefix: '',
       extraLabel: '', extraPlaceholder: '', pointsLabel: '', subtitlePrefix: 'КАСТОМНЫЕ ЛИСТЫ · ', autoRecalc: false, deleteWord: 'лист', deleteWordKey: 'list',
@@ -4891,6 +4986,11 @@ const TAB_CONFIG_I18N = {
       showMeta: true,
       metaKind: 'points',
       hideVerifierLine: true,
+    },
+    changes: {
+      key: 'customLists', addLabel: '', newTitle: '', nameLabel: '', namePlaceholder: '', verifierLabel: '', verifierPlaceholder: '', verifierPrefix: '',
+      extraLabel: '', extraPlaceholder: '', pointsLabel: '', subtitlePrefix: '', autoRecalc: false, deleteWord: '', deleteWordKey: '',
+      showLevelInfo: false, showRanking: false, showMeta: false, metaKind: 'points', hideVerifierLine: true,
     },
     custom: {
       key: 'customLists', addLabel: '', newTitle: '', nameLabel: '', namePlaceholder: '', verifierLabel: '', verifierPlaceholder: '', verifierPrefix: '',
@@ -5138,6 +5238,7 @@ function applyStaticTexts(){
   document.getElementById('tabNonListedBtn').textContent = t.tabNonListed;
   document.getElementById('tabPlayersBtn').textContent = t.tabPlayers;
   document.getElementById('tabCustomBtn').textContent = (CL_TXT[currentLang] || CL_TXT.en).tab;
+  document.getElementById('tabChangesBtn').textContent = (RC_TXT[currentLang] || RC_TXT.en).tab;
   const si = document.getElementById('listSearch');
   if(si){ si.setAttribute('data-placeholder', t.searchPlaceholder); si.setAttribute('aria-label', t.searchPlaceholder.replace(/[.…]+$/, '')); }
   const nml = document.getElementById('navMoreLabel');
@@ -5935,6 +6036,9 @@ function setSearchCount(n){
 function render(){
   const cfg = TAB_CONFIG[currentTab];
   document.body.classList.toggle('tab-custom', currentTab === 'custom');
+  document.body.classList.toggle('tab-players', currentTab === 'players');
+  document.body.classList.toggle('tab-changes', currentTab === 'changes');
+  if(currentTab !== 'changes'){ const L1 = document.getElementById('list'); if(L1) L1.classList.remove('rc-root'); }
   if(currentTab !== 'main' && currentTab !== 'nonListed'){ const vb = document.getElementById('lvViewBar'); if(vb) vb.style.display = 'none'; const L0 = document.getElementById('list'); if(L0) L0.classList.remove('lv-grid'); }
   if(currentTab !== 'custom'){ const L = document.getElementById('list'); if(L) L.classList.remove('cl-root', 'cl-static'); }
   const sb = document.getElementById('searchBar');
@@ -5955,6 +6059,7 @@ function render(){
     return;
   }
   if(currentTab === 'custom'){ renderCustomTab(list); return; }
+  if(currentTab === 'changes'){ renderChangesTab(list); return; }
   const arr = getArr();
   if(currentTab === 'players'){
     arr.forEach(p => { p.points = computePlayerPoints(p); });
@@ -6901,6 +7006,191 @@ document.getElementById('lvViewBar').addEventListener('click', (e) => {
   try{ localStorage.setItem('cll_lv_view', lvView); }catch(e){}
   render();
 });
+
+/* ══ ПОСЛЕДНИЕ ИЗМЕНЕНИЯ ══
+   лента строится из истории позиций уровней классического листа (historyExtra: «дата|место|заметка») */
+const RC_TXT = {
+  ru: { tab: 'Последние изменения', sub: 'Все движения классического листа', up30: 'поднялись за 30 дней', dn30: 'опустились', new30: 'новых уровней', top: 'чаще всех в ленте',
+    fAll: 'Все', fUp: 'Поднялись', fDn: 'Опустились', fNew: 'Новые', today: 'Сегодня', yesterday: 'Вчера', placed: 'встал на', above: 'выше', below: 'ниже',
+    empty: 'Изменений пока нет — они появятся, когда в истории уровней будут записи', emptyF: 'Таких изменений нет', more: 'Показать ещё', newTag: 'NEW' },
+  en: { tab: 'Recent changes', sub: 'Every move on the classic list', up30: 'moved up in 30 days', dn30: 'moved down', new30: 'new levels', top: 'most frequent in the feed',
+    fAll: 'All', fUp: 'Moved up', fDn: 'Moved down', fNew: 'New', today: 'Today', yesterday: 'Yesterday', placed: 'placed at', above: 'above', below: 'below',
+    empty: 'No changes yet — they appear once levels have history entries', emptyF: 'No changes of this kind', more: 'Show more', newTag: 'NEW' },
+};
+const rcT = () => RC_TXT[currentLang] || RC_TXT.en;
+let rcFilter = 'all', rcShown = 40;
+
+function rcEvents(){
+  const out = [];
+  state.levels.forEach((lvl, idx) => {
+    const h = String(lvl.historyExtra || '').split('\n').map(l => l.split('|').map(x => x.trim()))
+      .filter(p => p[0] && p[1] !== '' && p[1] != null && !isNaN(Number(p[1])))
+      .map((p, n) => ({ date: p[0], pos: Number(p[1]), note: p[2] || '', n }))
+      .sort((a, b) => String(a.date).localeCompare(String(b.date)) || a.n - b.n);
+    h.forEach((e, k) => {
+      const prev = k ? h[k - 1].pos : null;
+      const kind = prev === null ? 'new' : e.pos < prev ? 'up' : e.pos > prev ? 'dn' : 'same';
+      if(kind === 'same' && !e.note) return;
+      // соседей знаем точно, только если уровень так и стоит на этом месте
+      const isLast = k === h.length - 1, still = isLast && idx + 1 === e.pos;
+      out.push({ lvl, idx, date: e.date, pos: e.pos, prev, kind, note: e.note, d: prev === null ? 0 : prev - e.pos,
+        below: still && idx > 0 ? state.levels[idx - 1] : null, above: still && idx < state.levels.length - 1 ? state.levels[idx + 1] : null, k });
+    });
+  });
+  return out.sort((a, b) => String(b.date).localeCompare(String(a.date)) || a.pos - b.pos);
+}
+function rcDayLabel(d, t){
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(d)) return d || '—';
+  const td = todayIso();
+  const y = new Date(td); y.setDate(y.getDate() - 1);
+  const yd = `${y.getFullYear()}-${String(y.getMonth() + 1).padStart(2, '0')}-${String(y.getDate()).padStart(2, '0')}`;
+  return d === td ? t.today : d === yd ? t.yesterday : fmtEuDate(d);
+}
+
+function renderChangesTab(list){
+  const t = rcT();
+  const ru = currentLang === 'ru';
+  const X = ru
+    ? { act: 'Активность за полгода', less: 'меньше', more2: 'больше', top10: 'в топ-10', top3: 'в топ-3', top1: 'новый топ-1', big: 'скачок', fall: 'обвал', ev: (n) => `${n} ${n % 10 === 1 && n % 100 !== 11 ? 'изменение' : (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 'изменения' : 'изменений'}`,
+        now: 'сейчас', pts: 'очков', moves: 'движений', week: 'Герой недели', weekSub: 'сильнее всех поднялся за 7 дней', none: 'нет',
+        month: 'Герой месяца', monthSub: 'сильнее всех поднялся за 30 дней', ever: 'Рекордный рывок', everSub: 'самый большой подъём в истории листа', last30: 'за 30 дней' }
+    : { act: 'Activity, last 6 months', less: 'less', more2: 'more', top10: 'into top 10', top3: 'into top 3', top1: 'new #1', big: 'jump', fall: 'drop', ev: (n) => `${n} change${n === 1 ? '' : 's'}`,
+        now: 'now', pts: 'pts', moves: 'moves', week: 'Climber of the week', weekSub: 'biggest rise in 7 days', none: 'none',
+        month: 'Climber of the month', monthSub: 'biggest rise in 30 days', ever: 'Record climb', everSub: 'biggest rise in list history', last30: 'in 30 days' };
+  list.classList.add('rc-root');
+  const all = rcEvents();
+  const shown = all.slice(0, rcShown);
+  const MON = ru
+    ? ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря']
+    : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  const dayLabel = (d) => {
+    const s = rcDayLabel(d, t);
+    if(s !== fmtEuDate(d) || !/^\d{4}-\d{2}-\d{2}$/.test(d)) return s;
+    const [y, m, dd] = d.split('-').map(Number);
+    return `${dd} ${MON[m - 1]} ${y}`;
+  };
+  const iso = (dt) => `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-${String(dt.getDate()).padStart(2, '0')}`;
+
+  // календарь активности: 12 недель, неделя — колонка
+  const byDay = {};
+  all.forEach(e => { byDay[e.date] = (byDay[e.date] || 0) + 1; });
+  const today = new Date(todayIso());
+  // полгода: 26 недель-колонок, первая колонка начинается с понедельника
+  const start = new Date(today); start.setDate(start.getDate() - 25 * 7 - ((today.getDay() + 6) % 7));
+  const cells = [];
+  for(let d = new Date(start); d <= today; d.setDate(d.getDate() + 1)){
+    const k = iso(d), n = byDay[k] || 0;
+    cells.push(`<button type="button" class="rc-hm-c l${n === 0 ? 0 : n === 1 ? 1 : n <= 3 ? 2 : 3}${k === todayIso() ? ' now' : ''}" ${n ? `data-rc-day="${k}"` : 'disabled'} title="${escapeHtml(fmtEuDate(k))} · ${escapeHtml(X.ev(n))}" style="--c:${cells.length}"></button>`);
+  }
+  // герой недели
+  const wk = new Date(today); wk.setDate(wk.getDate() - 7);
+  const mo = new Date(today); mo.setDate(mo.getDate() - 30);
+  let hero = all.filter(e => e.kind === 'up' && e.date >= iso(wk)).sort((a, b) => b.d - a.d)[0], heroLab = X.week, heroSub = X.weekSub;
+  if(!hero){ hero = all.filter(e => e.kind === 'up' && e.date >= iso(mo)).sort((a, b) => b.d - a.d)[0]; heroLab = X.month; heroSub = X.monthSub; }
+  if(!hero){ hero = all.filter(e => e.kind === 'up').sort((a, b) => b.d - a.d)[0]; heroLab = X.ever; heroSub = X.everSub; }
+  const total30 = all.filter(e => e.date >= iso(mo)).length;
+
+  const lvl = (l) => `<button type="button" class="rc-lk" data-rc-lv="${state.levels.indexOf(l)}">${escapeHtml(l.name)}</button>`;
+  const ICON = {
+    up: '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg>',
+    dn: '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg>',
+    new: '<i></i>', same: '•',
+  };
+  // события по дням (для сводки в заголовке дня)
+  const dayStat = {};
+  shown.forEach(e => { const s = dayStat[e.date] || (dayStat[e.date] = { up: 0, dn: 0, new: 0 }); if(s[e.kind] !== undefined) s[e.kind]++; });
+
+  let html = '', lastDay = null, i = 0;
+  shown.forEach(e => {
+    if(e.date !== lastDay){
+      lastDay = e.date;
+      const s = dayStat[e.date];
+      html += `<div class="rc-day" data-day="${escapeHtml(e.date)}" style="--i:${Math.min(i, 24)}"><span>${escapeHtml(dayLabel(e.date))}</span>
+        <em class="rc-sum">${s.up ? `<b class="u">▲${s.up}</b>` : ''}${s.dn ? `<b class="d">▼${s.dn}</b>` : ''}${s.new ? `<b class="n">＋${s.new}</b>` : ''}</em></div>`;
+    }
+    const what = e.kind === 'new' ? `${t.placed} #${e.pos}` : e.kind === 'same' ? `#${e.pos}` : `#${e.prev} → #${e.pos}`;
+    const nb = [e.above ? `${t.above} ${lvl(e.above)}` : '', e.below ? `${t.below} ${lvl(e.below)}` : ''].filter(Boolean).join(', ');
+    // особые события
+    let tag = '', cls = '';
+    if(e.kind === 'up' && e.pos === 1){ tag = `<span class="rc-tag gold">👑 ${X.top1}</span>`; cls = ' is-top'; }
+    else if((e.kind === 'up' || e.kind === 'new') && e.pos <= 3 && (e.prev === null || e.prev > 3)){ tag = `<span class="rc-tag gold">${X.top3}</span>`; cls = ' is-top'; }
+    else if((e.kind === 'up' || e.kind === 'new') && e.pos <= 10 && (e.prev === null || e.prev > 10)){ tag = `<span class="rc-tag lime">${X.top10}</span>`; }
+    if(e.kind === 'up' && e.d >= 10){ tag += `<span class="rc-tag up">🚀 ${X.big} +${e.d}</span>`; cls += ' is-big'; }
+    if(e.kind === 'dn' && -e.d >= 10){ tag += `<span class="rc-tag dn">📉 ${X.fall} ${e.d}</span>`; cls += ' is-big'; }
+    html += `<div class="rc-ev k-${e.kind}${cls}${e.date === todayIso() ? ' is-today' : ''}" data-rc-lv="${e.idx}" role="button" tabindex="0" style="--i:${Math.min(i, 24)}">
+      <span class="rc-ic">${ICON[e.kind]}</span>
+      <span class="rc-tx"><button type="button" class="rc-name" data-rc-pop="${e.idx}">${escapeHtml(e.lvl.name)}</button>
+        <span class="rc-what">${escapeHtml(what)}${nb ? ',' : ''}</span>${nb ? ` <span class="rc-nb">${nb}</span>` : ''}${tag ? ` ${tag}` : ''}${e.note ? ` <span class="rc-note">— ${escapeHtml(e.note)}</span>` : ''}</span>
+    </div>`;
+    i++;
+  });
+
+  list.innerHTML = `
+    <div class="rc-card">
+      ${html || `<div class="rc-empty">${escapeHtml(t.empty)}</div>`}
+      ${all.length > rcShown ? `<button type="button" class="rc-more" data-rc-more>${escapeHtml(t.more)} · ${all.length - rcShown}</button>` : ''}
+    </div>`;
+
+  // клик по строке или по соседу открывает страницу уровня
+  list.querySelectorAll('[data-rc-lv]').forEach(el => {
+    const go = (e) => { e.stopPropagation(); const l = state.levels[Number(el.dataset.rcLv)]; if(l) openDetailModal(l); };
+    el.addEventListener('click', go);
+    if(el.classList.contains('rc-ev')) el.addEventListener('keydown', (e) => { if(e.key === 'Enter') go(e); });
+  });
+  // клик по дню в календаре — прокрутка к нему и вспышка
+  list.querySelectorAll('[data-rc-day]').forEach(c => c.addEventListener('click', () => {
+    const go = () => {
+      const h = list.querySelector(`.rc-day[data-day="${c.dataset.rcDay}"]`);
+      if(!h) return false;
+      h.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      let el = h; const flash = [];
+      while((el = el.nextElementSibling) && el.classList.contains('rc-ev')) flash.push(el);
+      [h, ...flash].forEach(x => { x.classList.remove('flash'); void x.offsetWidth; x.classList.add('flash'); });
+      return true;
+    };
+    if(!go()){ rcShown = all.length; render(); setTimeout(() => { const c2 = document.querySelector(`[data-rc-day="${c.dataset.rcDay}"]`); if(c2) c2.click(); }, 60); }
+  }));
+  rcBindPop(list);
+  const more = list.querySelector('[data-rc-more]');
+  if(more){
+    more.addEventListener('click', () => { const y = window.scrollY; rcShown += 40; render(); window.scrollTo(0, y); });
+    if('IntersectionObserver' in window){
+      const io = new IntersectionObserver((es) => { if(es.some(x => x.isIntersecting)){ io.disconnect(); more.click(); } }, { rootMargin: '200px' });
+      io.observe(more);
+    }
+  }
+}
+
+// карточка при наведении на название: текущее место, очки, верификатор, мини-график истории
+function rcBindPop(list){
+  if(window.matchMedia('(hover: none)').matches) return;
+  let pop = document.getElementById('rcPop');
+  if(!pop){ pop = document.createElement('div'); pop.id = 'rcPop'; pop.className = 'rc-pop'; document.body.appendChild(pop); }
+  const ru = currentLang === 'ru';
+  list.querySelectorAll('[data-rc-pop]').forEach(b => {
+    b.addEventListener('mouseenter', () => {
+      const pi = Number(b.dataset.rcPop), l = state.levels[pi]; if(!l) return;
+      const f = { lvl: l, idx: pi };
+      const h = String(l.historyExtra || '').split('\n').map(x => x.split('|')).filter(p => p[0] && p[1] && !isNaN(Number(p[1]))).map(p => ({ d: p[0].trim(), p: Number(p[1]) })).sort((a, b2) => a.d.localeCompare(b2.d)).slice(-12);
+      let spark = '';
+      if(h.length >= 2){
+        const ps = h.map(x => x.p), mx = Math.max(...ps), mn = Math.min(...ps), rg = Math.max(1, mx - mn);
+        const pts = h.map((x, k) => `${(4 + k * 152 / (h.length - 1)).toFixed(1)},${(6 + (x.p - mn) / rg * 30).toFixed(1)}`).join(' ');
+        const last = pts.split(' ').pop().split(',');
+        spark = `<svg width="160" height="42" viewBox="0 0 160 42"><polyline points="${pts}"/><circle cx="${last[0]}" cy="${last[1]}" r="3.5"/></svg>`;
+      }
+      pop.innerHTML = `<div class="rc-pop-top"><b>${escapeHtml(l.name)}</b><span>#${f.idx + 1}</span></div>
+        <div class="rc-pop-meta">${l.verifier ? `${ru ? 'верифицировал' : 'verified by'} <i>${escapeHtml(l.verifier)}</i> · ` : ''}${Number(l.points) || 0} ${ru ? 'очков' : 'pts'}</div>
+        ${spark ? `<div class="rc-pop-spark">${spark}<em>${ru ? 'история мест' : 'position history'}</em></div>` : ''}`;
+      const r = b.getBoundingClientRect();
+      pop.style.left = Math.min(window.innerWidth - 200, Math.max(10, r.left)) + 'px';
+      pop.style.top = (r.bottom + 8) + 'px';
+      pop.classList.add('on');
+    });
+    b.addEventListener('mouseleave', () => pop.classList.remove('on'));
+  });
+  if(!rcBindPop.bound){ rcBindPop.bound = true; window.addEventListener('scroll', () => { const p = document.getElementById('rcPop'); if(p) p.classList.remove('on'); }, { passive: true }); }
+}
 
 // level detail modal
 function youtubeId(url){
@@ -9310,7 +9600,24 @@ function beatenByHtml(lvl, cfg, t){
   </div>`;
 }
 
+/* уровень открывается в контексте своего листа: из «Последних изменений», Custom list,
+   рейтинга и профиля страница уровня иначе строилась по настройкам чужой вкладки (без инфо, места, видео).
+   при закрытии возвращаемся туда, откуда открыли */
+let detailReturnTab = null;
+const LIST_TAB_OF = { levels: 'main', futureLevels: 'future', nonListedLevels: 'nonListed' };
 function openDetailModal(lvl){
+  // ищем сам объект уровня (надёжнее, чем по id), иначе — по id
+  let f = null;
+  for(const key of Object.keys(LIST_TAB_OF)){ const i = (state[key] || []).indexOf(lvl); if(i >= 0){ f = { lvl, key, idx: i }; break; } }
+  if(!f && lvl && lvl.id != null) f = findLevelAny(lvl.id);
+  const tab = f && LIST_TAB_OF[f.key];
+  if(tab && tab !== currentTab){
+    if(detailReturnTab === null) detailReturnTab = currentTab;
+    currentTab = tab;
+  }
+  openDetailModalCore(f ? f.lvl : lvl);
+}
+function openDetailModalCore(lvl){
   hideSidePages();
   historyPage = 0; recordsPage = 0;
   const t = I18N[currentLang];
@@ -9528,12 +9835,13 @@ function showDetailView(){
 }
 
 function closeDetailModal(){
+  if(detailReturnTab !== null){ currentTab = detailReturnTab; detailReturnTab = null; render(); }
   document.getElementById('detailView').style.display = 'none';
   document.getElementById('detailContent').innerHTML = '';
   const ns = document.getElementById('lvNavSlot'); if(ns) ns.innerHTML = '';
   document.getElementById('listView').style.display = '';
   const sbShow = document.getElementById('searchBar');
-  if(sbShow) sbShow.style.display = (currentTab === 'players' || currentTab === 'custom') ? 'none' : '';
+  if(sbShow) sbShow.style.display = (currentTab === 'players' || currentTab === 'custom' || currentTab === 'changes') ? 'none' : '';
   if(!document.querySelector('.modal-overlay.open')) document.body.classList.remove('modal-open');
   window.scrollTo({ top: 0, behavior: 'auto' });
 }
@@ -9774,7 +10082,7 @@ function closeNotifView(){
   document.getElementById('notifView').style.display = 'none';
   document.getElementById('listView').style.display = '';
   const sbShow = document.getElementById('searchBar');
-  if(sbShow) sbShow.style.display = (currentTab === 'players' || currentTab === 'custom') ? 'none' : '';
+  if(sbShow) sbShow.style.display = (currentTab === 'players' || currentTab === 'custom' || currentTab === 'changes') ? 'none' : '';
   window.scrollTo({ top: 0, behavior: 'auto' });
 }
 function openNotifView(){
@@ -10108,7 +10416,7 @@ async function onAuthSubmit(e){
 document.getElementById('authCloseBtn').addEventListener('click', closeAuthPage);
 
 function syncMenuActive(page){
-  const map = { main:'tabMainBtn', future:'tabFutureBtn', nonListed:'tabNonListedBtn', players:'tabPlayersBtn', custom:'tabCustomBtn', updates:'updatesBtn' };
+  const map = { main:'tabMainBtn', future:'tabFutureBtn', nonListed:'tabNonListedBtn', players:'tabPlayersBtn', custom:'tabCustomBtn', changes:'tabChangesBtn', updates:'updatesBtn' };
   const activeId = page ? map[page] : map[currentTab];
   Object.values(map).forEach(id => {
     const el = document.getElementById(id);
@@ -10433,7 +10741,7 @@ function closeRulesPage(){
   document.getElementById('rulesView').style.display = 'none';
   document.getElementById('listView').style.display = '';
   const sbShow = document.getElementById('searchBar');
-  if(sbShow) sbShow.style.display = (currentTab === 'players' || currentTab === 'custom') ? 'none' : '';
+  if(sbShow) sbShow.style.display = (currentTab === 'players' || currentTab === 'custom' || currentTab === 'changes') ? 'none' : '';
 }
 
 /* ── переключатель видимости: элементы управления / галочки пройденных ── */
@@ -10634,7 +10942,8 @@ function applyTabLabels(){
     currentTab === 'main' ? 'tabMainBtn' :
     currentTab === 'future' ? 'tabFutureBtn' :
     currentTab === 'nonListed' ? 'tabNonListedBtn' :
-    currentTab === 'custom' ? 'tabCustomBtn' : 'tabPlayersBtn');
+    currentTab === 'custom' ? 'tabCustomBtn' :
+    currentTab === 'changes' ? 'tabChangesBtn' : 'tabPlayersBtn');
   if(titleEl && btn) titleEl.textContent = btn.textContent;
 }
 
@@ -10874,9 +11183,11 @@ deleteFromFormBtn.addEventListener('click', async () => {
   const tabNonListedBtn = document.getElementById('tabNonListedBtn');
   const tabPlayersBtn = document.getElementById('tabPlayersBtn');
   const tabCustomBtn = document.getElementById('tabCustomBtn');
+  const tabChangesBtn = document.getElementById('tabChangesBtn');
 
   window.switchTab = switchTab;
   function switchTab(tab){
+    detailReturnTab = null;
     const dv = document.getElementById('detailView');
     if(dv && dv.style.display !== 'none') closeDetailModal();
     const pv = document.getElementById('playerView');
@@ -10889,10 +11200,11 @@ deleteFromFormBtn.addEventListener('click', async () => {
     tabNonListedBtn.classList.toggle('active', tab === 'nonListed');
     tabPlayersBtn.classList.toggle('active', tab === 'players');
     tabCustomBtn.classList.toggle('active', tab === 'custom');
+    tabChangesBtn.classList.toggle('active', tab === 'changes');
     // снимаем подсветку с отдельных страниц (например, «Обновления»)
     if(typeof syncMenuActive === 'function') syncMenuActive();
     const titleEl = document.getElementById('currentListTitle');
-    const btnMap = { main:tabMainBtn, future:tabFutureBtn, nonListed:tabNonListedBtn, players:tabPlayersBtn, custom:tabCustomBtn };
+    const btnMap = { main:tabMainBtn, future:tabFutureBtn, nonListed:tabNonListedBtn, players:tabPlayersBtn, custom:tabCustomBtn, changes:tabChangesBtn };
     if(titleEl && btnMap[tab]) titleEl.textContent = btnMap[tab].textContent;
     const dd = document.getElementById('listsMenu');
     if(dd) dd.classList.remove('open');
@@ -10903,7 +11215,7 @@ deleteFromFormBtn.addEventListener('click', async () => {
     document.getElementById('authView').style.display = 'none';
     document.getElementById('listView').style.display = '';
   const sbShow = document.getElementById('searchBar');
-  if(sbShow) sbShow.style.display = (currentTab === 'players' || currentTab === 'custom') ? 'none' : '';
+  if(sbShow) sbShow.style.display = (currentTab === 'players' || currentTab === 'custom' || currentTab === 'changes') ? 'none' : '';
     searchQuery = '';
     const sIn = document.getElementById('listSearch');
     if(sIn){ sIn.textContent = ''; document.getElementById('listSearchClear').style.display = 'none'; }
@@ -10916,6 +11228,7 @@ deleteFromFormBtn.addEventListener('click', async () => {
   tabFutureBtn.addEventListener('click', () => switchTab('future'));
   tabNonListedBtn.addEventListener('click', () => switchTab('nonListed'));
   tabPlayersBtn.addEventListener('click', () => switchTab('players'));
+  tabChangesBtn.addEventListener('click', () => { rcFilter = 'all'; rcShown = 40; switchTab('changes'); });
   tabCustomBtn.addEventListener('click', () => { clOpenId = null; try{ history.replaceState(null, '', location.pathname + location.search); }catch(e){} switchTab('custom'); });
   // ссылка на кастомный лист (#cl=...) открывает его сразу
   clFromHash();
